@@ -11,6 +11,24 @@
                         <p class="text-gray-600">Manage all translated texts for your website</p>
                     </div>
 
+                    <!-- Language Switch Toggle -->
+                    <div class="mb-6 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-1">Language Switcher</h3>
+                                <p class="text-sm text-gray-600">Show or hide the language switcher in the storefront
+                                </p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" v-model="showLanguageSwitch" @change="saveLanguageSwitchSetting"
+                                    class="sr-only peer" />
+                                <div
+                                    class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-900">
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
                     <!-- Search Bar -->
                     <div class="mb-6">
                         <div class="relative">
@@ -115,7 +133,9 @@ definePageMeta({
 
 const translationsEn = ref<Record<string, any>>({})
 const translationsRo = ref<Record<string, any>>({})
+const showLanguageSwitch = ref(true)
 const saving = ref(false)
+const savingLanguageSwitch = ref(false)
 const message = ref('')
 const messageType = ref<'success' | 'error'>('success')
 const searchQuery = ref('')
@@ -283,9 +303,46 @@ const saveTranslations = async () => {
     }
 }
 
+// Load language switch setting
+const loadLanguageSwitchSetting = async () => {
+    try {
+        const response = await $fetch('/api/admin/settings') as { success: boolean; settings: any }
+        if (response.settings && typeof response.settings.showLanguageSwitch !== 'undefined') {
+            showLanguageSwitch.value = response.settings.showLanguageSwitch
+        }
+    } catch (error: any) {
+        console.error('Failed to load language switch setting:', error)
+    }
+}
+
+// Save language switch setting
+const saveLanguageSwitchSetting = async () => {
+    savingLanguageSwitch.value = true
+    try {
+        await $fetch('/api/admin/settings', {
+            method: 'PUT',
+            body: {
+                settings: {
+                    showLanguageSwitch: showLanguageSwitch.value
+                }
+            }
+        })
+        message.value = 'Language switch setting saved successfully!'
+        messageType.value = 'success'
+        setTimeout(() => {
+            message.value = ''
+        }, 3000)
+    } catch (error: any) {
+        message.value = error.data?.message || 'Failed to save language switch setting'
+        messageType.value = 'error'
+    } finally {
+        savingLanguageSwitch.value = false
+    }
+}
+
 // Load translations on mount
 onMounted(async () => {
-    await loadTranslations()
+    await Promise.all([loadTranslations(), loadLanguageSwitchSetting()])
 })
 
 useHead({

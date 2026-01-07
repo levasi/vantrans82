@@ -198,7 +198,8 @@ const settings = ref({
   smtpPort: '587',
   smtpUsername: '',
   smtpPassword: '',
-  smtpSecure: false
+  smtpSecure: false,
+  showLanguageSwitch: true
 })
 
 const systemInfo = ref({

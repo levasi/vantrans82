@@ -43,7 +43,8 @@
 
                 <!-- Language Switcher & CTA Button - Desktop -->
                 <div class="hidden md:flex items-center gap-4">
-                    <div class="flex items-center gap-2 border border-gray-300 rounded-lg p-1">
+                    <div v-if="showLanguageSwitch"
+                        class="flex items-center gap-2 border border-gray-300 rounded-lg p-1">
                         <button @click="switchLocale('en')" :class="[
                             'px-3 py-1 rounded text-sm transition-colors',
                             locale === 'en' ? 'bg-blue-900 text-white' : 'text-gray-700 hover:bg-gray-100'
@@ -101,7 +102,8 @@
                         class="text-left text-gray-700 hover:text-blue-900 transition-colors py-2">
                         {{ $t('nav.contact') }}
                     </button>
-                    <div class="flex items-center gap-2 border border-gray-300 rounded-lg p-1">
+                    <div v-if="showLanguageSwitch"
+                        class="flex items-center gap-2 border border-gray-300 rounded-lg p-1">
                         <button @click="switchLocale('en')" :class="[
                             'px-3 py-1 rounded text-sm transition-colors flex-1',
                             locale === 'en' ? 'bg-blue-900 text-white' : 'text-gray-700 hover:bg-gray-100'
@@ -126,11 +128,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { Menu, X } from 'lucide-vue-next'
 
 const { locale, setLocale } = useI18n()
 const mobileMenuOpen = ref(false)
+const showLanguageSwitch = ref(true)
 
 const scrollToSection = (id) => {
     const element = document.getElementById(id)
@@ -155,4 +158,17 @@ const scrollToSection = (id) => {
 const switchLocale = (newLocale) => {
     setLocale(newLocale)
 }
+
+// Load language switch setting
+onMounted(async () => {
+    try {
+        const response = await $fetch('/api/settings/public')
+        if (response && typeof response.showLanguageSwitch !== 'undefined') {
+            showLanguageSwitch.value = response.showLanguageSwitch
+        }
+    } catch (error) {
+        // Default to showing language switch on error
+        console.error('Failed to load language switch setting:', error)
+    }
+})
 </script>
