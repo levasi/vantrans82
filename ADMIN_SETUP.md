@@ -14,12 +14,13 @@
 **For Railway Deployment:**
 Add the `DATABASE_URL` to your Railway environment variables:
 - Go to your Railway service → Variables
-- Add: `DATABASE_URL` = `postgresql://postgres:UWAgRFeNqdJWEbPlwIUHGzXdPaYLOQrs@nozomi.proxy.rlwy.net:51660/railway`
+- Add: `DATABASE_URL` = `postgresql://postgres:PASSWORD@HOST:PORT/DATABASE`
+  - Replace `PASSWORD`, `HOST`, `PORT`, and `DATABASE` with your actual Railway database credentials
 
 **For Local Development:**
-Create a `.env` file in the project root:
+Create a `.env` file in the project root (this file is gitignored):
 ```
-DATABASE_URL=postgresql://postgres:UWAgRFeNqdJWEbPlwIUHGzXdPaYLOQrs@nozomi.proxy.rlwy.net:51660/railway
+DATABASE_URL=postgresql://user:password@localhost:5432/vantrans82
 ```
 
 ### 3. Initialize Database and Create First Admin User
