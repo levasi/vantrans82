@@ -46,12 +46,13 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { Package, Truck, Container } from 'lucide-vue-next'
 import { useI18n } from '#imports'
 
 const { t } = useI18n()
 
-const vehicles = [
+const vehicles = computed(() => [
   {
     icon: Package,
     name: t('fleet.vans'),
@@ -73,6 +74,6 @@ const vehicles = [
     description: t('fleet.trailersDesc'),
     image: 'https://images.unsplash.com/photo-1703977883249-d959f2b0c1ae?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjYXJnbyUyMHRyYW5zcG9ydCUyMHNoaXBwaW5nfGVufDF8fHx8MTc2NzczODgzNXww&ixlib=rb-4.1.0&q=80&w=1080',
   },
-]
+])
 </script>
 

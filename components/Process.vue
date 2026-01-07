@@ -53,11 +53,12 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useI18n } from '#imports'
 
 const { t } = useI18n()
 
-const steps = [
+const steps = computed(() => [
   {
     number: '01',
     title: t('process.requestQuote'),
@@ -82,6 +83,6 @@ const steps = [
     description: t('process.deliveryDesc'),
     image: 'https://images.unsplash.com/photo-1657819547860-ea03df0eafa8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXJlaG91c2UlMjBsb2dpc3RpY3MlMjB0ZWFtfGVufDF8fHx8MTc2NzczODgzNXww&ixlib=rb-4.1.0&q=80&w=1080',
   },
-]
+])
 </script>
 

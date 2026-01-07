@@ -14,13 +14,17 @@
   "dependencies": {
     "@nuxt/image": "^2.0.0",
     "@nuxtjs/i18n": "^10.2.1",
+    "bcryptjs": "^3.0.3",
     "lucide-vue-next": "^0.562.0",
     "nuxt": "^3.8.4",
+    "pg": "^8.16.3",
     "vue": "^3.3.13",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
-    "@nuxtjs/tailwindcss": "^6.8.4"
+    "@nuxtjs/tailwindcss": "^6.8.4",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/pg": "^8.16.0"
   },
   "engines": {
     "node": ">=20.19.0"
