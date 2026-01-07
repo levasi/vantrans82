@@ -11,9 +11,17 @@
 
 ### 2. Set Environment Variable
 
-**For Railway Deployment:**
-Add the `DATABASE_URL` to your Railway environment variables:
-- Go to your Railway service → Variables
+**For Railway Deployment (Recommended - Private Network):**
+To avoid egress fees, use Railway's private network connection:
+
+1. Go to your Railway web service → Variables
+2. Click "+ New Variable"
+3. Add a reference variable: `DATABASE_PRIVATE_URL` = `postgresql://${{postgres.PGUSER}}:${{postgres.PGPASSWORD}}@${{postgres.RAILWAY_PRIVATE_DOMAIN}}:${{postgres.PGPORT}}/${{postgres.PGDATABASE}}`
+   - Replace `postgres` with your actual PostgreSQL service name if different
+   - This uses Railway's private network (`railway.internal`) to avoid egress fees
+
+**Alternative - Public Endpoint (Not Recommended):**
+If you need to use the public endpoint (will incur egress fees):
 - Add: `DATABASE_URL` = `postgresql://postgres:PASSWORD@HOST:PORT/DATABASE`
   - Replace `PASSWORD`, `HOST`, `PORT`, and `DATABASE` with your actual Railway database credentials
 

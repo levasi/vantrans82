@@ -5,7 +5,10 @@ let pool: pg.Pool | null = null
 
 export const getDb = () => {
   if (!pool) {
-    const connectionString = process.env.DATABASE_URL
+    // Prefer private network connection to avoid egress fees on Railway
+    // Use DATABASE_PRIVATE_URL if available (Railway private network)
+    // Fall back to DATABASE_URL (public endpoint)
+    const connectionString = process.env.DATABASE_PRIVATE_URL || process.env.DATABASE_URL
     
     if (!connectionString) {
       // In development, allow graceful degradation
@@ -13,12 +16,16 @@ export const getDb = () => {
         console.warn('DATABASE_URL not set - database features will be disabled')
         return null as any
       }
-      throw new Error('DATABASE_URL environment variable is not set')
+      throw new Error('DATABASE_URL or DATABASE_PRIVATE_URL environment variable is not set')
     }
+
+    // Parse connection string to determine if we need SSL
+    const isPrivateNetwork = connectionString.includes('railway.internal')
+    const needsSSL = !isPrivateNetwork && process.env.NODE_ENV === 'production'
 
     pool = new Pool({
       connectionString,
-      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+      ssl: needsSSL ? { rejectUnauthorized: false } : false
     })
 
     // Test connection
