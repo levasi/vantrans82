@@ -105,10 +105,10 @@
     }
   },
   "about": {
-    "title": "Despre VanTrans82",
+    "title": "Despre noi",
     "description1": "Fondată în 2010, VanTrans82 a devenit unul dintre cei mai de încredere parteneri logisici din România. Cu peste 15 ani de experiență, ne-am construit reputația pe livrarea excelenței în fiecare expediere.",
     "description2": "Misiunea noastră este simplă: să oferim soluții de transport fiabile, eficiente și rentabile care ajută afacerile să crească. Combinăm tehnologia modernă cu serviciul personalizat pentru a ne asigura că marfa ta ajunge în siguranță și la timp.",
-    "coreValues": "Valorile Noastre de Bază",
+    "coreValues": "Valorile noastre de bază",
     "safety": "Siguranță",
     "safetyDesc": "Fiecare expediere este tratată cu cele mai înalte standarde de siguranță și grijă.",
     "speed": "Viteză",
@@ -118,7 +118,7 @@
     "satisfiedClients": "Clienți Mulțumiți"
   },
   "faq": {
-    "title": "Întrebări Frecvente",
+    "title": "Întrebări frecvente",
     "subtitle": "Ai întrebări? Avem răspunsuri. Găsește soluții rapide la întrebările comune de mai jos.",
     "stillHaveQuestions": "Mai ai întrebări? Suntem aici pentru a te ajuta.",
     "contactUs": "Contactează-ne →",
@@ -150,17 +150,17 @@
     }
   },
   "contact": {
-    "title": "Ia Legătura",
+    "title": "Ia legătura cu noi",
     "subtitle": "Gata să-ți simplifici logistica? Contactează-ne astăzi pentru o ofertă personalizată sau pentru a discuta nevoile tale de transport.",
-    "yourName": "Numele Tău",
-    "emailAddress": "Adresa de Email",
+    "yourName": "Numele tău",
+    "emailAddress": "Adresa de email",
     "message": "Mesaj",
-    "sendMessage": "Trimite Mesaj",
-    "contactInformation": "Informații de Contact",
+    "sendMessage": "Trimite mesaj",
+    "contactInformation": "Informații de contact",
     "phone": "Telefon",
     "email": "Email",
     "whatsapp": "WhatsApp",
-    "chatInstantly": "Chat cu noi instant",
+    "chatInstantly": "Chat cu noi",
     "address": "Adresă",
     "chatOnWhatsApp": "Chat pe WhatsApp",
     "businessHours": "Program de Lucru",

@@ -135,7 +135,19 @@ const mobileMenuOpen = ref(false)
 const scrollToSection = (id) => {
     const element = document.getElementById(id)
     if (element) {
-        element.scrollIntoView({ behavior: 'smooth' })
+        // Get header height (64px on mobile, 80px on desktop)
+        const header = document.querySelector('header')
+        const headerHeight = header ? header.offsetHeight : 80
+
+        // Calculate position with offset
+        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset
+        const offsetPosition = elementPosition - headerHeight
+
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+        })
+
         mobileMenuOpen.value = false
     }
 }

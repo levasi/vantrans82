@@ -50,7 +50,18 @@ import { ArrowRight, Phone } from 'lucide-vue-next'
 const scrollToContact = () => {
   const element = document.getElementById('contact')
   if (element) {
-    element.scrollIntoView({ behavior: 'smooth' })
+    // Get header height (64px on mobile, 80px on desktop)
+    const header = document.querySelector('header')
+    const headerHeight = header ? header.offsetHeight : 80
+    
+    // Calculate position with offset
+    const elementPosition = element.getBoundingClientRect().top + window.pageYOffset
+    const offsetPosition = elementPosition - headerHeight - 20 // 20px extra padding
+    
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: 'smooth'
+    })
   }
 }
 </script>
