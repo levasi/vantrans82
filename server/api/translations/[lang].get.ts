@@ -43,50 +43,67 @@ export default defineEventHandler(async (event) => {
       [lang]
     )
 
-    // If no translations in database, load from file and sync to database
+    // Only sync from file to database if:
+    // 1. No translations exist for this language in the database
+    // 2. AND no translations exist for ANY language (first-time setup)
+    // This prevents overwriting existing translations on redeployment
     if (result.rows.length === 0) {
-      const { readFile } = await import('fs/promises')
-      const { join } = await import('path')
-      const filePath = join(process.cwd(), 'locales', `${lang}.json`)
+      // Check if any translations exist in the database at all
+      const anyTranslationsResult = await db.query(
+        'SELECT COUNT(*) as count FROM translations LIMIT 1'
+      )
+      const hasAnyTranslations = parseInt(anyTranslationsResult.rows[0]?.count || '0') > 0
       
-      try {
-        const fileContent = await readFile(filePath, 'utf-8')
-        const translations = JSON.parse(fileContent)
+      // Only sync from file if this is truly the first setup (no translations exist at all)
+      if (!hasAnyTranslations) {
+        const { readFile } = await import('fs/promises')
+        const { join } = await import('path')
+        const filePath = join(process.cwd(), 'locales', `${lang}.json`)
         
-        // Flatten and store in database
-        const flatten = (obj: any, prefix = ''): Array<{ key: string; value: string }> => {
-          const result: Array<{ key: string; value: string }> = []
+        try {
+          const fileContent = await readFile(filePath, 'utf-8')
+          const translations = JSON.parse(fileContent)
           
-          for (const key in obj) {
-            const newKey = prefix ? `${prefix}.${key}` : key
+          // Flatten and store in database
+          const flatten = (obj: any, prefix = ''): Array<{ key: string; value: string }> => {
+            const result: Array<{ key: string; value: string }> = []
             
-            if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
-              result.push(...flatten(obj[key], newKey))
-            } else {
-              result.push({ key: newKey, value: String(obj[key] || '') })
+            for (const key in obj) {
+              const newKey = prefix ? `${prefix}.${key}` : key
+              
+              if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
+                result.push(...flatten(obj[key], newKey))
+              } else {
+                result.push({ key: newKey, value: String(obj[key] || '') })
+              }
             }
+            
+            return result
           }
           
-          return result
+          const flattened = flatten(translations)
+          
+          // Insert into database - use DO NOTHING on conflict to avoid overwriting
+          // This ensures we only insert missing keys, never overwrite existing ones
+          for (const item of flattened) {
+            await db.query(
+              'INSERT INTO translations (lang, key_path, value) VALUES ($1, $2, $3) ON CONFLICT (lang, key_path) DO NOTHING',
+              [lang, item.key, item.value]
+            )
+          }
+          
+          // Return file translations for first-time setup
+          return translations
+        } catch (fileError: any) {
+          if (fileError.code === 'ENOENT') {
+            return {}
+          }
+          throw fileError
         }
-        
-        const flattened = flatten(translations)
-        
-        // Insert into database
-        for (const item of flattened) {
-          await db.query(
-            'INSERT INTO translations (lang, key_path, value) VALUES ($1, $2, $3) ON CONFLICT (lang, key_path) DO UPDATE SET value = $3',
-            [lang, item.key, item.value]
-          )
-        }
-        
-        return translations
-      } catch (fileError: any) {
-        if (fileError.code === 'ENOENT') {
-          return {}
-        }
-        throw fileError
       }
+      // If translations exist for other languages but not this one, return empty
+      // This means the database was already initialized, so don't sync from file
+      return {}
     }
 
     // Reconstruct nested object from database
