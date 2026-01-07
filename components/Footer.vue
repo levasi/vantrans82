@@ -8,8 +8,7 @@
                         <NuxtImg src="/vtlogo.png" alt="VanTrans82" class="h-10 w-auto" />
                     </div>
                     <p class="text-sm text-gray-400 leading-relaxed mb-6">
-                        Your trusted partner for reliable, fast, and professional transport solutions across Romania and
-                        Europe.
+                        {{ $t('footer.description') }}
                     </p>
                     <div class="flex items-center gap-4">
                         <a href="#"
@@ -37,30 +36,30 @@
 
                 <!-- Quick Links -->
                 <div>
-                    <h3 class="text-white font-semibold mb-4">Quick Links</h3>
+                    <h3 class="text-white font-semibold mb-4">{{ $t('footer.quickLinks') }}</h3>
                     <ul class="space-y-3">
                         <li>
                             <button @click="scrollToSection('home')"
                                 class="text-sm hover:text-orange-600 transition-colors">
-                                Home
+                                {{ $t('nav.home') }}
                             </button>
                         </li>
                         <li>
                             <button @click="scrollToSection('services')"
                                 class="text-sm hover:text-orange-600 transition-colors">
-                                Services
+                                {{ $t('nav.services') }}
                             </button>
                         </li>
                         <li>
                             <button @click="scrollToSection('fleet')"
                                 class="text-sm hover:text-orange-600 transition-colors">
-                                Fleet
+                                {{ $t('nav.fleet') }}
                             </button>
                         </li>
                         <li>
                             <button @click="scrollToSection('about')"
                                 class="text-sm hover:text-orange-600 transition-colors">
-                                About Us
+                                {{ $t('nav.about') }}
                             </button>
                         </li>
                     </ul>
@@ -68,18 +67,18 @@
 
                 <!-- Services -->
                 <div>
-                    <h3 class="text-white font-semibold mb-4">Our Services</h3>
+                    <h3 class="text-white font-semibold mb-4">{{ $t('footer.ourServices') }}</h3>
                     <ul class="space-y-3">
-                        <li class="text-sm">Road Transport</li>
-                        <li class="text-sm">Express Delivery</li>
-                        <li class="text-sm">International Freight</li>
-                        <li class="text-sm">Custom Logistics</li>
+                        <li class="text-sm">{{ $t('footer.roadTransport') }}</li>
+                        <li class="text-sm">{{ $t('footer.expressDelivery') }}</li>
+                        <li class="text-sm">{{ $t('footer.internationalFreight') }}</li>
+                        <li class="text-sm">{{ $t('footer.customLogistics') }}</li>
                     </ul>
                 </div>
 
                 <!-- Contact -->
                 <div>
-                    <h3 class="text-white font-semibold mb-4">Contact</h3>
+                    <h3 class="text-white font-semibold mb-4">{{ $t('footer.contact') }}</h3>
                     <ul class="space-y-3">
                         <li class="text-sm">
                             <a href="tel:+40123456789" class="hover:text-orange-600 transition-colors">
@@ -103,7 +102,7 @@
             <div class="pt-8 border-t border-gray-800">
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                     <p class="text-sm text-gray-400">
-                        © 2026 VanTrans82. All rights reserved.
+                        © 2026 VanTrans82. {{ $t('footer.rights') }}
                     </p>
                     <div class="flex items-center gap-6">
                         <a href="#" class="text-sm text-gray-400 hover:text-orange-600 transition-colors">

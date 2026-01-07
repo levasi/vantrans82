@@ -5,21 +5,18 @@
         <!-- Left: Text Content -->
         <div>
           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-            About VanTrans82
+            {{ $t('about.title') }}
           </h2>
           <p class="text-lg text-gray-600 mb-6 leading-relaxed">
-            Founded in 2010, VanTrans82 has grown to become one of Romania's most trusted logistics partners. 
-            With over 15 years of experience, we've built our reputation on delivering excellence in every shipment.
+            {{ $t('about.description1') }}
           </p>
           <p class="text-lg text-gray-600 mb-8 leading-relaxed">
-            Our mission is simple: to provide reliable, efficient, and cost-effective transport solutions 
-            that help businesses grow. We combine modern technology with personalized service to ensure 
-            your cargo arrives safely and on time.
+            {{ $t('about.description2') }}
           </p>
 
           <!-- Values -->
           <div class="space-y-6">
-            <h3 class="text-xl font-bold text-gray-900 mb-4">Our Core Values</h3>
+            <h3 class="text-xl font-bold text-gray-900 mb-4">{{ $t('about.coreValues') }}</h3>
             <div v-for="(value, index) in values" :key="index" class="flex items-start gap-4">
               <div class="p-3 bg-blue-100 rounded-lg flex-shrink-0">
                 <component :is="value.icon" class="w-6 h-6 text-blue-900" />
@@ -49,7 +46,7 @@
           <!-- Stats Overlay -->
           <div class="absolute -bottom-6 -left-6 bg-white p-6 rounded-xl shadow-xl border border-gray-200">
             <div class="text-4xl font-bold text-blue-900 mb-1">500+</div>
-            <div class="text-sm text-gray-600">Satisfied Clients</div>
+            <div class="text-sm text-gray-600">{{ $t('about.satisfiedClients') }}</div>
           </div>
 
           <!-- Decorative Elements -->
@@ -62,23 +59,26 @@
 
 <script setup>
 import { Shield, Zap, Users } from 'lucide-vue-next'
+import { useI18n } from '#imports'
 
-const values = [
+const { t } = useI18n()
+
+const values = computed(() => [
   {
     icon: Shield,
-    title: 'Safety',
-    description: 'Every shipment is handled with the highest safety standards and care.',
+    title: t('about.safety'),
+    description: t('about.safetyDesc'),
   },
   {
     icon: Zap,
-    title: 'Speed',
-    description: 'Fast, efficient delivery without compromising on quality or security.',
+    title: t('about.speed'),
+    description: t('about.speedDesc'),
   },
   {
     icon: Users,
-    title: 'Trust',
-    description: 'Building lasting partnerships through transparency and reliability.',
+    title: t('about.trust'),
+    description: t('about.trustDesc'),
   },
-]
+])
 </script>
 

@@ -13,11 +13,10 @@
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="max-w-4xl mx-auto text-center">
         <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
-          Need a Fast Transport Quote?
+          {{ $t('cta.title') }}
         </h2>
         <p class="text-lg md:text-xl text-blue-100 mb-10 leading-relaxed">
-          Get competitive pricing and flexible solutions tailored to your logistics needs. 
-          Our team is ready to help you find the perfect transport solution.
+          {{ $t('cta.subtitle') }}
         </p>
 
         <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
@@ -25,7 +24,7 @@
             @click="scrollToContact"
             class="px-8 py-4 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors flex items-center gap-2 font-medium text-lg"
           >
-            Get a Quote
+            {{ $t('cta.getQuote') }}
             <ArrowRight class="w-5 h-5" />
           </button>
           <a
@@ -38,7 +37,7 @@
         </div>
 
         <p class="text-sm text-blue-200">
-          Available 24/7 for urgent shipments and inquiries
+          {{ $t('cta.available') }}
         </p>
       </div>
     </div>

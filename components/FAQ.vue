@@ -4,10 +4,10 @@
       <!-- Section Header -->
       <div class="text-center mb-16">
         <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-          Frequently Asked Questions
+          {{ $t('faq.title') }}
         </h2>
         <p class="text-lg text-gray-600">
-          Have questions? We've got answers. Find quick solutions to common inquiries below.
+          {{ $t('faq.subtitle') }}
         </p>
       </div>
 
@@ -42,13 +42,13 @@
       <!-- Additional Help -->
       <div class="mt-12 text-center">
         <p class="text-gray-600 mb-4">
-          Still have questions? We're here to help.
+          {{ $t('faq.stillHaveQuestions') }}
         </p>
         <button
           @click="scrollToContact"
           class="text-orange-600 hover:text-orange-700 font-semibold"
         >
-          Contact Us →
+          {{ $t('faq.contactUs') }}
         </button>
       </div>
     </div>
@@ -56,9 +56,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { ChevronDown } from 'lucide-vue-next'
+import { useI18n } from '#imports'
 
+const { t } = useI18n()
 const openIndex = ref(null)
 
 const toggleFaq = (index) => {
@@ -72,31 +74,31 @@ const scrollToContact = () => {
   }
 }
 
-const faqs = [
+const faqs = computed(() => [
   {
-    question: 'What areas do you cover?',
-    answer: 'We provide comprehensive coverage across all of Romania and major European routes, including Western and Central Europe. Our network spans from local urban deliveries to international freight transport.',
+    question: t('faq.questions.q1.question'),
+    answer: t('faq.questions.q1.answer'),
   },
   {
-    question: 'How do I get a transport quote?',
-    answer: 'You can request a quote by filling out our contact form, calling us directly at +40 123 456 789, or sending us an email. We typically respond within 2 hours during business hours and provide detailed pricing based on your specific needs.',
+    question: t('faq.questions.q2.question'),
+    answer: t('faq.questions.q2.answer'),
   },
   {
-    question: 'Do you offer tracking for shipments?',
-    answer: 'Yes! All our vehicles are equipped with GPS tracking systems. You\'ll receive real-time updates on your shipment\'s location and estimated delivery time through our online portal or mobile app.',
+    question: t('faq.questions.q3.question'),
+    answer: t('faq.questions.q3.answer'),
   },
   {
-    question: 'What types of cargo do you transport?',
-    answer: 'We handle a wide range of cargo including general freight, palletized goods, packaged products, and industrial equipment. For specialized cargo (hazardous materials, temperature-sensitive goods), please contact us to discuss your specific requirements.',
+    question: t('faq.questions.q4.question'),
+    answer: t('faq.questions.q4.answer'),
   },
   {
-    question: 'What are your delivery timeframes?',
-    answer: 'Delivery times vary based on distance and service type. Local deliveries typically arrive within 24 hours, national transport takes 1-3 days, and international shipments range from 3-7 days. We also offer express same-day and next-day services for urgent shipments.',
+    question: t('faq.questions.q5.question'),
+    answer: t('faq.questions.q5.answer'),
   },
   {
-    question: 'How do you ensure cargo safety?',
-    answer: 'Safety is our top priority. All our vehicles undergo regular maintenance, our drivers are extensively trained, and we have comprehensive insurance coverage. We use professional loading equipment and secure fastening systems to protect your cargo throughout transport.',
+    question: t('faq.questions.q6.question'),
+    answer: t('faq.questions.q6.answer'),
   },
-]
+])
 </script>
 

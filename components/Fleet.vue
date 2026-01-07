@@ -4,10 +4,10 @@
       <!-- Section Header -->
       <div class="text-center max-w-3xl mx-auto mb-16">
         <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-          Our Fleet
+          {{ $t('fleet.title') }}
         </h2>
         <p class="text-lg text-gray-600">
-          Modern, well-maintained vehicles equipped with the latest technology to ensure safe and efficient delivery.
+          {{ $t('fleet.subtitle') }}
         </p>
       </div>
 
@@ -47,27 +47,30 @@
 
 <script setup>
 import { Package, Truck, Container } from 'lucide-vue-next'
+import { useI18n } from '#imports'
+
+const { t } = useI18n()
 
 const vehicles = [
   {
     icon: Package,
-    name: 'Vans',
-    capacity: 'Up to 1.5 tons',
-    description: 'Perfect for urban deliveries and smaller loads. Ideal for express services within cities and short-distance transport.',
+    name: t('fleet.vans'),
+    capacity: t('fleet.vansCapacity'),
+    description: t('fleet.vansDesc'),
     image: 'https://images.unsplash.com/photo-1761454200783-ca533f7928e3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkZWxpdmVyeSUyMHZhbiUyMHZlaGljbGV8ZW58MXx8fHwxNzY3NzM4ODM1fDA&ixlib=rb-4.1.0&q=80&w=1080',
   },
   {
     icon: Truck,
-    name: 'Trucks',
-    capacity: 'Up to 12 tons',
-    description: 'Versatile medium-duty trucks for regional and national transport. Equipped with modern safety features and GPS tracking.',
+    name: t('fleet.trucks'),
+    capacity: t('fleet.trucksCapacity'),
+    description: t('fleet.trucksDesc'),
     image: 'https://images.unsplash.com/photo-1738507869660-b44ea20ab037?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0cnVjayUyMGhpZ2h3YXklMjBsb2dpc3RpY3N8ZW58MXx8fHwxNzY3NzM0MzUzfDA&ixlib=rb-4.1.0&q=80&w=1080',
   },
   {
     icon: Container,
-    name: 'Trailers',
-    capacity: 'Up to 24 tons',
-    description: 'Heavy-duty semi-trailers for large-scale freight and international shipments. Temperature-controlled options available.',
+    name: t('fleet.trailers'),
+    capacity: t('fleet.trailersCapacity'),
+    description: t('fleet.trailersDesc'),
     image: 'https://images.unsplash.com/photo-1703977883249-d959f2b0c1ae?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjYXJnbyUyMHRyYW5zcG9ydCUyMHNoaXBwaW5nfGVufDF8fHx8MTc2NzczODgzNXww&ixlib=rb-4.1.0&q=80&w=1080',
   },
 ]

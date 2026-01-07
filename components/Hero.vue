@@ -16,11 +16,10 @@
         <!-- Left: Text Content -->
         <div>
           <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-            Fast & Reliable Freight Transport Across Romania & EU
+            {{ $t('hero.title') }}
           </h1>
           <p class="text-lg md:text-xl text-blue-100 mb-8 leading-relaxed">
-            Professional logistics solutions with guaranteed on-time delivery. 
-            Your trusted partner for road transport, express delivery, and international freight.
+            {{ $t('hero.subtitle') }}
           </p>
 
           <!-- CTA Buttons -->
@@ -29,14 +28,14 @@
               @click="scrollToSection('contact')"
               class="px-8 py-4 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors flex items-center justify-center gap-2 font-medium"
             >
-              Request a Quote
+              {{ $t('hero.requestQuote') }}
               <ArrowRight class="w-5 h-5" />
             </button>
             <button 
               @click="scrollToSection('services')"
               class="px-8 py-4 bg-white/10 text-white border-2 border-white/30 rounded-lg hover:bg-white/20 transition-colors backdrop-blur-sm font-medium"
             >
-              Our Services
+              {{ $t('hero.ourServices') }}
             </button>
           </div>
 
@@ -48,7 +47,7 @@
               </div>
               <div>
                 <div class="text-2xl font-bold">98.5%</div>
-                <div class="text-sm text-blue-200">On-Time Delivery</div>
+                <div class="text-sm text-blue-200">{{ $t('hero.onTimeDelivery') }}</div>
               </div>
             </div>
 
@@ -58,7 +57,7 @@
               </div>
               <div>
                 <div class="text-2xl font-bold">15+ Years</div>
-                <div class="text-sm text-blue-200">Experience</div>
+                <div class="text-sm text-blue-200">{{ $t('hero.experience') }}</div>
               </div>
             </div>
 
@@ -68,7 +67,7 @@
               </div>
               <div>
                 <div class="text-2xl font-bold">50K+</div>
-                <div class="text-sm text-blue-200">Monthly Shipments</div>
+                <div class="text-sm text-blue-200">{{ $t('hero.monthlyShipments') }}</div>
               </div>
             </div>
           </div>

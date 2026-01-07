@@ -7,8 +7,8 @@
           <div class="inline-flex items-center justify-center w-16 h-16 bg-orange-100 rounded-xl mb-4">
             <Clock class="w-8 h-8 text-orange-600" />
           </div>
-          <h3 class="font-bold text-gray-900 mb-2">Fast Delivery</h3>
-          <p class="text-sm text-gray-600">Express shipping options available</p>
+          <h3 class="font-bold text-gray-900 mb-2">{{ $t('features.fastDelivery') }}</h3>
+          <p class="text-sm text-gray-600">{{ $t('features.fastDeliveryDesc') }}</p>
         </div>
 
         <!-- Feature 2 -->
@@ -16,8 +16,8 @@
           <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-xl mb-4">
             <Shield class="w-8 h-8 text-blue-900" />
           </div>
-          <h3 class="font-bold text-gray-900 mb-2">Secure Transport</h3>
-          <p class="text-sm text-gray-600">Full insurance coverage</p>
+          <h3 class="font-bold text-gray-900 mb-2">{{ $t('features.secureTransport') }}</h3>
+          <p class="text-sm text-gray-600">{{ $t('features.secureTransportDesc') }}</p>
         </div>
 
         <!-- Feature 3 -->
@@ -25,8 +25,8 @@
           <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-xl mb-4">
             <TrendingUp class="w-8 h-8 text-green-600" />
           </div>
-          <h3 class="font-bold text-gray-900 mb-2">Live Tracking</h3>
-          <p class="text-sm text-gray-600">Real-time GPS monitoring</p>
+          <h3 class="font-bold text-gray-900 mb-2">{{ $t('features.liveTracking') }}</h3>
+          <p class="text-sm text-gray-600">{{ $t('features.liveTrackingDesc') }}</p>
         </div>
 
         <!-- Feature 4 -->
@@ -34,8 +34,8 @@
           <div class="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-xl mb-4">
             <Headphones class="w-8 h-8 text-purple-600" />
           </div>
-          <h3 class="font-bold text-gray-900 mb-2">24/7 Support</h3>
-          <p class="text-sm text-gray-600">Always here to help</p>
+          <h3 class="font-bold text-gray-900 mb-2">{{ $t('features.support') }}</h3>
+          <p class="text-sm text-gray-600">{{ $t('features.supportDesc') }}</p>
         </div>
       </div>
     </div>

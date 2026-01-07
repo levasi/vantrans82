@@ -4,10 +4,10 @@
       <!-- Section Header -->
       <div class="text-center max-w-3xl mx-auto mb-16">
         <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-          How It Works
+          {{ $t('process.title') }}
         </h2>
         <p class="text-lg text-gray-600">
-          Our streamlined process ensures your cargo gets from point A to point B efficiently and safely.
+          {{ $t('process.subtitle') }}
         </p>
       </div>
 
@@ -53,29 +53,33 @@
 </template>
 
 <script setup>
+import { useI18n } from '#imports'
+
+const { t } = useI18n()
+
 const steps = [
   {
     number: '01',
-    title: 'Request Quote',
-    description: 'Share your shipping details and requirements',
+    title: t('process.requestQuote'),
+    description: t('process.requestQuoteDesc'),
     image: 'https://images.unsplash.com/photo-1763736809655-9337caf643cc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsb2dpc3RpY3MlMjBjb250cm9sJTIwY2VudGVyfGVufDF8fHx8MTc2NzczOTE1Mnww&ixlib=rb-4.1.0&q=80&w=1080',
   },
   {
     number: '02',
-    title: 'Plan Route',
-    description: 'We optimize the best delivery route for your cargo',
+    title: t('process.planRoute'),
+    description: t('process.planRouteDesc'),
     image: 'https://images.unsplash.com/photo-1730317195704-29f7ced19356?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxldXJvcGUlMjBtYXAlMjBnZW9ncmFwaHl8ZW58MXx8fHwxNzY3NzM5MTUxfDA&ixlib=rb-4.1.0&q=80&w=1080',
   },
   {
     number: '03',
-    title: 'Safe Transport',
-    description: 'Your shipment is handled with utmost care',
+    title: t('process.safeTransport'),
+    description: t('process.safeTransportDesc'),
     image: 'https://images.unsplash.com/photo-1738507869660-b44ea20ab037?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0cnVjayUyMGhpZ2h3YXklMjBsb2dpc3RpY3N8ZW58MXx8fHwxNzY3NzM0MzUzfDA&ixlib=rb-4.1.0&q=80&w=1080',
   },
   {
     number: '04',
-    title: 'Delivery',
-    description: 'On-time delivery to your destination',
+    title: t('process.delivery'),
+    description: t('process.deliveryDesc'),
     image: 'https://images.unsplash.com/photo-1657819547860-ea03df0eafa8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXJlaG91c2UlMjBsb2dpc3RpY3MlMjB0ZWFtfGVufDF8fHx8MTc2NzczODgzNXww&ixlib=rb-4.1.0&q=80&w=1080',
   },
 ]

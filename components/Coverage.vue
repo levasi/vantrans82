@@ -5,12 +5,10 @@
         <!-- Left: Text Content -->
         <div>
           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-            Our Coverage
+            {{ $t('coverage.title') }}
           </h2>
           <p class="text-lg text-gray-600 mb-8 leading-relaxed">
-            We provide comprehensive logistics coverage across Romania and major European routes. 
-            Our extensive network ensures your cargo reaches its destination safely and on time, 
-            no matter the distance.
+            {{ $t('coverage.subtitle') }}
           </p>
 
           <!-- Regions List -->
@@ -26,11 +24,10 @@
               <MapPin class="w-6 h-6 text-blue-900 flex-shrink-0 mt-1" />
               <div>
                 <h4 class="font-semibold text-gray-900 mb-2">
-                  Strategic Locations
+                  {{ $t('coverage.strategicLocations') }}
                 </h4>
                 <p class="text-gray-600 text-sm leading-relaxed">
-                  Our distribution centers are strategically positioned to provide optimal coverage 
-                  and minimize transit times across all major routes.
+                  {{ $t('coverage.strategicLocationsDesc') }}
                 </p>
               </div>
             </div>
@@ -74,15 +71,19 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { MapPin, CheckCircle } from 'lucide-vue-next'
+import { useI18n } from '#imports'
 
-const regions = [
-  'Bucharest & Ilfov',
-  'Transylvania Region',
-  'Moldova Region',
-  'Muntenia & Oltenia',
-  'Western Europe',
-  'Central Europe',
-]
+const { t } = useI18n()
+
+const regions = computed(() => [
+  t('coverage.regions.bucharest'),
+  t('coverage.regions.transylvania'),
+  t('coverage.regions.moldova'),
+  t('coverage.regions.muntenia'),
+  t('coverage.regions.westernEurope'),
+  t('coverage.regions.centralEurope'),
+])
 </script>
 

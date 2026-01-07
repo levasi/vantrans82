@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@nuxt/image": "^2.0.0",
+    "@nuxtjs/i18n": "^10.2.1",
     "lucide-vue-next": "^0.562.0",
     "nuxt": "^3.8.4",
     "vue": "^3.3.13",

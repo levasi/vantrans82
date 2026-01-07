@@ -4,11 +4,10 @@
             <!-- Section Header -->
             <div class="text-center max-w-3xl mx-auto mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                    Our Services
+                    {{ $t('services.title') }}
                 </h2>
                 <p class="text-lg text-gray-600">
-                    Comprehensive logistics solutions tailored to meet your business needs with reliability and
-                    efficiency.
+                    {{ $t('services.subtitle') }}
                 </p>
             </div>
 
@@ -44,30 +43,33 @@
 
 <script setup>
 import { Truck, Zap, Globe, Settings } from 'lucide-vue-next'
+import { useI18n } from '#imports'
+
+const { t } = useI18n()
 
 const services = [
     {
         icon: Truck,
-        title: 'Road Transport',
-        description: 'Comprehensive ground transportation services across Romania and Europe with full tracking capabilities and flexible scheduling.',
+        title: t('services.roadTransport'),
+        description: t('services.roadTransportDesc'),
         image: 'https://images.unsplash.com/photo-1643119270753-9f506b137e38?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyb2FkJTIwaGlnaHdheSUyMHRyYW5zcG9ydHxlbnwxfHx8fDE3Njc3MzkxNTN8MA&ixlib=rb-4.1.0&q=80&w=1080',
     },
     {
         icon: Zap,
-        title: 'Express Delivery',
-        description: 'Same-day and next-day delivery options for urgent shipments. Fast, reliable, and secure transport when time matters most.',
+        title: t('services.expressDelivery'),
+        description: t('services.expressDeliveryDesc'),
         image: 'https://images.unsplash.com/photo-1761454200783-ca533f7928e3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkZWxpdmVyeSUyMHZhbiUyMHZlaGljbGV8ZW58MXx8fHwxNzY3NzM4ODM1fDA&ixlib=rb-4.1.0&q=80&w=1080',
     },
     {
         icon: Globe,
-        title: 'International Freight',
-        description: 'Cross-border logistics solutions with complete customs clearance support and documentation for seamless international transport.',
+        title: t('services.internationalFreight'),
+        description: t('services.internationalFreightDesc'),
         image: 'https://images.unsplash.com/photo-1663103746090-2e4274c6c7ac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaGlwcGluZyUyMGNvbnRhaW5lciUyMHBvcnR8ZW58MXx8fHwxNzY3NzM5MTUyfDA&ixlib=rb-4.1.0&q=80&w=1080',
     },
     {
         icon: Settings,
-        title: 'Custom Logistics',
-        description: 'Tailored supply chain solutions designed for your specific business needs, from warehousing to last-mile delivery.',
+        title: t('services.customLogistics'),
+        description: t('services.customLogisticsDesc'),
         image: 'https://images.unsplash.com/photo-1726866672851-5b99c837603c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXJlaG91c2UlMjBtb2Rlcm4lMjBmYWNpbGl0eXxlbnwxfHx8fDE3Njc3MzkxNTF8MA&ixlib=rb-4.1.0&q=80&w=1080',
     },
 ]

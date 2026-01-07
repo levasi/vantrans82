@@ -1,0 +1,183 @@
+{
+    "nav": {
+        "home": "Home",
+        "services": "Services",
+        "fleet": "Fleet",
+        "coverage": "Coverage",
+        "about": "About",
+        "faq": "FAQ",
+        "contact": "Contact",
+        "getQuote": "Get a Quote"
+    },
+    "hero": {
+        "title": "Fast & Reliable Freight Transport Across Romania & EU",
+        "subtitle": "Professional logistics solutions with guaranteed on-time delivery. Your trusted partner for road transport, express delivery, and international freight.",
+        "requestQuote": "Request a Quote",
+        "ourServices": "Our Services",
+        "onTimeDelivery": "On-Time Delivery",
+        "experience": "Experience",
+        "monthlyShipments": "Monthly Shipments"
+    },
+    "features": {
+        "fastDelivery": "Fast Delivery",
+        "fastDeliveryDesc": "Express shipping options available",
+        "secureTransport": "Secure Transport",
+        "secureTransportDesc": "Full insurance coverage",
+        "liveTracking": "Live Tracking",
+        "liveTrackingDesc": "Real-time GPS monitoring",
+        "support": "24/7 Support",
+        "supportDesc": "Always here to help"
+    },
+    "services": {
+        "title": "Our Services",
+        "subtitle": "Comprehensive logistics solutions tailored to meet your business needs with reliability and efficiency.",
+        "roadTransport": "Road Transport",
+        "roadTransportDesc": "Comprehensive ground transportation services across Romania and Europe with full tracking capabilities and flexible scheduling.",
+        "expressDelivery": "Express Delivery",
+        "expressDeliveryDesc": "Same-day and next-day delivery options for urgent shipments. Fast, reliable, and secure transport when time matters most.",
+        "internationalFreight": "International Freight",
+        "internationalFreightDesc": "Cross-border logistics solutions with complete customs clearance support and documentation for seamless international transport.",
+        "customLogistics": "Custom Logistics",
+        "customLogisticsDesc": "Tailored supply chain solutions designed for your specific business needs, from warehousing to last-mile delivery."
+    },
+    "process": {
+        "title": "How It Works",
+        "subtitle": "Our streamlined process ensures your cargo gets from point A to point B efficiently and safely.",
+        "requestQuote": "Request Quote",
+        "requestQuoteDesc": "Share your shipping details and requirements",
+        "planRoute": "Plan Route",
+        "planRouteDesc": "We optimize the best delivery route for your cargo",
+        "safeTransport": "Safe Transport",
+        "safeTransportDesc": "Your shipment is handled with utmost care",
+        "delivery": "Delivery",
+        "deliveryDesc": "On-time delivery to your destination"
+    },
+    "fleet": {
+        "title": "Our Fleet",
+        "subtitle": "Modern, well-maintained vehicles equipped with the latest technology to ensure safe and efficient delivery.",
+        "vans": "Vans",
+        "vansCapacity": "Up to 1.5 tons",
+        "vansDesc": "Perfect for urban deliveries and smaller loads. Ideal for express services within cities and short-distance transport.",
+        "trucks": "Trucks",
+        "trucksCapacity": "Up to 12 tons",
+        "trucksDesc": "Versatile medium-duty trucks for regional and national transport. Equipped with modern safety features and GPS tracking.",
+        "trailers": "Trailers",
+        "trailersCapacity": "Up to 24 tons",
+        "trailersDesc": "Heavy-duty semi-trailers for large-scale freight and international shipments. Temperature-controlled options available."
+    },
+    "coverage": {
+        "title": "Our Coverage",
+        "subtitle": "We provide comprehensive logistics coverage across Romania and major European routes. Our extensive network ensures your cargo reaches its destination safely and on time, no matter the distance.",
+        "strategicLocations": "Strategic Locations",
+        "strategicLocationsDesc": "Our distribution centers are strategically positioned to provide optimal coverage and minimize transit times across all major routes.",
+        "regions": {
+            "bucharest": "Bucharest & Ilfov",
+            "transylvania": "Transylvania Region",
+            "moldova": "Moldova Region",
+            "muntenia": "Muntenia & Oltenia",
+            "westernEurope": "Western Europe",
+            "centralEurope": "Central Europe"
+        }
+    },
+    "cta": {
+        "title": "Need a Fast Transport Quote?",
+        "subtitle": "Get competitive pricing and flexible solutions tailored to your logistics needs. Our team is ready to help you find the perfect transport solution.",
+        "getQuote": "Get a Quote",
+        "available": "Available 24/7 for urgent shipments and inquiries"
+    },
+    "testimonials": {
+        "title": "What Our Clients Say",
+        "subtitle": "Don't just take our word for it. Here's what our partners have to say about working with us.",
+        "testimonial1": {
+            "quote": "VanTrans82 has been our go-to logistics partner for 5 years. Their reliability and professionalism are unmatched. Every delivery arrives on time, every time.",
+            "name": "Maria Ionescu",
+            "company": "TechCom Solutions SRL"
+        },
+        "testimonial2": {
+            "quote": "The express delivery service saved our business during a critical product launch. Exceptional service and real-time tracking gave us complete peace of mind.",
+            "name": "Alexandru Popescu",
+            "company": "Industrial Equipment Ltd"
+        },
+        "testimonial3": {
+            "quote": "Professional, efficient, and always available. Their international freight service made expanding into EU markets seamless. Highly recommended!",
+            "name": "Elena Dumitrescu",
+            "company": "Fashion Export Group"
+        }
+    },
+    "about": {
+        "title": "About VanTrans82",
+        "description1": "Founded in 2010, VanTrans82 has grown to become one of Romania's most trusted logistics partners. With over 15 years of experience, we've built our reputation on delivering excellence in every shipment.",
+        "description2": "Our mission is simple: to provide reliable, efficient, and cost-effective transport solutions that help businesses grow. We combine modern technology with personalized service to ensure your cargo arrives safely and on time.",
+        "coreValues": "Our Core Values",
+        "safety": "Safety",
+        "safetyDesc": "Every shipment is handled with the highest safety standards and care.",
+        "speed": "Speed",
+        "speedDesc": "Fast, efficient delivery without compromising on quality or security.",
+        "trust": "Trust",
+        "trustDesc": "Building lasting partnerships through transparency and reliability.",
+        "satisfiedClients": "Satisfied Clients"
+    },
+    "faq": {
+        "title": "Frequently Asked Questions",
+        "subtitle": "Have questions? We've got answers. Find quick solutions to common inquiries below.",
+        "stillHaveQuestions": "Still have questions? We're here to help.",
+        "contactUs": "Contact Us →",
+        "questions": {
+            "q1": {
+                "question": "What areas do you cover?",
+                "answer": "We provide comprehensive coverage across all of Romania and major European routes, including Western and Central Europe. Our network spans from local urban deliveries to international freight transport."
+            },
+            "q2": {
+                "question": "How do I get a transport quote?",
+                "answer": "You can request a quote by filling out our contact form, calling us directly at +40 123 456 789, or sending us an email. We typically respond within 2 hours during business hours and provide detailed pricing based on your specific needs."
+            },
+            "q3": {
+                "question": "Do you offer tracking for shipments?",
+                "answer": "Yes! All our vehicles are equipped with GPS tracking systems. You'll receive real-time updates on your shipment's location and estimated delivery time through our online portal or mobile app."
+            },
+            "q4": {
+                "question": "What types of cargo do you transport?",
+                "answer": "We handle a wide range of cargo including general freight, palletized goods, packaged products, and industrial equipment. For specialized cargo (hazardous materials, temperature-sensitive goods), please contact us to discuss your specific requirements."
+            },
+            "q5": {
+                "question": "What are your delivery timeframes?",
+                "answer": "Delivery times vary based on distance and service type. Local deliveries typically arrive within 24 hours, national transport takes 1-3 days, and international shipments range from 3-7 days. We also offer express same-day and next-day services for urgent shipments."
+            },
+            "q6": {
+                "question": "How do you ensure cargo safety?",
+                "answer": "Safety is our top priority. All our vehicles undergo regular maintenance, our drivers are extensively trained, and we have comprehensive insurance coverage. We use professional loading equipment and secure fastening systems to protect your cargo throughout transport."
+            }
+        }
+    },
+    "contact": {
+        "title": "Get In Touch",
+        "subtitle": "Ready to streamline your logistics? Contact us today for a custom quote or to discuss your transport needs.",
+        "yourName": "Your Name",
+        "emailAddress": "Email Address",
+        "message": "Message",
+        "sendMessage": "Send Message",
+        "contactInformation": "Contact Information",
+        "phone": "Phone",
+        "email": "Email",
+        "whatsapp": "WhatsApp",
+        "chatInstantly": "Chat with us instantly",
+        "address": "Address",
+        "chatOnWhatsApp": "Chat on WhatsApp",
+        "businessHours": "Business Hours",
+        "mondayFriday": "Monday - Friday: 8:00 - 18:00",
+        "saturday": "Saturday: 9:00 - 14:00",
+        "sunday": "Sunday: Closed",
+        "emergencySupport": "24/7 Emergency Support Available"
+    },
+    "footer": {
+        "description": "Your trusted partner for reliable, fast, and professional transport solutions across Romania and Europe.",
+        "quickLinks": "Quick Links",
+        "ourServices": "Our Services",
+        "roadTransport": "Road Transport",
+        "expressDelivery": "Express Delivery",
+        "internationalFreight": "International Freight",
+        "customLogistics": "Custom Logistics",
+        "contact": "Contact",
+        "rights": "All rights reserved."
+    }
+}

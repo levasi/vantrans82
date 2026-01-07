@@ -1,0 +1,183 @@
+{
+  "nav": {
+    "home": "Acasă",
+    "services": "Servicii",
+    "fleet": "Flotă",
+    "coverage": "Acoperire",
+    "about": "Despre",
+    "faq": "Întrebări",
+    "contact": "Contact",
+    "getQuote": "Solicită Ofertă"
+  },
+  "hero": {
+    "title": "Transport Rapid și Sigur de Mărfuri în România și UE",
+    "subtitle": "Soluții logistice profesionale cu livrare garantată la timp. Partenerul tău de încredere pentru transport rutier, livrare expres și transport internațional.",
+    "requestQuote": "Solicită Ofertă",
+    "ourServices": "Serviciile Noastre",
+    "onTimeDelivery": "Livrare la Timp",
+    "experience": "Experiență",
+    "monthlyShipments": "Transporturi Lunare"
+  },
+  "features": {
+    "fastDelivery": "Livrare Rapidă",
+    "fastDeliveryDesc": "Opțiuni de expediere expres disponibile",
+    "secureTransport": "Transport Sigur",
+    "secureTransportDesc": "Acoperire completă de asigurare",
+    "liveTracking": "Urmărire în Timp Real",
+    "liveTrackingDesc": "Monitorizare GPS în timp real",
+    "support": "Suport 24/7",
+    "supportDesc": "Mereu aici pentru a te ajuta"
+  },
+  "services": {
+    "title": "Serviciile Noastre",
+    "subtitle": "Soluții logistice complete adaptate nevoilor afacerii tale cu fiabilitate și eficiență.",
+    "roadTransport": "Transport Rutier",
+    "roadTransportDesc": "Servicii complete de transport terestru în România și Europa cu capabilități complete de urmărire și programare flexibilă.",
+    "expressDelivery": "Livrare Expres",
+    "expressDeliveryDesc": "Opțiuni de livrare în aceeași zi și a doua zi pentru expedieri urgente. Transport rapid, fiabil și sigur când timpul contează cel mai mult.",
+    "internationalFreight": "Transport Internațional",
+    "internationalFreightDesc": "Soluții logistice transfrontaliere cu sprijin complet pentru vamă și documentație pentru transport internațional fără probleme.",
+    "customLogistics": "Logistică Personalizată",
+    "customLogisticsDesc": "Soluții de lanț de aprovizionare personalizate proiectate pentru nevoile specifice ale afacerii tale, de la depozitare la livrare ultimul kilometru."
+  },
+  "process": {
+    "title": "Cum Funcționează",
+    "subtitle": "Procesul nostru simplificat asigură că marfa ta ajunge de la punctul A la punctul B eficient și sigur.",
+    "requestQuote": "Solicită Ofertă",
+    "requestQuoteDesc": "Distribuie detaliile și cerințele de expediere",
+    "planRoute": "Planifică Ruta",
+    "planRouteDesc": "Optimizăm cea mai bună rută de livrare pentru marfa ta",
+    "safeTransport": "Transport Sigur",
+    "safeTransportDesc": "Expedierea ta este tratată cu cea mai mare grijă",
+    "delivery": "Livrare",
+    "deliveryDesc": "Livrare la timp la destinația ta"
+  },
+  "fleet": {
+    "title": "Flota Noastră",
+    "subtitle": "Vehicule moderne, bine întreținute, echipate cu cea mai recentă tehnologie pentru a asigura livrare sigură și eficientă.",
+    "vans": "Dubă",
+    "vansCapacity": "Până la 1,5 tone",
+    "vansDesc": "Perfect pentru livrări urbane și încărcături mai mici. Ideal pentru servicii expres în orașe și transport pe distanțe scurte.",
+    "trucks": "Camioane",
+    "trucksCapacity": "Până la 12 tone",
+    "trucksDesc": "Camioane medii versatil pentru transport regional și național. Echipate cu caracteristici moderne de siguranță și urmărire GPS.",
+    "trailers": "Remorci",
+    "trailersCapacity": "Până la 24 tone",
+    "trailersDesc": "Remorci semiremorci pentru marfă la scară mare și transporturi internaționale. Opțiuni cu control de temperatură disponibile."
+  },
+  "coverage": {
+    "title": "Acoperirea Noastră",
+    "subtitle": "Oferim acoperire logistică completă în România și pe rutele majore europene. Rețeaua noastră extinsă asigură că marfa ta ajunge la destinație în siguranță și la timp, indiferent de distanță.",
+    "strategicLocations": "Locații Strategice",
+    "strategicLocationsDesc": "Centrele noastre de distribuție sunt poziționate strategic pentru a oferi acoperire optimă și a minimiza timpii de tranzit pe toate rutele majore.",
+    "regions": {
+      "bucharest": "București & Ilfov",
+      "transylvania": "Regiunea Transilvania",
+      "moldova": "Regiunea Moldova",
+      "muntenia": "Muntenia & Oltenia",
+      "westernEurope": "Europa de Vest",
+      "centralEurope": "Europa Centrală"
+    }
+  },
+  "cta": {
+    "title": "Ai Nevoie de Ofertă Rapidă de Transport?",
+    "subtitle": "Obține prețuri competitive și soluții flexibile adaptate nevoilor tale logistice. Echipa noastră este gata să te ajute să găsești soluția perfectă de transport.",
+    "getQuote": "Solicită Ofertă",
+    "available": "Disponibil 24/7 pentru expedieri urgente și întrebări"
+  },
+  "testimonials": {
+    "title": "Ce Spun Clienții Noștri",
+    "subtitle": "Nu ne crede pe cuvânt. Iată ce au de spus partenerii noștri despre colaborarea cu noi.",
+    "testimonial1": {
+      "quote": "VanTrans82 este partenerul nostru logistic de încredere de 5 ani. Fiabilitatea și profesionalismul lor sunt de neegalat. Fiecare livrare ajunge la timp, de fiecare dată.",
+      "name": "Maria Ionescu",
+      "company": "TechCom Solutions SRL"
+    },
+    "testimonial2": {
+      "quote": "Serviciul de livrare expres ne-a salvat afacerea în timpul unei lansări critice de produs. Serviciu excepțional și urmărire în timp real ne-au oferit liniște deplină.",
+      "name": "Alexandru Popescu",
+      "company": "Industrial Equipment Ltd"
+    },
+    "testimonial3": {
+      "quote": "Profesioniști, eficienți și mereu disponibili. Serviciul lor de transport internațional a făcut extinderea pe piețele UE fără probleme. Recomand cu căldură!",
+      "name": "Elena Dumitrescu",
+      "company": "Fashion Export Group"
+    }
+  },
+  "about": {
+    "title": "Despre VanTrans82",
+    "description1": "Fondată în 2010, VanTrans82 a devenit unul dintre cei mai de încredere parteneri logisici din România. Cu peste 15 ani de experiență, ne-am construit reputația pe livrarea excelenței în fiecare expediere.",
+    "description2": "Misiunea noastră este simplă: să oferim soluții de transport fiabile, eficiente și rentabile care ajută afacerile să crească. Combinăm tehnologia modernă cu serviciul personalizat pentru a ne asigura că marfa ta ajunge în siguranță și la timp.",
+    "coreValues": "Valorile Noastre de Bază",
+    "safety": "Siguranță",
+    "safetyDesc": "Fiecare expediere este tratată cu cele mai înalte standarde de siguranță și grijă.",
+    "speed": "Viteză",
+    "speedDesc": "Livrare rapidă și eficientă fără a compromite calitatea sau securitatea.",
+    "trust": "Încredere",
+    "trustDesc": "Construirea de parteneriate durabile prin transparență și fiabilitate.",
+    "satisfiedClients": "Clienți Mulțumiți"
+  },
+  "faq": {
+    "title": "Întrebări Frecvente",
+    "subtitle": "Ai întrebări? Avem răspunsuri. Găsește soluții rapide la întrebările comune de mai jos.",
+    "stillHaveQuestions": "Mai ai întrebări? Suntem aici pentru a te ajuta.",
+    "contactUs": "Contactează-ne →",
+    "questions": {
+      "q1": {
+        "question": "Ce zone acoperiți?",
+        "answer": "Oferim acoperire completă în toată România și pe rutele majore europene, inclusiv Europa de Vest și Centrală. Rețeaua noastră se întinde de la livrări urbane locale la transport internațional de marfă."
+      },
+      "q2": {
+        "question": "Cum obțin o ofertă de transport?",
+        "answer": "Poți solicita o ofertă completând formularul nostru de contact, sunându-ne direct la +40 123 456 789 sau trimitându-ne un email. Răspundem de obicei în 2 ore în timpul orelor de lucru și oferim prețuri detaliate bazate pe nevoile tale specifice."
+      },
+      "q3": {
+        "question": "Oferiți urmărire pentru expedieri?",
+        "answer": "Da! Toate vehiculele noastre sunt echipate cu sisteme de urmărire GPS. Vei primi actualizări în timp real despre locația expedierii tale și timpul estimat de livrare prin portalul nostru online sau aplicația mobilă."
+      },
+      "q4": {
+        "question": "Ce tipuri de marfă transportați?",
+        "answer": "Prelucrăm o gamă largă de marfă, inclusiv marfă generală, mărfuri pe palete, produse ambalate și echipamente industriale. Pentru marfă specializată (materiale periculoase, bunuri sensibile la temperatură), te rugăm să ne contactezi pentru a discuta cerințele tale specifice."
+      },
+      "q5": {
+        "question": "Care sunt termenii voștri de livrare?",
+        "answer": "Termenii de livrare variază în funcție de distanță și tipul de serviciu. Livrările locale ajung de obicei în 24 de ore, transportul național durează 1-3 zile, iar transporturile internaționale variază de la 3-7 zile. Oferim și servicii expres în aceeași zi și a doua zi pentru expedieri urgente."
+      },
+      "q6": {
+        "question": "Cum asigurați siguranța mărfii?",
+        "answer": "Siguranța este prioritatea noastră principală. Toate vehiculele noastre sunt supuse întreținerii regulate, șoferii noștri sunt instruiți extensiv și avem acoperire completă de asigurare. Folosim echipamente profesionale de încărcare și sisteme de fixare sigure pentru a proteja marfa ta pe tot parcursul transportului."
+      }
+    }
+  },
+  "contact": {
+    "title": "Ia Legătura",
+    "subtitle": "Gata să-ți simplifici logistica? Contactează-ne astăzi pentru o ofertă personalizată sau pentru a discuta nevoile tale de transport.",
+    "yourName": "Numele Tău",
+    "emailAddress": "Adresa de Email",
+    "message": "Mesaj",
+    "sendMessage": "Trimite Mesaj",
+    "contactInformation": "Informații de Contact",
+    "phone": "Telefon",
+    "email": "Email",
+    "whatsapp": "WhatsApp",
+    "chatInstantly": "Chat cu noi instant",
+    "address": "Adresă",
+    "chatOnWhatsApp": "Chat pe WhatsApp",
+    "businessHours": "Program de Lucru",
+    "mondayFriday": "Luni - Vineri: 8:00 - 18:00",
+    "saturday": "Sâmbătă: 9:00 - 14:00",
+    "sunday": "Duminică: Închis",
+    "emergencySupport": "Suport de Urgență Disponibil 24/7"
+  },
+  "footer": {
+    "description": "Partenerul tău de încredere pentru soluții de transport fiabile, rapide și profesionale în România și Europa.",
+    "quickLinks": "Linkuri Rapide",
+    "ourServices": "Serviciile Noastre",
+    "roadTransport": "Transport Rutier",
+    "expressDelivery": "Livrare Expres",
+    "internationalFreight": "Transport Internațional",
+    "customLogistics": "Logistică Personalizată",
+    "contact": "Contact",
+    "rights": "Toate drepturile rezervate."
+  }
+}
