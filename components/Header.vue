@@ -1,6 +1,5 @@
 <template>
     <header class="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
-        teeeest
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16 md:h-20">
                 <!-- Logo -->
