@@ -1,4 +1,5 @@
-import { readFile, writeFile } from 'fs/promises'
+import { getDb } from '~/server/utils/db'
+import { writeFile } from 'fs/promises'
 import { join } from 'path'
 
 export default defineEventHandler(async (event) => {
@@ -22,9 +23,54 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    const filePath = join(process.cwd(), 'locales', `${lang}.json`)
+    const db = getDb()
     
-    // Write translations to file with proper formatting
+    // Save to database if available
+    if (db) {
+      // Ensure translations table exists
+      await db.query(`
+        CREATE TABLE IF NOT EXISTS translations (
+          id SERIAL PRIMARY KEY,
+          lang VARCHAR(10) NOT NULL,
+          key_path VARCHAR(500) NOT NULL,
+          value TEXT NOT NULL,
+          UNIQUE(lang, key_path)
+        )
+      `)
+
+      // Flatten translations for database storage
+      const flatten = (obj: any, prefix = ''): Array<{ key: string; value: string }> => {
+        const result: Array<{ key: string; value: string }> = []
+        
+        for (const key in obj) {
+          const newKey = prefix ? `${prefix}.${key}` : key
+          
+          if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
+            result.push(...flatten(obj[key], newKey))
+          } else {
+            result.push({ key: newKey, value: String(obj[key] || '') })
+          }
+        }
+        
+        return result
+      }
+      
+      const flattened = flatten(translations)
+      
+      // Delete existing translations for this language
+      await db.query('DELETE FROM translations WHERE lang = $1', [lang])
+      
+      // Insert new translations
+      for (const item of flattened) {
+        await db.query(
+          'INSERT INTO translations (lang, key_path, value) VALUES ($1, $2, $3)',
+          [lang, item.key, item.value]
+        )
+      }
+    }
+    
+    // Also save to file as backup
+    const filePath = join(process.cwd(), 'locales', `${lang}.json`)
     const formattedJson = JSON.stringify(translations, null, 2)
     await writeFile(filePath, formattedJson, 'utf-8')
     

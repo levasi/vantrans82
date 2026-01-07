@@ -30,6 +30,10 @@ export default defineNuxtConfig({
       cookieKey: 'i18n_redirected',
       redirectOn: 'root',
       alwaysRedirect: false
+    },
+    // Enable dynamic loading
+    compilation: {
+      strictMessage: false
     }
   }
 })
