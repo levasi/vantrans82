@@ -1,7 +1,7 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 flex items-center justify-center px-4">
-    <div class="w-full max-w-md">
-      <div class="bg-white rounded-2xl shadow-2xl p-8">
+  <div class="min-h-screen bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 flex items-center justify-center px-4 py-8">
+    <div class="w-full max-w-md mx-auto">
+      <div class="bg-white rounded-2xl shadow-2xl p-6 sm:p-8">
         <!-- Logo -->
         <div class="flex justify-center mb-8">
           <NuxtImg src="/vtlogo.png" alt="VanTrans82" class="h-16 w-auto" />
@@ -61,6 +61,16 @@
             </span>
           </button>
         </form>
+
+        <!-- Register Link -->
+        <div class="mt-6 text-center">
+          <p class="text-sm text-gray-600">
+            Don't have an account?
+            <NuxtLink to="/admin/register" class="text-blue-900 font-medium hover:underline">
+              Create one
+            </NuxtLink>
+          </p>
+        </div>
 
         <!-- Footer -->
         <p class="mt-6 text-center text-sm text-gray-500">

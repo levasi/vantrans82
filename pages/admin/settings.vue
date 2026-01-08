@@ -154,6 +154,32 @@
             </div>
           </div>
 
+          <!-- Account Settings -->
+          <div class="bg-white rounded-xl shadow-sm border border-red-200 p-4 sm:p-6 mb-6">
+            <h2 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <Trash2 class="w-5 h-5 text-red-600" />
+              <span class="text-red-600">Danger Zone</span>
+            </h2>
+            <div class="space-y-4">
+              <div>
+                <h3 class="text-base font-medium text-gray-900 mb-2">Delete Account</h3>
+                <p class="text-sm text-gray-600 mb-4">
+                  Once you delete your account, there is no going back. This action cannot be undone.
+                  You will be logged out immediately and will need to create a new account to access the admin area.
+                </p>
+                <button
+                  @click="handleDeleteAccount"
+                  :disabled="deleting"
+                  class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                  <Trash2 v-if="!deleting" class="w-4 h-4" />
+                  <div v-else class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  {{ deleting ? 'Deleting...' : 'Delete My Account' }}
+                </button>
+              </div>
+            </div>
+          </div>
+
           <!-- Save Button -->
           <div class="flex flex-col sm:flex-row justify-end gap-4">
             <button
@@ -180,7 +206,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { Save, Globe, Mail, Server } from 'lucide-vue-next'
+import { Save, Globe, Mail, Server, Trash2 } from 'lucide-vue-next'
 
 definePageMeta({
   middleware: 'admin',
@@ -212,8 +238,11 @@ const systemInfo = ref({
 })
 
 const saving = ref(false)
+const deleting = ref(false)
 const message = ref('')
 const messageType = ref<'success' | 'error'>('success')
+const { user, logout } = useAuth()
+const router = useRouter()
 
 // Load settings
 const loadSettings = async () => {
@@ -253,6 +282,62 @@ const saveSettings = async () => {
     messageType.value = 'error'
   } finally {
     saving.value = false
+  }
+}
+
+// Delete account
+const handleDeleteAccount = async () => {
+  const confirmed = confirm(
+    '⚠️ WARNING: This will permanently delete your account!\n\n' +
+    'This action cannot be undone. You will be logged out immediately.\n\n' +
+    'Are you absolutely sure you want to delete your account?'
+  )
+
+  if (!confirmed) {
+    return
+  }
+
+  // Double confirmation
+  const doubleConfirmed = confirm(
+    'This is your last chance to cancel.\n\n' +
+    'Click OK to permanently delete your account.'
+  )
+
+  if (!doubleConfirmed) {
+    return
+  }
+
+  deleting.value = true
+  message.value = ''
+
+  try {
+    const token = sessionStorage.getItem('admin_token')
+    if (!token) {
+      throw new Error('No authentication token found')
+    }
+
+    await $fetch('/api/admin/delete-account', {
+      method: 'POST',
+      query: { token }
+    })
+
+    message.value = 'Account deleted successfully. Logging out...'
+    messageType.value = 'success'
+
+    // Logout and redirect after a short delay
+    setTimeout(() => {
+      logout()
+      router.push('/admin/login')
+    }, 1500)
+  } catch (error: unknown) {
+    if (error && typeof error === 'object' && 'data' in error) {
+      const errorData = error as { data?: { message?: string } }
+      message.value = errorData.data?.message || 'Failed to delete account'
+    } else {
+      message.value = 'An error occurred while deleting your account'
+    }
+    messageType.value = 'error'
+    deleting.value = false
   }
 }
 

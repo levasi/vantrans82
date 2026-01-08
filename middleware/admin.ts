@@ -30,19 +30,24 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         // Verify with server (this will update state if token is valid)
         await checkAuth()
 
-        // If authenticated and on login page, redirect to admin dashboard
-        if (isAuthenticated.value && to.path === '/admin/login') {
+        // If authenticated and on login/register page, redirect to admin dashboard
+        if (isAuthenticated.value && (to.path === '/admin/login' || to.path === '/admin/register')) {
             return navigateTo('/admin')
         }
 
-        // If authenticated and not on login page, allow access
-        if (isAuthenticated.value && to.path !== '/admin/login') {
+        // If authenticated and not on login/register page, allow access
+        if (isAuthenticated.value && to.path !== '/admin/login' && to.path !== '/admin/register') {
             return
         }
     }
 
-    // No token or not authenticated - redirect to login if not already there
-    if (!isAuthenticated.value && to.path !== '/admin/login') {
+    // No token or not authenticated - allow access to login and register pages
+    if (!isAuthenticated.value && (to.path === '/admin/login' || to.path === '/admin/register')) {
+        return
+    }
+
+    // No token or not authenticated - redirect to login if not on login/register page
+    if (!isAuthenticated.value && to.path !== '/admin/login' && to.path !== '/admin/register') {
         return navigateTo('/admin/login')
     }
 })
