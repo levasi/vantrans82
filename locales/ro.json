@@ -13,7 +13,7 @@
     "title": "Transport Rapid și Sigur de Mărfuri în România și UE",
     "subtitle": "Soluții logistice profesionale cu livrare garantată la timp. Partenerul tău de încredere pentru transport rutier, livrare expres și transport internațional.",
     "requestQuote": "Solicită Ofertă",
-    "ourServices": "Serviciile Noastre",
+    "ourServices": "Servicii",
     "onTimeDelivery": "Livrare la Timp",
     "experience": "Experiență",
     "monthlyShipments": "Transporturi Lunare"
@@ -42,7 +42,7 @@
     "satisfiedClients": "Clienți Mulțumiți"
   },
   "services": {
-    "title": "Serviciile Noastre",
+    "title": "Servicii",
     "subtitle": "Soluții logistice complete adaptate nevoilor afacerii tale cu fiabilitate și eficiență.",
     "roadTransport": "Transport Rutier",
     "roadTransportDesc": "Servicii complete de transport terestru în România și Europa cu capabilități complete de urmărire și programare flexibilă.",
@@ -172,7 +172,7 @@
   "footer": {
     "description": "Partenerul tău de încredere pentru soluții de transport fiabile, rapide și profesionale în România și Europa.",
     "quickLinks": "Linkuri Rapide",
-    "ourServices": "Serviciile Noastre",
+    "ourServices": "Servicii",
     "roadTransport": "Transport Rutier",
     "expressDelivery": "Livrare Expres",
     "internationalFreight": "Transport Internațional",
