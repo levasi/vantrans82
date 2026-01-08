@@ -5,18 +5,32 @@ let pool: pg.Pool | null = null
 
 export const getDb = () => {
   if (!pool) {
-    // Prefer private network connection to avoid egress fees on Railway
-    // Use DATABASE_PRIVATE_URL if available (Railway private network)
-    // Fall back to DATABASE_URL (public endpoint)
-    const connectionString = process.env.DATABASE_PRIVATE_URL || process.env.DATABASE_URL
+    let connectionString: string | undefined
     
-    if (!connectionString) {
-      // In development, allow graceful degradation
-      if (process.env.NODE_ENV === 'development') {
-        console.warn('DATABASE_URL not set - database features will be disabled')
+    // In development, prioritize local database to avoid affecting production
+    if (process.env.NODE_ENV === 'development' || !process.env.NODE_ENV) {
+      // Development mode: use local database if available
+      connectionString = process.env.DATABASE_LOCAL_URL || process.env.DATABASE_URL
+      
+      if (!connectionString) {
+        console.warn('DATABASE_LOCAL_URL or DATABASE_URL not set - database features will be disabled')
+        console.warn('To use a local database, set DATABASE_LOCAL_URL in your .env file')
         return null as any
       }
-      throw new Error('DATABASE_URL or DATABASE_PRIVATE_URL environment variable is not set')
+      
+      // Warn if using production database in development
+      if (connectionString.includes('railway') || connectionString.includes('railway.internal')) {
+        console.warn('⚠️  WARNING: You are connecting to a Railway database in development mode!')
+        console.warn('⚠️  This could affect production data. Consider using DATABASE_LOCAL_URL for local development.')
+      }
+    } else {
+      // Production mode: use Railway database
+      // Prefer private network connection to avoid egress fees on Railway
+      connectionString = process.env.DATABASE_PRIVATE_URL || process.env.DATABASE_URL
+      
+      if (!connectionString) {
+        throw new Error('DATABASE_URL or DATABASE_PRIVATE_URL environment variable is not set')
+      }
     }
 
     // Parse connection string to determine if we need SSL
@@ -32,6 +46,10 @@ export const getDb = () => {
     pool.on('error', (err) => {
       console.error('Unexpected error on idle client', err)
     })
+    
+    // Log which database we're connecting to (without sensitive info)
+    const dbInfo = connectionString.replace(/:[^:@]+@/, ':****@')
+    console.log(`📊 Database connection: ${dbInfo.substring(0, 50)}...`)
   }
 
   return pool

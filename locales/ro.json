@@ -28,6 +28,19 @@
     "support": "Suport 24/7",
     "supportDesc": "Mereu aici pentru a te ajuta"
   },
+  "about": {
+    "safetyDesc": "Fiecare expediere este tratată cu cele mai înalte standarde de siguranță și grijă.",
+    "speed": "Viteză",
+    "speedDesc": "Livrare rapidă și eficientă fără a compromite calitatea sau securitatea.",
+    "title": "Despre noi",
+    "description1": "Fondată în 2010, VanTrans82 a devenit unul dintre cei mai de încredere parteneri logisici din România. Cu peste 15 ani de experiență, ne-am construit reputația pe livrarea excelenței în fiecare expediere.",
+    "description2": "Misiunea noastră este simplă: să oferim soluții de transport fiabile, eficiente și rentabile care ajută afacerile să crească. Combinăm tehnologia modernă cu serviciul personalizat pentru a ne asigura că marfa ta ajunge în siguranță și la timp.",
+    "coreValues": "Valorile noastre de bază",
+    "safety": "Siguranță",
+    "trust": "Încredere",
+    "trustDesc": "Construirea de parteneriate durabile prin transparență și fiabilitate.",
+    "satisfiedClients": "Clienți Mulțumiți"
+  },
   "services": {
     "title": "Serviciile Noastre",
     "subtitle": "Soluții logistice complete adaptate nevoilor afacerii tale cu fiabilitate și eficiență.",
@@ -103,19 +116,6 @@
       "name": "Elena Dumitrescu",
       "company": "Fashion Export Group"
     }
-  },
-  "about": {
-    "title": "Despre noi",
-    "description1": "Fondată în 2010, VanTrans82 a devenit unul dintre cei mai de încredere parteneri logisici din România. Cu peste 15 ani de experiență, ne-am construit reputația pe livrarea excelenței în fiecare expediere.",
-    "description2": "Misiunea noastră este simplă: să oferim soluții de transport fiabile, eficiente și rentabile care ajută afacerile să crească. Combinăm tehnologia modernă cu serviciul personalizat pentru a ne asigura că marfa ta ajunge în siguranță și la timp.",
-    "coreValues": "Valorile noastre de bază",
-    "safety": "Siguranță",
-    "safetyDesc": "Fiecare expediere este tratată cu cele mai înalte standarde de siguranță și grijă.",
-    "speed": "Viteză",
-    "speedDesc": "Livrare rapidă și eficientă fără a compromite calitatea sau securitatea.",
-    "trust": "Încredere",
-    "trustDesc": "Construirea de parteneriate durabile prin transparență și fiabilitate.",
-    "satisfiedClients": "Clienți Mulțumiți"
   },
   "faq": {
     "title": "Întrebări frecvente",

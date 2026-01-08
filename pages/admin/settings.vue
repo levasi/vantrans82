@@ -1,14 +1,14 @@
 <template>
   <div class="min-h-screen bg-gray-50">
-    <AdminHeader />
+    <AdminHeader @toggle-sidebar="sidebarOpen = !sidebarOpen" />
     <div class="flex">
-      <AdminSidebar />
-      <main class="flex-1 p-8">
+      <AdminSidebar :is-open="sidebarOpen" @close="sidebarOpen = false" />
+      <main class="flex-1 p-4 sm:p-6 lg:p-8 lg:ml-0">
         <div class="max-w-4xl mx-auto">
           <!-- Header -->
-          <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900 mb-2">Settings</h1>
-            <p class="text-gray-600">Manage your website settings and configuration</p>
+          <div class="mb-6 sm:mb-8">
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Settings</h1>
+            <p class="text-sm sm:text-base text-gray-600">Manage your website settings and configuration</p>
           </div>
 
           <!-- Success/Error Messages -->
@@ -20,8 +20,8 @@
           </div>
 
           <!-- General Settings -->
-          <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+          <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 mb-6">
+            <h2 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <Globe class="w-5 h-5" />
               General Settings
             </h2>
@@ -66,8 +66,8 @@
           </div>
 
           <!-- Email Settings -->
-          <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+          <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 mb-6">
+            <h2 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <Mail class="w-5 h-5" />
               Email Settings
             </h2>
@@ -81,7 +81,7 @@
                   placeholder="smtp.example.com"
                 />
               </div>
-              <div class="grid grid-cols-2 gap-4">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">SMTP Port</label>
                   <input
@@ -124,13 +124,13 @@
           </div>
 
           <!-- System Information -->
-          <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+          <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 mb-6">
+            <h2 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <Server class="w-5 h-5" />
               System Information
             </h2>
             <div class="space-y-3">
-              <div class="flex justify-between items-center py-2 border-b border-gray-100">
+              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 py-2 border-b border-gray-100">
                 <span class="text-sm text-gray-600">Database Status</span>
                 <span :class="[
                   'px-3 py-1 rounded-full text-xs font-medium',
@@ -139,15 +139,15 @@
                   {{ systemInfo.dbConnected ? 'Connected' : 'Disconnected' }}
                 </span>
               </div>
-              <div class="flex justify-between items-center py-2 border-b border-gray-100">
+              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 py-2 border-b border-gray-100">
                 <span class="text-sm text-gray-600">Environment</span>
                 <span class="text-sm font-medium text-gray-900">{{ systemInfo.environment }}</span>
               </div>
-              <div class="flex justify-between items-center py-2 border-b border-gray-100">
+              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 py-2 border-b border-gray-100">
                 <span class="text-sm text-gray-600">Node.js Version</span>
                 <span class="text-sm font-medium text-gray-900">{{ systemInfo.nodeVersion }}</span>
               </div>
-              <div class="flex justify-between items-center py-2">
+              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 py-2">
                 <span class="text-sm text-gray-600">Uptime</span>
                 <span class="text-sm font-medium text-gray-900">{{ systemInfo.uptime }}</span>
               </div>
@@ -155,7 +155,7 @@
           </div>
 
           <!-- Save Button -->
-          <div class="flex justify-end gap-4">
+          <div class="flex flex-col sm:flex-row justify-end gap-4">
             <button
               @click="loadSettings"
               class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
@@ -186,6 +186,8 @@ definePageMeta({
   middleware: 'admin',
   layout: false
 })
+
+const sidebarOpen = ref(false)
 
 // Auth is handled by middleware
 

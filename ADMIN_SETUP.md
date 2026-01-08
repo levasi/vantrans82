@@ -26,10 +26,25 @@ If you need to use the public endpoint (will incur egress fees):
   - Replace `PASSWORD`, `HOST`, `PORT`, and `DATABASE` with your actual Railway database credentials
 
 **For Local Development:**
+⚠️ **IMPORTANT**: To prevent accidentally modifying production data, use `DATABASE_LOCAL_URL` for local development.
+
 Create a `.env` file in the project root (this file is gitignored):
 ```
-DATABASE_URL=postgresql://user:password@localhost:5432/vantrans82
+# Use DATABASE_LOCAL_URL for local development to avoid affecting production
+DATABASE_LOCAL_URL=postgresql://user:password@localhost:5432/vantrans82_local
+
+# DO NOT set DATABASE_URL or DATABASE_PRIVATE_URL in local .env
+# These are only for production (Railway will set them automatically)
 ```
+
+**Setting up a local PostgreSQL database:**
+1. Install PostgreSQL locally (if not already installed)
+2. Create a local database:
+   ```bash
+   createdb vantrans82_local
+   ```
+3. Update your `.env` file with the local connection string
+4. The app will automatically use the local database in development mode
 
 ### 3. Initialize Database and Create First Admin User
 
@@ -68,14 +83,43 @@ VALUES (
 
 ## Local Development
 
-For local development, you can:
+**Database Separation:**
+The application automatically separates local and production databases:
+- **Development mode**: Uses `DATABASE_LOCAL_URL` (if set) or falls back to `DATABASE_URL`
+- **Production mode**: Uses `DATABASE_PRIVATE_URL` or `DATABASE_URL` (set by Railway)
 
-1. Set up a local PostgreSQL database, or
-2. Use Railway's database connection string locally
-3. Create a `.env` file with:
+This prevents accidentally modifying production data during local development.
+
+**Setting up local development:**
+
+1. **Install PostgreSQL locally** (if not already installed):
+   - macOS: `brew install postgresql`
+   - Linux: `sudo apt-get install postgresql`
+   - Windows: Download from [postgresql.org](https://www.postgresql.org/download/)
+
+2. **Create a local database:**
+   ```bash
+   createdb vantrans82_local
    ```
-   DATABASE_URL=postgresql://user:password@localhost:5432/vantrans82
+
+3. **Create a `.env` file** in the project root:
+   ```env
+   DATABASE_LOCAL_URL=postgresql://your_username:your_password@localhost:5432/vantrans82_local
    ```
+   Replace `your_username` and `your_password` with your PostgreSQL credentials.
+
+4. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
+
+5. **Initialize the local database:**
+   The database tables will be created automatically on first run.
+
+**⚠️ Important Notes:**
+- Never set `DATABASE_URL` or `DATABASE_PRIVATE_URL` in your local `.env` file
+- If you see a warning about connecting to Railway in development, check your `.env` file
+- Your local database is completely separate from production
 
 ## Security Notes
 

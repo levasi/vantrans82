@@ -9,7 +9,11 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "start": "node .output/server/index.mjs",
-    "postinstall": "nuxt prepare || true"
+    "postinstall": "nuxt prepare || true",
+    "db:setup": "bash scripts/setup-local-db.sh",
+    "db:start": "docker compose up -d postgres",
+    "db:stop": "docker compose down",
+    "db:logs": "docker compose logs -f postgres"
   },
   "dependencies": {
     "@nuxt/image": "^2.0.0",

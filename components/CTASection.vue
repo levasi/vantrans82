@@ -28,11 +28,11 @@
             <ArrowRight class="w-5 h-5" />
           </button>
           <a
-            href="tel:+40123456789"
+            :href="`tel:${formatPhoneForTel(settings.phoneNumber)}`"
             class="px-8 py-4 bg-white/10 text-white border-2 border-white/30 rounded-lg hover:bg-white/20 transition-colors backdrop-blur-sm flex items-center gap-2 font-medium text-lg"
           >
             <Phone class="w-5 h-5" />
-            +40 123 456 789
+            {{ settings.phoneNumber }}
           </a>
         </div>
 
@@ -46,6 +46,13 @@
 
 <script setup>
 import { ArrowRight, Phone } from 'lucide-vue-next'
+import { onMounted } from 'vue'
+
+const { settings, loadSettings, formatPhoneForTel } = useSettings()
+
+onMounted(() => {
+  loadSettings()
+})
 
 const scrollToContact = () => {
   const element = document.getElementById('contact')

@@ -1,6 +1,6 @@
 {
   "nav": {
-    "home": "Home",
+    "home": "Homeaaa",
     "services": "Services",
     "fleet": "Fleet",
     "coverage": "Coverage",
@@ -27,6 +27,19 @@
     "liveTrackingDesc": "Real-time GPS monitoring",
     "support": "24/7 Support",
     "supportDesc": "Always here to help"
+  },
+  "about": {
+    "safetyDesc": "Every shipment is handled with the highest safety standards and care.",
+    "speed": "Speed",
+    "speedDesc": "Fast, efficient delivery without compromising on quality or security.",
+    "title": "About VanTrans82",
+    "description1": "Founded in 2010, VanTrans82 has grown to become one of Romania's most trusted logistics partners. With over 15 years of experience, we've built our reputation on delivering excellence in every shipment.",
+    "description2": "Our mission is simple: to provide reliable, efficient, and cost-effective transport solutions that help businesses grow. We combine modern technology with personalized service to ensure your cargo arrives safely and on time.",
+    "coreValues": "Our Core Values",
+    "safety": "Safety",
+    "trust": "Trust",
+    "trustDesc": "Building lasting partnerships through transparency and reliability.",
+    "satisfiedClients": "Satisfied Clients"
   },
   "services": {
     "title": "Our Services",
@@ -103,19 +116,6 @@
       "name": "Elena Dumitrescu",
       "company": "Fashion Export Group"
     }
-  },
-  "about": {
-    "title": "About VanTrans82",
-    "description1": "Founded in 2010, VanTrans82 has grown to become one of Romania's most trusted logistics partners. With over 15 years of experience, we've built our reputation on delivering excellence in every shipment.",
-    "description2": "Our mission is simple: to provide reliable, efficient, and cost-effective transport solutions that help businesses grow. We combine modern technology with personalized service to ensure your cargo arrives safely and on time.",
-    "coreValues": "Our Core Values",
-    "safety": "Safety",
-    "safetyDesc": "Every shipment is handled with the highest safety standards and care.",
-    "speed": "Speed",
-    "speedDesc": "Fast, efficient delivery without compromising on quality or security.",
-    "trust": "Trust",
-    "trustDesc": "Building lasting partnerships through transparency and reliability.",
-    "satisfiedClients": "Satisfied Clients"
   },
   "faq": {
     "title": "Frequently Asked Questions",

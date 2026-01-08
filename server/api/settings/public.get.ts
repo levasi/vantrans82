@@ -4,11 +4,20 @@ export default defineEventHandler(async (event) => {
   try {
     const db = getDb()
     
+    // Default settings
+    const defaultSettings = {
+      showLanguageSwitch: true,
+      companyName: 'VanTrans82',
+      phoneNumber: '+40 123 456 789',
+      contactEmail: 'contact@vantrans82.ro',
+      address: 'Str. Logistica nr. 123\nBucharest, Romania'
+    }
+    
     if (!db) {
       // Return default settings if database is not available
       return {
         success: true,
-        showLanguageSwitch: true
+        ...defaultSettings
       }
     }
 
@@ -22,28 +31,36 @@ export default defineEventHandler(async (event) => {
       )
     `)
 
-    // Load showLanguageSwitch setting from database
-    const result = await db.query('SELECT value FROM settings WHERE key = $1', ['showLanguageSwitch'])
+    // Load all settings from database
+    const result = await db.query('SELECT key, value FROM settings')
     
-    let showLanguageSwitch = true // default value
-    
-    if (result.rows.length > 0) {
+    const settings: Record<string, any> = {}
+    result.rows.forEach((row: any) => {
       try {
-        showLanguageSwitch = JSON.parse(result.rows[0].value)
+        settings[row.key] = JSON.parse(row.value)
       } catch {
-        showLanguageSwitch = result.rows[0].value === 'true'
+        settings[row.key] = row.value
       }
-    }
+    })
 
+    // Merge with defaults
     return {
       success: true,
-      showLanguageSwitch
+      showLanguageSwitch: settings.showLanguageSwitch ?? defaultSettings.showLanguageSwitch,
+      companyName: settings.companyName ?? defaultSettings.companyName,
+      phoneNumber: settings.phoneNumber ?? defaultSettings.phoneNumber,
+      contactEmail: settings.contactEmail ?? defaultSettings.contactEmail,
+      address: settings.address ?? defaultSettings.address
     }
   } catch (error: any) {
-    // On error, return default value
+    // On error, return default values
     return {
       success: true,
-      showLanguageSwitch: true
+      showLanguageSwitch: true,
+      companyName: 'VanTrans82',
+      phoneNumber: '+40 123 456 789',
+      contactEmail: 'contact@vantrans82.ro',
+      address: 'Str. Logistica nr. 123\nBucharest, Romania'
     }
   }
 })

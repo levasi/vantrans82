@@ -82,8 +82,8 @@
                 </div>
                 <div>
                   <div class="font-semibold text-gray-900 mb-1">{{ $t('contact.phone') }}</div>
-                  <a href="tel:+40123456789" class="text-gray-600 hover:text-orange-600 transition-colors">
-                    +40 123 456 789
+                  <a :href="`tel:${formatPhoneForTel(settings.phoneNumber)}`" class="text-gray-600 hover:text-orange-600 transition-colors">
+                    {{ settings.phoneNumber }}
                   </a>
                 </div>
               </div>
@@ -94,8 +94,8 @@
                 </div>
                 <div>
                   <div class="font-semibold text-gray-900 mb-1">{{ $t('contact.email') }}</div>
-                  <a href="mailto:contact@vantrans82.ro" class="text-gray-600 hover:text-orange-600 transition-colors">
-                    contact@vantrans82.ro
+                  <a :href="`mailto:${settings.contactEmail}`" class="text-gray-600 hover:text-orange-600 transition-colors">
+                    {{ settings.contactEmail }}
                   </a>
                 </div>
               </div>
@@ -107,12 +107,12 @@
                 <div>
                   <div class="font-semibold text-gray-900 mb-1">{{ $t('contact.whatsapp') }}</div>
                   <a 
-                    href="https://wa.me/40123456789" 
+                    :href="`https://wa.me/${formatPhoneForWhatsApp(settings.phoneNumber)}`" 
                     target="_blank"
                     rel="noopener noreferrer"
                     class="text-gray-600 hover:text-green-600 transition-colors inline-flex items-center gap-1"
                   >
-                    +40 123 456 789
+                    {{ settings.phoneNumber }}
                   </a>
                   <p class="text-xs text-gray-500 mt-1">{{ $t('contact.chatInstantly') }}</p>
                 </div>
@@ -124,10 +124,7 @@
                 </div>
                 <div>
                   <div class="font-semibold text-gray-900 mb-1">{{ $t('contact.address') }}</div>
-                  <p class="text-gray-600">
-                    Str. Logistica nr. 123<br />
-                    Bucharest, Romania<br />
-                    010101
+                  <p class="text-gray-600" v-html="settings.address.replace(/\n/g, '<br />')">
                   </p>
                 </div>
               </div>
@@ -136,7 +133,7 @@
 
           <!-- WhatsApp Quick Action -->
           <a
-            href="https://wa.me/40123456789?text=Hello! I'm interested in your transport services."
+            :href="`https://wa.me/${formatPhoneForWhatsApp(settings.phoneNumber)}?text=Hello! I'm interested in your transport services.`"
             target="_blank"
             rel="noopener noreferrer"
             class="block w-full p-4 bg-green-600 hover:bg-green-700 text-white rounded-xl transition-colors text-center font-semibold flex items-center justify-center gap-2"
@@ -161,8 +158,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { Mail, Phone, MapPin, Send, MessageCircle } from 'lucide-vue-next'
+
+const { settings, loadSettings, formatPhoneForTel, formatPhoneForWhatsApp } = useSettings()
+
+onMounted(() => {
+  loadSettings()
+})
 
 const formData = ref({
   name: '',

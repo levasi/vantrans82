@@ -128,7 +128,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { Menu, X } from 'lucide-vue-next'
 
 const { locale, setLocale } = useI18n()
@@ -159,16 +159,15 @@ const switchLocale = (newLocale) => {
     setLocale(newLocale)
 }
 
-// Load language switch setting
-onMounted(async () => {
-    try {
-        const response = await $fetch('/api/settings/public')
-        if (response && typeof response.showLanguageSwitch !== 'undefined') {
-            showLanguageSwitch.value = response.showLanguageSwitch
-        }
-    } catch (error) {
-        // Default to showing language switch on error
-        console.error('Failed to load language switch setting:', error)
-    }
+// Load settings
+const { settings, loadSettings } = useSettings()
+
+onMounted(() => {
+    loadSettings()
 })
+
+// Watch for settings changes to update language switch
+watch(() => settings.value.showLanguageSwitch, (newValue) => {
+    showLanguageSwitch.value = newValue
+}, { immediate: true })
 </script>

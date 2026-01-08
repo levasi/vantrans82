@@ -1,22 +1,22 @@
 <template>
     <div class="min-h-screen bg-gray-50">
-        <AdminHeader />
+        <AdminHeader @toggle-sidebar="sidebarOpen = !sidebarOpen" />
         <div class="flex">
-            <AdminSidebar />
-            <main class="flex-1 p-8">
-                <div class="max-w-7xl mx-auto">
+            <AdminSidebar :is-open="sidebarOpen" @close="sidebarOpen = false" />
+            <main class="flex-1 p-4 sm:p-6 lg:p-8 lg:ml-0 overflow-x-hidden">
+                <div class="max-w-7xl mx-auto w-full">
                     <!-- Header -->
-                    <div class="mb-8">
-                        <h1 class="text-3xl font-bold text-gray-900 mb-2">Translations</h1>
-                        <p class="text-gray-600">Manage all translated texts for your website</p>
+                    <div class="mb-6 sm:mb-8">
+                        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Translations</h1>
+                        <p class="text-sm sm:text-base text-gray-600">Manage all translated texts for your website</p>
                     </div>
 
                     <!-- Language Switch Toggle -->
-                    <div class="mb-6 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <div class="flex items-center justify-between">
+                    <div class="mb-6 bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                             <div>
-                                <h3 class="text-lg font-semibold text-gray-900 mb-1">Language Switcher</h3>
-                                <p class="text-sm text-gray-600">Show or hide the language switcher in the storefront
+                                <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-1">Language Switcher</h3>
+                                <p class="text-xs sm:text-sm text-gray-600">Show or hide the language switcher in the storefront
                                 </p>
                             </div>
                             <label class="relative inline-flex items-center cursor-pointer">
@@ -48,7 +48,7 @@
                     <!-- Save Button -->
                     <div class="mb-6 flex justify-end">
                         <button @click="saveTranslations" :disabled="saving"
-                            class="px-6 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-950 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+                            class="w-full sm:w-auto px-6 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-950 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
                             <Save v-if="!saving" class="w-5 h-5" />
                             <div v-else class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                             {{ saving ? 'Saving...' : 'Save Changes' }}
@@ -66,20 +66,22 @@
                     <!-- Translations Table -->
                     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                         <div class="overflow-x-auto">
-                            <table class="w-full">
+                            <table class="w-full min-w-[600px]">
                                 <thead class="bg-gray-50 border-b border-gray-200">
                                     <tr>
-                                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Key</th>
-                                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+                                        <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-gray-900">Key</th>
+                                        <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-gray-900">
                                             <div class="flex items-center gap-2">
                                                 <span class="inline-block w-2 h-2 rounded-full bg-blue-600"></span>
-                                                English (EN)
+                                                <span class="hidden sm:inline">English (EN)</span>
+                                                <span class="sm:hidden">EN</span>
                                             </div>
                                         </th>
-                                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+                                        <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-gray-900">
                                             <div class="flex items-center gap-2">
                                                 <span class="inline-block w-2 h-2 rounded-full bg-red-600"></span>
-                                                Română (RO)
+                                                <span class="hidden sm:inline">Română (RO)</span>
+                                                <span class="sm:hidden">RO</span>
                                             </div>
                                         </th>
                                     </tr>
@@ -87,17 +89,17 @@
                                 <tbody class="divide-y divide-gray-200">
                                     <tr v-for="(translation, key) in filteredTranslations" :key="key"
                                         class="hover:bg-gray-50">
-                                        <td class="px-6 py-4 text-sm font-mono text-gray-600 align-top">
+                                        <td class="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-mono text-gray-600 align-top break-all">
                                             <span v-html="highlightMatch(key, searchQuery)"></span>
                                         </td>
-                                        <td class="px-6 py-4 align-top">
+                                        <td class="px-4 sm:px-6 py-3 sm:py-4 align-top">
                                             <input v-model="translation.en" type="text"
-                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent"
+                                                class="w-full px-2 sm:px-3 py-2 text-xs sm:text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent"
                                                 placeholder="Enter English translation" />
                                         </td>
-                                        <td class="px-6 py-4 align-top">
+                                        <td class="px-4 sm:px-6 py-3 sm:py-4 align-top">
                                             <input v-model="translation.ro" type="text"
-                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent"
+                                                class="w-full px-2 sm:px-3 py-2 text-xs sm:text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent"
                                                 placeholder="Introdu traducerea în română" />
                                         </td>
                                     </tr>
@@ -128,6 +130,8 @@ definePageMeta({
     middleware: 'admin',
     layout: false
 })
+
+const sidebarOpen = ref(false)
 
 // Auth is handled by middleware
 

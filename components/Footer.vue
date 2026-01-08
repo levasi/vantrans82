@@ -26,7 +26,7 @@
                             aria-label="Twitter">
                             <Twitter class="w-5 h-5" />
                         </a>
-                        <a href="mailto:contact@vantrans82.ro"
+                        <a :href="`mailto:${settings.contactEmail}`"
                             class="w-10 h-10 bg-gray-800 hover:bg-orange-600 rounded-lg flex items-center justify-center transition-colors"
                             aria-label="Email">
                             <Mail class="w-5 h-5" />
@@ -81,18 +81,16 @@
                     <h3 class="text-white font-semibold mb-4">{{ $t('footer.contact') }}</h3>
                     <ul class="space-y-3">
                         <li class="text-sm">
-                            <a href="tel:+40123456789" class="hover:text-orange-600 transition-colors">
-                                +40 123 456 789
+                            <a :href="`tel:${formatPhoneForTel(settings.phoneNumber)}`" class="hover:text-orange-600 transition-colors">
+                                {{ settings.phoneNumber }}
                             </a>
                         </li>
                         <li class="text-sm">
-                            <a href="mailto:contact@vantrans82.ro" class="hover:text-orange-600 transition-colors">
-                                contact@vantrans82.ro
+                            <a :href="`mailto:${settings.contactEmail}`" class="hover:text-orange-600 transition-colors">
+                                {{ settings.contactEmail }}
                             </a>
                         </li>
-                        <li class="text-sm">
-                            Str. Logistica nr. 123<br />
-                            Bucharest, Romania
+                        <li class="text-sm" v-html="settings.address.replace(/\n/g, '<br />')">
                         </li>
                     </ul>
                 </div>
@@ -102,7 +100,7 @@
             <div class="pt-8 border-t border-gray-800">
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                     <p class="text-sm text-gray-400">
-                        © 2026 VanTrans82. {{ $t('footer.rights') }}
+                        © 2026 {{ settings.companyName }}. {{ $t('footer.rights') }}
                     </p>
                     <div class="flex items-center gap-6">
                         <a href="#" class="text-sm text-gray-400 hover:text-orange-600 transition-colors">
@@ -120,6 +118,13 @@
 
 <script setup>
 import { Facebook, Linkedin, Twitter, Mail } from 'lucide-vue-next'
+import { onMounted } from 'vue'
+
+const { settings, loadSettings, formatPhoneForTel } = useSettings()
+
+onMounted(() => {
+  loadSettings()
+})
 
 const scrollToSection = (id) => {
     const element = document.getElementById(id)
