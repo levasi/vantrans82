@@ -101,8 +101,16 @@ export default defineEventHandler(async (event) => {
       )
       const hasAnyTranslations = parseInt(anyTranslationsResult.rows[0]?.count || '0') > 0
       
-      if (!hasAnyTranslations) {
-        // First-time setup: sync from file to DB
+      // Check if this specific language has translations
+      const langTranslationsResult = await db.query(
+        'SELECT COUNT(*) as count FROM translations WHERE lang = $1',
+        [lang]
+      )
+      const hasLangTranslations = parseInt(langTranslationsResult.rows[0]?.count || '0') > 0
+      
+      // If this language is empty, sync from file (even if other languages exist)
+      if (!hasLangTranslations) {
+        // Sync from file to DB for this language
         const filePath = join(process.cwd(), 'locales', `${lang}.json`)
         try {
           const fileContent = await readFile(filePath, 'utf-8')
@@ -116,7 +124,9 @@ export default defineEventHandler(async (event) => {
               [lang, item.key, item.value]
             )
           }
-          console.log(`Synced translations for ${lang} from file to database (first-time setup).`)
+          console.log(`Synced translations for ${lang} from file to database.`)
+          
+          // Return the synced translations
           return { success: true, translations: fileTranslations }
         } catch (fileError: any) {
           if (fileError.code === 'ENOENT') {
@@ -131,7 +141,7 @@ export default defineEventHandler(async (event) => {
           })
         }
       } else {
-        // Database was already initialized, but this language is empty
+        // This language already has translations in database
         // Return empty object - don't sync from file to avoid overwriting
         return { success: true, translations: {} }
       }
