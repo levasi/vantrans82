@@ -5,7 +5,9 @@
                 <!-- Logo & Description -->
                 <div class="lg:col-span-1">
                     <div class="flex items-center gap-2 mb-4">
-                        <NuxtImg src="/vtlogo.png" alt="VanTrans82" class="h-10 w-auto" />
+                        <span class="inline-flex items-center justify-center bg-white rounded px-2 py-1">
+                            <NuxtImg src="/vtlogo.png" alt="VanTrans82" class="h-13 w-auto" />
+                        </span>
                     </div>
                     <p class="text-sm text-gray-400 leading-relaxed mb-6">
                         {{ $t('footer.description') }}
@@ -81,12 +83,14 @@
                     <h3 class="text-white font-semibold mb-4">{{ $t('footer.contact') }}</h3>
                     <ul class="space-y-3">
                         <li class="text-sm">
-                            <a :href="`tel:${formatPhoneForTel(settings.phoneNumber)}`" class="hover:text-orange-600 transition-colors">
+                            <a :href="`tel:${formatPhoneForTel(settings.phoneNumber)}`"
+                                class="hover:text-orange-600 transition-colors">
                                 {{ settings.phoneNumber }}
                             </a>
                         </li>
                         <li class="text-sm">
-                            <a :href="`mailto:${settings.contactEmail}`" class="hover:text-orange-600 transition-colors">
+                            <a :href="`mailto:${settings.contactEmail}`"
+                                class="hover:text-orange-600 transition-colors">
                                 {{ settings.contactEmail }}
                             </a>
                         </li>
@@ -123,7 +127,7 @@ import { onMounted } from 'vue'
 const { settings, loadSettings, formatPhoneForTel } = useSettings()
 
 onMounted(() => {
-  loadSettings()
+    loadSettings()
 })
 
 const scrollToSection = (id) => {
@@ -132,11 +136,11 @@ const scrollToSection = (id) => {
         // Get header height (64px on mobile, 80px on desktop)
         const header = document.querySelector('header')
         const headerHeight = header ? header.offsetHeight : 80
-        
+
         // Calculate position with offset
         const elementPosition = element.getBoundingClientRect().top + window.pageYOffset
         const offsetPosition = elementPosition - headerHeight - 20 // 20px extra padding
-        
+
         window.scrollTo({
             top: offsetPosition,
             behavior: 'smooth'
