@@ -13,30 +13,30 @@
                 <!-- Desktop Navigation -->
                 <div class="hidden md:flex items-center gap-8">
                     <button @click="scrollToSection('home')"
-                        class="text-gray-700 hover:text-blue-900 transition-colors">
+                        :class="navLinkClass('home')">
                         {{ $t('nav.home') }}
                     </button>
                     <button @click="scrollToSection('services')"
-                        class="text-gray-700 hover:text-blue-900 transition-colors">
+                        :class="navLinkClass('services')">
                         {{ $t('nav.services') }}
                     </button>
                     <button @click="scrollToSection('fleet')"
-                        class="text-gray-700 hover:text-blue-900 transition-colors">
+                        :class="navLinkClass('fleet')">
                         {{ $t('nav.fleet') }}
                     </button>
                     <button @click="scrollToSection('coverage')"
-                        class="text-gray-700 hover:text-blue-900 transition-colors">
+                        :class="navLinkClass('coverage')">
                         {{ $t('nav.coverage') }}
                     </button>
                     <button @click="scrollToSection('about')"
-                        class="text-gray-700 hover:text-blue-900 transition-colors">
+                        :class="navLinkClass('about')">
                         {{ $t('nav.about') }}
                     </button>
-                    <button @click="scrollToSection('faq')" class="text-gray-700 hover:text-blue-900 transition-colors">
+                    <button @click="scrollToSection('faq')" :class="navLinkClass('faq')">
                         {{ $t('nav.faq') }}
                     </button>
                     <button @click="scrollToSection('contact')"
-                        class="text-gray-700 hover:text-blue-900 transition-colors">
+                        :class="navLinkClass('contact')">
                         {{ $t('nav.contact') }}
                     </button>
                 </div>
@@ -75,31 +75,31 @@
             <div v-if="mobileMenuOpen" class="md:hidden py-4 border-t border-gray-200">
                 <div class="flex flex-col gap-4">
                     <button @click="scrollToSection('home')"
-                        class="text-left text-gray-700 hover:text-blue-900 transition-colors py-2">
+                        :class="navLinkClass('home', true)">
                         {{ $t('nav.home') }}
                     </button>
                     <button @click="scrollToSection('services')"
-                        class="text-left text-gray-700 hover:text-blue-900 transition-colors py-2">
+                        :class="navLinkClass('services', true)">
                         {{ $t('nav.services') }}
                     </button>
                     <button @click="scrollToSection('fleet')"
-                        class="text-left text-gray-700 hover:text-blue-900 transition-colors py-2">
+                        :class="navLinkClass('fleet', true)">
                         {{ $t('nav.fleet') }}
                     </button>
                     <button @click="scrollToSection('coverage')"
-                        class="text-left text-gray-700 hover:text-blue-900 transition-colors py-2">
+                        :class="navLinkClass('coverage', true)">
                         {{ $t('nav.coverage') }}
                     </button>
                     <button @click="scrollToSection('about')"
-                        class="text-left text-gray-700 hover:text-blue-900 transition-colors py-2">
+                        :class="navLinkClass('about', true)">
                         {{ $t('nav.about') }}
                     </button>
                     <button @click="scrollToSection('faq')"
-                        class="text-left text-gray-700 hover:text-blue-900 transition-colors py-2">
+                        :class="navLinkClass('faq', true)">
                         {{ $t('nav.faq') }}
                     </button>
                     <button @click="scrollToSection('contact')"
-                        class="text-left text-gray-700 hover:text-blue-900 transition-colors py-2">
+                        :class="navLinkClass('contact', true)">
                         {{ $t('nav.contact') }}
                     </button>
                     <div v-if="showLanguageSwitch"
@@ -128,12 +128,42 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { Menu, X } from 'lucide-vue-next'
 
 const { locale, setLocale } = useI18n()
 const mobileMenuOpen = ref(false)
 const showLanguageSwitch = ref(true)
+const activeSection = ref('home')
+
+const navSections = ['home', 'services', 'fleet', 'coverage', 'about', 'faq', 'contact']
+
+function updateActiveSection() {
+    const header = document.querySelector('header')
+    const headerHeight = header ? header.offsetHeight : 80
+    const offset = headerHeight + 80
+
+    for (let i = navSections.length - 1; i >= 0; i--) {
+        const el = document.getElementById(navSections[i])
+        if (el) {
+            const top = el.getBoundingClientRect().top
+            if (top <= offset) {
+                activeSection.value = navSections[i]
+                return
+            }
+        }
+    }
+    activeSection.value = 'home'
+}
+
+function navLinkClass(sectionId, isMobile = false) {
+    const base = isMobile
+        ? 'text-left transition-colors py-2'
+        : 'transition-colors'
+    const active = 'text-blue-900 font-semibold'
+    const inactive = 'text-gray-700 hover:text-blue-900'
+    return [base, activeSection.value === sectionId ? active : inactive].join(' ')
+}
 
 const scrollToSection = (id) => {
     const element = document.getElementById(id)
@@ -164,6 +194,12 @@ const { settings, loadSettings } = useSettings()
 
 onMounted(() => {
     loadSettings()
+    updateActiveSection()
+    window.addEventListener('scroll', updateActiveSection, { passive: true })
+})
+
+onUnmounted(() => {
+    window.removeEventListener('scroll', updateActiveSection)
 })
 
 // Watch for settings changes to update language switch
