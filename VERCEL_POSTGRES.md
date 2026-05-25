@@ -15,12 +15,14 @@ Vercel will add environment variables automatically (no manual copy required for
 
 | Variable | Used when |
 |----------|-----------|
-| `POSTGRES_URL` | **Production on Vercel** (pooled connection — default) |
-| `POSTGRES_URL_NON_POOLING` | Fallback if pooled URL is missing |
-| `DATABASE_URL` | Fallback; you can set it equal to `POSTGRES_URL` if you like |
-| `DATABASE_LOCAL_URL` | **Local only** — Docker Postgres (`npm run db:start`) |
+| `POSTGRES_URL` | **Production on Vercel** (pooled — preferred) |
+| `POSTGRES_PRISMA_URL` | Also supported |
+| `POSTGRES_URL_NON_POOLING` | Fallback |
+| `DATABASE_URL` | Fallback |
+| `STORAGE_URL` | Only if you used prefix `STORAGE` in the integration UI |
+| `DATABASE_LOCAL_URL` | **Local only** — Docker Postgres |
 
-You do **not** need to add `DATABASE_URL` on Vercel if `POSTGRES_URL` is present.
+Use prefix **`POSTGRES`** in the Neon integration (not `STORAGE`). You do **not** need a manual `DATABASE_URL` when `POSTGRES_URL` exists.
 
 ## 3. Local development with production DB (optional)
 

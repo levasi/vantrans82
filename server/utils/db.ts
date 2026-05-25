@@ -3,25 +3,23 @@ const { Pool } = pg
 
 let pool: pg.Pool | null = null
 
-/** Connection string for the active environment (local Docker, Vercel Postgres, Railway, etc.) */
+/** All Postgres URL env vars Vercel/Neon may inject */
 export function resolveDatabaseUrl(): string | undefined {
   const isDev = process.env.NODE_ENV === 'development' || !process.env.NODE_ENV
 
+  const vercelNeon =
+    process.env.POSTGRES_URL ||
+    process.env.POSTGRES_PRISMA_URL ||
+    process.env.POSTGRES_URL_NON_POOLING ||
+    process.env.DATABASE_URL ||
+    process.env.DATABASE_PRIVATE_URL ||
+    process.env.STORAGE_URL
+
   if (isDev) {
-    return (
-      process.env.DATABASE_LOCAL_URL ||
-      process.env.DATABASE_URL ||
-      process.env.POSTGRES_URL
-    )
+    return process.env.DATABASE_LOCAL_URL || vercelNeon
   }
 
-  // Production / Vercel: Vercel Postgres injects POSTGRES_URL (pooled, serverless-friendly)
-  return (
-    process.env.DATABASE_URL ||
-    process.env.POSTGRES_URL ||
-    process.env.DATABASE_PRIVATE_URL ||
-    process.env.POSTGRES_URL_NON_POOLING
-  )
+  return vercelNeon
 }
 
 function needsSsl(connectionString: string): boolean {
@@ -31,9 +29,9 @@ function needsSsl(connectionString: string): boolean {
   if (connectionString.includes('localhost') || connectionString.includes('127.0.0.1')) {
     return false
   }
-  // Vercel Postgres (Neon), Railway public, Supabase, etc.
   return (
     process.env.NODE_ENV === 'production' ||
+    process.env.VERCEL === '1' ||
     connectionString.includes('neon.tech') ||
     connectionString.includes('vercel') ||
     connectionString.includes('sslmode=require') ||
@@ -47,40 +45,40 @@ export const getDb = () => {
     const isDev = process.env.NODE_ENV === 'development' || !process.env.NODE_ENV
 
     if (!connectionString) {
-      if (isDev) {
-        console.warn('DATABASE_LOCAL_URL or DATABASE_URL not set - database features will be disabled')
-        console.warn('To use a local database, set DATABASE_LOCAL_URL in your .env file')
-        return null as any
-      }
-      throw new Error(
-        'No database URL set. On Vercel, add Vercel Postgres (Storage) or set DATABASE_URL / POSTGRES_URL.'
+      console.warn(
+        isDev
+          ? 'DATABASE_LOCAL_URL or POSTGRES_URL not set - database features disabled'
+          : 'POSTGRES_URL / DATABASE_URL not set - database features disabled'
       )
+      return null as any
     }
 
     if (isDev && (connectionString.includes('railway') || connectionString.includes('railway.internal'))) {
-      console.warn('⚠️  WARNING: You are connecting to a Railway database in development mode!')
-      console.warn('⚠️  This could affect production data. Consider using DATABASE_LOCAL_URL for local development.')
+      console.warn('⚠️  WARNING: Connecting to Railway in development — use DATABASE_LOCAL_URL locally.')
     }
 
-    pool = new Pool({
-      connectionString,
-      ssl: needsSsl(connectionString) ? { rejectUnauthorized: false } : false,
-      // One connection per serverless instance (Vercel Postgres uses a pooler via POSTGRES_URL)
-      max: process.env.VERCEL ? 1 : 10
-    })
+    try {
+      pool = new Pool({
+        connectionString,
+        ssl: needsSsl(connectionString) ? { rejectUnauthorized: false } : false,
+        max: process.env.VERCEL ? 1 : 10
+      })
 
-    pool.on('error', (err) => {
-      console.error('Unexpected error on idle client', err)
-    })
+      pool.on('error', (err) => {
+        console.error('Unexpected error on idle client', err)
+      })
 
-    const dbInfo = connectionString.replace(/:[^:@]+@/, ':****@')
-    console.log(`📊 Database connection: ${dbInfo.substring(0, 50)}...`)
+      const dbInfo = connectionString.replace(/:[^:@]+@/, ':****@')
+      console.log(`📊 Database: ${dbInfo.substring(0, 50)}...`)
+    } catch (error) {
+      console.error('Failed to create database pool:', error)
+      return null as any
+    }
   }
 
   return pool
 }
 
-// Initialize database tables
 export const initDb = async () => {
   const db = getDb()
 

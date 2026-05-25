@@ -4338,7 +4338,7 @@ function _expandFromEnv(value) {
 const _inlineRuntimeConfig = {
   "app": {
     "baseURL": "/",
-    "buildId": "12c39a4e-b3f6-424c-b5f7-c8d8d02069ac",
+    "buildId": "ef802a13-8d9a-48e5-b8c0-ea822bdaa399",
     "buildAssetsDir": "/_nuxt/",
     "cdnURL": ""
   },
@@ -5043,26 +5043,43 @@ function createPathIndexLanguageParser(index = 0) {
 
 const { Pool } = pg;
 let pool = null;
+function resolveDatabaseUrl() {
+  const vercelNeon = process.env.POSTGRES_URL || process.env.POSTGRES_PRISMA_URL || process.env.POSTGRES_URL_NON_POOLING || process.env.DATABASE_URL || process.env.DATABASE_PRIVATE_URL || process.env.STORAGE_URL;
+  return vercelNeon;
+}
+function needsSsl(connectionString) {
+  if (connectionString.includes("railway.internal")) {
+    return false;
+  }
+  if (connectionString.includes("localhost") || connectionString.includes("127.0.0.1")) {
+    return false;
+  }
+  return true;
+}
 const getDb = () => {
   if (!pool) {
-    let connectionString;
-    {
-      connectionString = process.env.DATABASE_PRIVATE_URL || process.env.DATABASE_URL;
-      if (!connectionString) {
-        throw new Error("DATABASE_URL or DATABASE_PRIVATE_URL environment variable is not set");
-      }
+    const connectionString = resolveDatabaseUrl();
+    if (!connectionString) {
+      console.warn(
+        "POSTGRES_URL / DATABASE_URL not set - database features disabled"
+      );
+      return null;
     }
-    const isPrivateNetwork = connectionString.includes("railway.internal");
-    const needsSSL = !isPrivateNetwork && true;
-    pool = new Pool({
-      connectionString,
-      ssl: needsSSL ? { rejectUnauthorized: false } : false
-    });
-    pool.on("error", (err) => {
-      console.error("Unexpected error on idle client", err);
-    });
-    const dbInfo = connectionString.replace(/:[^:@]+@/, ":****@");
-    console.log(`\u{1F4CA} Database connection: ${dbInfo.substring(0, 50)}...`);
+    try {
+      pool = new Pool({
+        connectionString,
+        ssl: needsSsl(connectionString) ? { rejectUnauthorized: false } : false,
+        max: process.env.VERCEL ? 1 : 10
+      });
+      pool.on("error", (err) => {
+        console.error("Unexpected error on idle client", err);
+      });
+      const dbInfo = connectionString.replace(/:[^:@]+@/, ":****@");
+      console.log(`\u{1F4CA} Database: ${dbInfo.substring(0, 50)}...`);
+    } catch (error) {
+      console.error("Failed to create database pool:", error);
+      return null;
+    }
   }
   return pool;
 };
@@ -5468,7 +5485,7 @@ const _d2TBSUf5I8SVmKjWaUEz88KzDUqGRSs4s5FHB7CJZI = defineNitroPlugin(async (nit
     const localeSegment = detector.route(event.path);
     const pathLocale = isSupportedLocale(localeSegment) && localeSegment || void 0;
     const path = (pathLocale && url.pathname.slice(pathLocale.length + 1)) ?? url.pathname;
-    if (!url.pathname.includes("/_i18n/8MCyIYrM") && !isExistingNuxtRoute(path)) {
+    if (!url.pathname.includes("/_i18n/5l-qbFmU") && !isExistingNuxtRoute(path)) {
       return;
     }
     const resolved = resolveRedirectPath(event, path, pathLocale, ctx.vueI18nOptions.defaultLocale, detector);
@@ -5490,7 +5507,7 @@ const _d2TBSUf5I8SVmKjWaUEz88KzDUqGRSs4s5FHB7CJZI = defineNitroPlugin(async (nit
 
 const _AA9VvhDTx7VOyFlJKvo1o_Afpq7DONlpvAm_hXieM = defineNitroPlugin(async (nitroApp) => {
   process.env.DATABASE_LOCAL_URL;
-  const hasProductionDb = process.env.DATABASE_PRIVATE_URL || process.env.DATABASE_URL;
+  const hasProductionDb = !!(process.env.POSTGRES_URL || process.env.POSTGRES_PRISMA_URL || process.env.POSTGRES_URL_NON_POOLING || process.env.DATABASE_URL || process.env.DATABASE_PRIVATE_URL || process.env.STORAGE_URL);
   const shouldInit = hasProductionDb;
   if (shouldInit) {
     try {
@@ -5500,13 +5517,19 @@ const _AA9VvhDTx7VOyFlJKvo1o_Afpq7DONlpvAm_hXieM = defineNitroPlugin(async (nitr
     }
   } else {
     {
-      console.warn("DATABASE_URL or DATABASE_PRIVATE_URL not set - database features will be disabled");
+      console.warn("DATABASE_URL / POSTGRES_URL not set - database features will be disabled");
     }
   }
 });
 
 const _NokDZO8iJcasAYhOWNXRUmy82vb4CYWlazf5ETSZPk = defineNitroPlugin(async (nitroApp) => {
-  const db = getDb();
+  let db;
+  try {
+    db = getDb();
+  } catch (error) {
+    console.error("Database unavailable for i18n plugin:", error);
+    return;
+  }
   if (!db) {
     return;
   }
@@ -5545,8 +5568,6 @@ const _NokDZO8iJcasAYhOWNXRUmy82vb4CYWlazf5ETSZPk = defineNitroPlugin(async (nit
       }
       return translations;
     };
-    nitroApp.hooks.hook("render:route", async (url, result) => {
-    });
     nitroApp.$loadTranslationsFromDb = loadTranslationsFromDb;
   } catch (error) {
     console.error("Error initializing translation database:", error);
