@@ -5,6 +5,9 @@
 .cache
 dist
 
+# Vercel (never commit — causes prebuilt deploys & ERR_MODULE_NOT_FOUND)
+.vercel
+
 # Node dependencies
 node_modules
 
