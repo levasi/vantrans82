@@ -18,7 +18,8 @@ export default defineEventHandler(async (event) => {
     if (!db) {
       throw createError({
         statusCode: 503,
-        message: 'Database not available'
+        message:
+          'Database not available. For local dev: copy .env.example to .env, run npm run db:start, then restart npm run dev.'
       })
     }
     
