@@ -3,51 +3,76 @@ const { Pool } = pg
 
 let pool: pg.Pool | null = null
 
+/** Connection string for the active environment (local Docker, Vercel Postgres, Railway, etc.) */
+export function resolveDatabaseUrl(): string | undefined {
+  const isDev = process.env.NODE_ENV === 'development' || !process.env.NODE_ENV
+
+  if (isDev) {
+    return (
+      process.env.DATABASE_LOCAL_URL ||
+      process.env.DATABASE_URL ||
+      process.env.POSTGRES_URL
+    )
+  }
+
+  // Production / Vercel: Vercel Postgres injects POSTGRES_URL (pooled, serverless-friendly)
+  return (
+    process.env.DATABASE_URL ||
+    process.env.POSTGRES_URL ||
+    process.env.DATABASE_PRIVATE_URL ||
+    process.env.POSTGRES_URL_NON_POOLING
+  )
+}
+
+function needsSsl(connectionString: string): boolean {
+  if (connectionString.includes('railway.internal')) {
+    return false
+  }
+  if (connectionString.includes('localhost') || connectionString.includes('127.0.0.1')) {
+    return false
+  }
+  // Vercel Postgres (Neon), Railway public, Supabase, etc.
+  return (
+    process.env.NODE_ENV === 'production' ||
+    connectionString.includes('neon.tech') ||
+    connectionString.includes('vercel') ||
+    connectionString.includes('sslmode=require') ||
+    connectionString.includes('ssl=true')
+  )
+}
+
 export const getDb = () => {
   if (!pool) {
-    let connectionString: string | undefined
-    
-    // In development, prioritize local database to avoid affecting production
-    if (process.env.NODE_ENV === 'development' || !process.env.NODE_ENV) {
-      // Development mode: use local database if available
-      connectionString = process.env.DATABASE_LOCAL_URL || process.env.DATABASE_URL
-      
-      if (!connectionString) {
+    const connectionString = resolveDatabaseUrl()
+    const isDev = process.env.NODE_ENV === 'development' || !process.env.NODE_ENV
+
+    if (!connectionString) {
+      if (isDev) {
         console.warn('DATABASE_LOCAL_URL or DATABASE_URL not set - database features will be disabled')
         console.warn('To use a local database, set DATABASE_LOCAL_URL in your .env file')
         return null as any
       }
-      
-      // Warn if using production database in development
-      if (connectionString.includes('railway') || connectionString.includes('railway.internal')) {
-        console.warn('⚠️  WARNING: You are connecting to a Railway database in development mode!')
-        console.warn('⚠️  This could affect production data. Consider using DATABASE_LOCAL_URL for local development.')
-      }
-    } else {
-      // Production mode: use Railway database
-      // Prefer private network connection to avoid egress fees on Railway
-      connectionString = process.env.DATABASE_PRIVATE_URL || process.env.DATABASE_URL
-      
-      if (!connectionString) {
-        throw new Error('DATABASE_URL or DATABASE_PRIVATE_URL environment variable is not set')
-      }
+      throw new Error(
+        'No database URL set. On Vercel, add Vercel Postgres (Storage) or set DATABASE_URL / POSTGRES_URL.'
+      )
     }
 
-    // Parse connection string to determine if we need SSL
-    const isPrivateNetwork = connectionString.includes('railway.internal')
-    const needsSSL = !isPrivateNetwork && process.env.NODE_ENV === 'production'
+    if (isDev && (connectionString.includes('railway') || connectionString.includes('railway.internal'))) {
+      console.warn('⚠️  WARNING: You are connecting to a Railway database in development mode!')
+      console.warn('⚠️  This could affect production data. Consider using DATABASE_LOCAL_URL for local development.')
+    }
 
     pool = new Pool({
       connectionString,
-      ssl: needsSSL ? { rejectUnauthorized: false } : false
+      ssl: needsSsl(connectionString) ? { rejectUnauthorized: false } : false,
+      // One connection per serverless instance (Vercel Postgres uses a pooler via POSTGRES_URL)
+      max: process.env.VERCEL ? 1 : 10
     })
 
-    // Test connection
     pool.on('error', (err) => {
       console.error('Unexpected error on idle client', err)
     })
-    
-    // Log which database we're connecting to (without sensitive info)
+
     const dbInfo = connectionString.replace(/:[^:@]+@/, ':****@')
     console.log(`📊 Database connection: ${dbInfo.substring(0, 50)}...`)
   }
@@ -58,14 +83,13 @@ export const getDb = () => {
 // Initialize database tables
 export const initDb = async () => {
   const db = getDb()
-  
+
   if (!db) {
     console.warn('Database not available - skipping initialization')
     return
   }
-  
+
   try {
-    // Create users table if it doesn't exist
     await db.query(`
       CREATE TABLE IF NOT EXISTS admin_users (
         id SERIAL PRIMARY KEY,
@@ -77,7 +101,6 @@ export const initDb = async () => {
       )
     `)
 
-    // Create index on email for faster lookups
     await db.query(`
       CREATE INDEX IF NOT EXISTS idx_admin_users_email ON admin_users(email)
     `)
@@ -88,4 +111,3 @@ export const initDb = async () => {
     throw error
   }
 }
-

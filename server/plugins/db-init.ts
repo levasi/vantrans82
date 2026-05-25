@@ -3,7 +3,11 @@ import { initDb } from '~/server/utils/db'
 export default defineNitroPlugin(async (nitroApp) => {
   // Check for database connection (local or production)
   const hasLocalDb = process.env.DATABASE_LOCAL_URL
-  const hasProductionDb = process.env.DATABASE_PRIVATE_URL || process.env.DATABASE_URL
+  const hasProductionDb =
+    process.env.DATABASE_URL ||
+    process.env.POSTGRES_URL ||
+    process.env.DATABASE_PRIVATE_URL ||
+    process.env.POSTGRES_URL_NON_POOLING
   
   // In development, prefer local database
   const shouldInit = process.env.NODE_ENV === 'development' 
@@ -23,7 +27,7 @@ export default defineNitroPlugin(async (nitroApp) => {
       console.warn('DATABASE_LOCAL_URL not set - database features will be disabled')
       console.warn('Set DATABASE_LOCAL_URL in your .env file to use a local database')
     } else {
-      console.warn('DATABASE_URL or DATABASE_PRIVATE_URL not set - database features will be disabled')
+      console.warn('DATABASE_URL / POSTGRES_URL not set - database features will be disabled')
     }
   }
 })

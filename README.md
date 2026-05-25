@@ -71,29 +71,23 @@ Ensure the repo is on GitHub (or GitLab/Bitbucket supported by Vercel).
 ### 2. Import on Vercel
 
 1. Go to [vercel.com/new](https://vercel.com/new) and import `vantrans82`.
-2. Framework preset should detect **Nuxt** automatically.
-3. Build command: `npm run build` (default).
-4. Install command: `npm install` (default).
+2. **Build Command** must be `npm run build` (not `nuxt build`). Override in **Settings → Build** if needed, or use `vercel.json` in the repo.
+3. **Install Command**: `npm ci` (set in `vercel.json`).
+4. Framework: **Nuxt.js** or **Other** — both work if the build command is `npm run build`.
 
-### 3. Environment variables
+### 3. Vercel Postgres (recommended)
 
-In **Project → Settings → Environment Variables**, add for **Production** (and Preview if you use the admin/API on previews):
+1. In the Vercel project: **Storage** → **Create Database** → **Postgres** → link to this app.
+2. Vercel injects `POSTGRES_URL` automatically — **no manual env copy needed**.
+3. The app reads `POSTGRES_URL` in production (see [VERCEL_POSTGRES.md](./VERCEL_POSTGRES.md)).
 
-| Variable | Description |
-|----------|-------------|
-| `DATABASE_URL` | PostgreSQL connection string (SSL required for hosted DBs). Use [Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres), [Neon](https://neon.tech), or your existing Railway URL. |
-| `NODE_ENV` | Set to `production` (Vercel often sets this automatically). |
+Do **not** set `DATABASE_LOCAL_URL` on Vercel (local Docker only).
 
-Do **not** set `DATABASE_LOCAL_URL` on Vercel—that is for local Docker only.
+Optional: run `npx vercel env pull .env.local` to use the same DB locally.
 
-Copy from `.env.example` and replace with your real production URL.
+### 4. After deploy
 
-### 4. Database
-
-- **Vercel Postgres / Neon**: create a database, paste the connection string into `DATABASE_URL`.
-- **Existing Railway DB**: use the public `DATABASE_URL` (not `railway.internal`) so Vercel serverless can reach it; enable SSL if required.
-
-After the first deploy, open `/admin` and complete setup if you use the admin panel (tables are created on first API use in production).
+Tables are created on first start. Open `/admin` and complete setup (see [ADMIN_SETUP.md](./ADMIN_SETUP.md)).
 
 ### 5. Deploy
 
