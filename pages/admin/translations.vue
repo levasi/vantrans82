@@ -45,9 +45,14 @@
                         </div>
                     </div>
 
-                    <!-- Save Button -->
-                    <div class="mb-6 flex justify-end">
-                        <button @click="saveTranslations" :disabled="saving"
+                    <!-- Actions -->
+                    <div class="mb-6 flex flex-col sm:flex-row justify-end gap-3">
+                        <button @click="importFromFiles" :disabled="importing || saving"
+                            class="w-full sm:w-auto px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                            <div v-if="importing" class="animate-spin rounded-full h-5 w-5 border-b-2 border-gray-600"></div>
+                            {{ importing ? 'Importing...' : 'Import from JSON files' }}
+                        </button>
+                        <button @click="saveTranslations" :disabled="saving || importing"
                             class="w-full sm:w-auto px-6 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-950 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
                             <Save v-if="!saving" class="w-5 h-5" />
                             <div v-else class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
@@ -139,6 +144,7 @@ const translationsEn = ref<Record<string, any>>({})
 const translationsRo = ref<Record<string, any>>({})
 const showLanguageSwitch = ref(true)
 const saving = ref(false)
+const importing = ref(false)
 const savingLanguageSwitch = ref(false)
 const message = ref('')
 const messageType = ref<'success' | 'error'>('success')
@@ -234,6 +240,32 @@ const loadTranslations = async () => {
     } catch (error: any) {
         message.value = error.data?.message || 'Failed to load translations'
         messageType.value = 'error'
+    }
+}
+
+const importFromFiles = async () => {
+    importing.value = true
+    message.value = ''
+
+    try {
+        const response = await $fetch('/api/admin/translations/sync', {
+            method: 'POST',
+            body: { force: true }
+        }) as { message?: string; synced?: string[]; errors?: Array<{ lang: string; error: string }> }
+
+        await loadTranslations()
+        message.value = response.message || 'Translations imported successfully'
+        messageType.value = 'success'
+
+        if (response.errors?.length) {
+            message.value += ` (${response.errors.map(e => e.lang).join(', ')} failed)`
+            messageType.value = 'error'
+        }
+    } catch (error: any) {
+        message.value = error.data?.message || 'Failed to import translations'
+        messageType.value = 'error'
+    } finally {
+        importing.value = false
     }
 }
 

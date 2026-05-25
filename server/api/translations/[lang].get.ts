@@ -1,8 +1,14 @@
 import { getDb } from '~/server/utils/db'
+import { getLocaleFromBundle } from '~/server/utils/locale-files'
+import {
+  ensureTranslationsTable,
+  reconstructTranslations,
+  syncLocaleFromBundleIfEmpty
+} from '~/server/utils/translation-db'
 
 export default defineEventHandler(async (event) => {
   const lang = getRouterParam(event, 'lang')
-  
+
   if (!lang || !['en', 'ro'].includes(lang)) {
     throw createError({
       statusCode: 400,
@@ -10,132 +16,33 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  const bundle = getLocaleFromBundle(lang)
+  if (!bundle) {
+    return {}
+  }
+
   try {
     const db = getDb()
-    
-    // If database is not available, fall back to file system
+
     if (!db) {
-      const { readFile } = await import('fs/promises')
-      const { join } = await import('path')
-      const filePath = join(process.cwd(), 'locales', `${lang}.json`)
-      try {
-        const fileContent = await readFile(filePath, 'utf-8')
-        return JSON.parse(fileContent)
-      } catch {
-        return {}
-      }
+      return bundle
     }
 
-    // Ensure translations table exists
-    await db.query(`
-      CREATE TABLE IF NOT EXISTS translations (
-        id SERIAL PRIMARY KEY,
-        lang VARCHAR(10) NOT NULL,
-        key_path VARCHAR(500) NOT NULL,
-        value TEXT NOT NULL,
-        UNIQUE(lang, key_path)
-      )
-    `)
+    await ensureTranslationsTable(db)
 
-    // Load translations from database
     const result = await db.query(
       'SELECT key_path, value FROM translations WHERE lang = $1',
       [lang]
     )
 
-    // Only sync from file to database if:
-    // 1. No translations exist for this language in the database
-    // 2. AND no translations exist for ANY language (first-time setup)
-    // This prevents overwriting existing translations on redeployment
-    if (result.rows.length === 0) {
-      // Check if any translations exist in the database at all
-      const anyTranslationsResult = await db.query(
-        'SELECT COUNT(*) as count FROM translations LIMIT 1'
-      )
-      const hasAnyTranslations = parseInt(anyTranslationsResult.rows[0]?.count || '0') > 0
-      
-      // Only sync from file if this is truly the first setup (no translations exist at all)
-      if (!hasAnyTranslations) {
-        const { readFile } = await import('fs/promises')
-        const { join } = await import('path')
-        const filePath = join(process.cwd(), 'locales', `${lang}.json`)
-        
-        try {
-          const fileContent = await readFile(filePath, 'utf-8')
-          const translations = JSON.parse(fileContent)
-          
-          // Flatten and store in database
-          const flatten = (obj: any, prefix = ''): Array<{ key: string; value: string }> => {
-            const result: Array<{ key: string; value: string }> = []
-            
-            for (const key in obj) {
-              const newKey = prefix ? `${prefix}.${key}` : key
-              
-              if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
-                result.push(...flatten(obj[key], newKey))
-              } else {
-                result.push({ key: newKey, value: String(obj[key] || '') })
-              }
-            }
-            
-            return result
-          }
-          
-          const flattened = flatten(translations)
-          
-          // Insert into database - use DO NOTHING on conflict to avoid overwriting
-          // This ensures we only insert missing keys, never overwrite existing ones
-          for (const item of flattened) {
-            await db.query(
-              'INSERT INTO translations (lang, key_path, value) VALUES ($1, $2, $3) ON CONFLICT (lang, key_path) DO NOTHING',
-              [lang, item.key, item.value]
-            )
-          }
-          
-          // Return file translations for first-time setup
-          return translations
-        } catch (fileError: any) {
-          if (fileError.code === 'ENOENT') {
-            return {}
-          }
-          throw fileError
-        }
-      }
-      // If translations exist for other languages but not this one, return empty
-      // This means the database was already initialized, so don't sync from file
-      return {}
+    if (result.rows.length > 0) {
+      return reconstructTranslations(result.rows)
     }
 
-    // Reconstruct nested object from database
-    const translations: Record<string, any> = {}
-    
-    for (const row of result.rows) {
-      const keys = row.key_path.split('.')
-      let current = translations
-      
-      for (let i = 0; i < keys.length - 1; i++) {
-        if (!current[keys[i]]) {
-          current[keys[i]] = {}
-        }
-        current = current[keys[i]]
-      }
-      
-      current[keys[keys.length - 1]] = row.value
-    }
-    
-    return translations
-  } catch (error: any) {
+    const synced = await syncLocaleFromBundleIfEmpty(db, lang)
+    return synced ?? bundle
+  } catch (error) {
     console.error('Error loading translations:', error)
-    // Fallback to file system
-    try {
-      const { readFile } = await import('fs/promises')
-      const { join } = await import('path')
-      const filePath = join(process.cwd(), 'locales', `${lang}.json`)
-      const fileContent = await readFile(filePath, 'utf-8')
-      return JSON.parse(fileContent)
-    } catch {
-      return {}
-    }
+    return bundle
   }
 })
-

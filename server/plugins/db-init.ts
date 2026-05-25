@@ -1,4 +1,5 @@
 import { initDb } from '~/server/utils/db'
+import { seedTranslationsIfEmpty } from '~/server/utils/translation-db'
 
 export default defineNitroPlugin(async (nitroApp) => {
   // Check for database connection (local or production)
@@ -20,6 +21,7 @@ export default defineNitroPlugin(async (nitroApp) => {
   if (shouldInit) {
     try {
       await initDb()
+      await seedTranslationsIfEmpty()
     } catch (error) {
       console.error('Failed to initialize database:', error)
       // Don't throw - allow app to start even if DB init fails
