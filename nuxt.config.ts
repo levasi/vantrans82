@@ -2,8 +2,9 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxtjs/tailwindcss', '@nuxt/image', '@nuxtjs/i18n'],
+  // Vercel: serverless preset (auto when VERCEL=1). Local prod: node-server via `npm run start`.
   nitro: {
-    preset: 'node-server'
+    preset: process.env.VERCEL ? 'vercel' : 'node-server'
   },
   // @ts-ignore - i18n module types
   i18n: {

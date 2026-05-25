@@ -53,11 +53,63 @@ Build the application for production:
 npm run build
 ```
 
-Preview the production build:
+Preview the production build locally (Node server):
 
 ```bash
-npm run preview
+npm run build
+npm run start
 ```
+
+## Deploy to Vercel
+
+This app is configured for [Vercel](https://vercel.com) (Nuxt serverless + API routes).
+
+### 1. Push to GitHub
+
+Ensure the repo is on GitHub (or GitLab/Bitbucket supported by Vercel).
+
+### 2. Import on Vercel
+
+1. Go to [vercel.com/new](https://vercel.com/new) and import `vantrans82`.
+2. Framework preset should detect **Nuxt** automatically.
+3. Build command: `npm run build` (default).
+4. Install command: `npm install` (default).
+
+### 3. Environment variables
+
+In **Project → Settings → Environment Variables**, add for **Production** (and Preview if you use the admin/API on previews):
+
+| Variable | Description |
+|----------|-------------|
+| `DATABASE_URL` | PostgreSQL connection string (SSL required for hosted DBs). Use [Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres), [Neon](https://neon.tech), or your existing Railway URL. |
+| `NODE_ENV` | Set to `production` (Vercel often sets this automatically). |
+
+Do **not** set `DATABASE_LOCAL_URL` on Vercel—that is for local Docker only.
+
+Copy from `.env.example` and replace with your real production URL.
+
+### 4. Database
+
+- **Vercel Postgres / Neon**: create a database, paste the connection string into `DATABASE_URL`.
+- **Existing Railway DB**: use the public `DATABASE_URL` (not `railway.internal`) so Vercel serverless can reach it; enable SSL if required.
+
+After the first deploy, open `/admin` and complete setup if you use the admin panel (tables are created on first API use in production).
+
+### 5. Deploy
+
+- **Git**: every push to `main` deploys production; other branches get preview URLs.
+- **CLI** (optional):
+
+```bash
+npx vercel login
+npx vercel link
+npx vercel env pull .env.local   # optional: sync env for local testing
+npx vercel --prod
+```
+
+### Custom domain
+
+Vercel → Project → **Settings → Domains** → add your domain and follow DNS instructions.
 
 ## Learn More
 
