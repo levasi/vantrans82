@@ -1,50 +1,49 @@
 <template>
     <!-- Mobile Overlay -->
-    <div v-if="isOpen" 
-        class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+    <div v-if="isOpen"
+        class="admin-sidebar__overlay"
         @click="$emit('close')">
     </div>
 
     <!-- Sidebar -->
-    <aside :class="[
-        'fixed lg:static inset-y-0 left-0 z-50 bg-white border-r border-gray-200 min-h-screen transition-transform duration-300 ease-in-out',
-        isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
-        'w-64'
-    ]">
-        <nav class="p-4">
+    <aside
+        class="admin-sidebar"
+        :class="{ 'admin-sidebar--open': isOpen }"
+    >
+        <nav class="admin-sidebar__nav">
             <!-- Mobile Close Button -->
-            <div class="flex items-center justify-between mb-4 lg:hidden">
-                <h2 class="text-lg font-semibold text-gray-900">Menu</h2>
-                <button @click="$emit('close')" class="p-2 hover:bg-gray-100 rounded-lg">
-                    <X class="w-5 h-5 text-gray-600" />
+            <div class="admin-sidebar__mobile-header">
+                <h2 class="admin-sidebar__mobile-title">Menu</h2>
+                <button @click="$emit('close')" class="admin-sidebar__close" type="button">
+                    <X class="icon admin-sidebar__close-icon" />
                 </button>
             </div>
 
-            <ul class="space-y-2">
+            <ul class="admin-sidebar__list">
                 <li>
-                    <NuxtLink to="/admin" 
+                    <NuxtLink to="/admin"
                         @click="$emit('close')"
-                        class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors"
-                        :class="isActive('/admin') ? 'bg-blue-50 text-blue-900 font-medium' : 'text-gray-700 hover:bg-gray-50'">
-                        <LayoutDashboard class="w-5 h-5" />
+                        class="admin-sidebar__link"
+                        :class="{ 'admin-sidebar__link--active': isActive('/admin') }">
+                        <LayoutDashboard class="icon" />
                         <span>Dashboard</span>
                     </NuxtLink>
                 </li>
                 <li>
                     <NuxtLink to="/admin/translations"
                         @click="$emit('close')"
-                        class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors"
-                        :class="isActive('/admin/translations') ? 'bg-blue-50 text-blue-900 font-medium' : 'text-gray-700 hover:bg-gray-50'">
-                        <FileText class="w-5 h-5" />
+                        class="admin-sidebar__link"
+                        :class="{ 'admin-sidebar__link--active': isActive('/admin/translations') }">
+                        <FileText class="icon" />
                         <span>Translations</span>
                     </NuxtLink>
                 </li>
                 <li>
                     <NuxtLink to="/admin/settings"
                         @click="$emit('close')"
-                        class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors"
-                        :class="isActive('/admin/settings') ? 'bg-blue-50 text-blue-900 font-medium' : 'text-gray-700 hover:bg-gray-50'">
-                        <Settings class="w-5 h-5" />
+                        class="admin-sidebar__link"
+                        :class="{ 'admin-sidebar__link--active': isActive('/admin/settings') }">
+                        <Settings class="icon" />
                         <span>Settings</span>
                     </NuxtLink>
                 </li>
@@ -70,3 +69,111 @@ const isActive = (path: string) => {
     return route.path === path
 }
 </script>
+
+<style lang="scss" scoped>
+@use '~/assets/scss/variables' as *;
+@use '~/assets/scss/mixins' as *;
+
+.admin-sidebar {
+  position: fixed;
+  inset-block: 0;
+  left: 0;
+  z-index: 50;
+  width: 16rem;
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+  min-height: 100vh;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+
+  @include respond-to(lg) {
+    position: static;
+    transform: translateX(0);
+  }
+
+  &--open {
+    transform: translateX(0);
+  }
+
+  &__overlay {
+    position: fixed;
+    inset: 0;
+    background: rgb(0 0 0 / 0.5);
+    z-index: 40;
+
+    @include respond-to(lg) {
+      display: none;
+    }
+  }
+
+  &__nav {
+    padding: 1rem;
+  }
+
+  &__mobile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+
+    @include respond-to(lg) {
+      display: none;
+    }
+  }
+
+  &__mobile-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  &__close {
+    padding: 0.5rem;
+    background: none;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      background: #f3f4f6;
+    }
+  }
+
+  &__close-icon {
+    color: var(--color-text-muted);
+  }
+
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: background-color 0.2s, color 0.2s;
+
+    &:hover {
+      background: var(--color-muted);
+    }
+
+    &--active {
+      background: var(--color-brand-tint);
+      color: var(--color-brand);
+      font-weight: 500;
+    }
+  }
+}
+</style>

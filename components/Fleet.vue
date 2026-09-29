@@ -1,43 +1,31 @@
 <template>
-  <section id="fleet" class="py-20 md:py-24 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <!-- Section Header -->
-      <div class="text-center max-w-3xl mx-auto mb-16">
-        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-          {{ $t('fleet.title') }}
-        </h2>
-        <p class="text-lg text-gray-600">
-          {{ $t('fleet.subtitle') }}
-        </p>
+  <section id="fleet" class="fleet">
+    <div class="container">
+      <div class="section-header">
+        <h2>{{ $t('fleet.title') }}</h2>
+        <p>{{ $t('fleet.subtitle') }}</p>
       </div>
 
-      <!-- Fleet Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="fleet__grid">
         <div
           v-for="(vehicle, index) in vehicles"
           :key="index"
-          class="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow duration-300"
+          class="fleet__card"
         >
-          <div class="relative h-48 bg-gray-100 overflow-hidden">
+          <div class="fleet__media">
             <img
               :src="vehicle.image"
               :alt="vehicle.name"
-              class="w-full h-full object-cover"
+              class="fleet__image"
             />
-            <div class="absolute top-4 left-4 p-2 bg-white rounded-lg shadow-md">
-              <component :is="vehicle.icon" class="w-6 h-6 text-blue-900" />
+            <div class="fleet__icon-wrap">
+              <component :is="vehicle.icon" class="icon icon--md fleet__icon" />
             </div>
           </div>
-          <div class="p-6">
-            <h3 class="text-2xl font-bold text-gray-900 mb-2">
-              {{ vehicle.name }}
-            </h3>
-            <div class="text-orange-600 font-semibold mb-4">
-              {{ vehicle.capacity }}
-            </div>
-            <p class="text-gray-600 leading-relaxed">
-              {{ vehicle.description }}
-            </p>
+          <div class="fleet__body">
+            <h3 class="fleet__name">{{ vehicle.name }}</h3>
+            <div class="fleet__capacity">{{ vehicle.capacity }}</div>
+            <p class="fleet__desc">{{ vehicle.description }}</p>
           </div>
         </div>
       </div>
@@ -77,3 +65,84 @@ const vehicles = computed(() => [
 ])
 </script>
 
+<style lang="scss" scoped>
+@use '~/assets/scss/variables' as *;
+@use '~/assets/scss/mixins' as *;
+
+.fleet {
+  @include section-pad;
+  background: $color-surface;
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+
+    @include respond-to(md) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  &__card {
+    background: $color-surface;
+    border-radius: $radius-xl;
+    border: 1px solid $color-border;
+    overflow: hidden;
+    transition: box-shadow 0.3s;
+
+    &:hover {
+      box-shadow: $shadow-xl;
+    }
+  }
+
+  &__media {
+    position: relative;
+    height: 12rem;
+    background: $color-muted;
+    overflow: hidden;
+  }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__icon-wrap {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    padding: 0.5rem;
+    background: $color-surface;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-md;
+  }
+
+  &__icon {
+    color: $color-brand;
+  }
+
+  &__body {
+    padding: 1.5rem;
+  }
+
+  &__name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $color-text;
+    margin: 0 0 0.5rem;
+  }
+
+  &__capacity {
+    color: $color-accent;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  &__desc {
+    color: $color-text-muted;
+    line-height: 1.625;
+    margin: 0;
+  }
+}
+</style>

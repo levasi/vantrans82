@@ -1,23 +1,23 @@
 <template>
-  <section id="contact" class="py-20 md:py-24 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section id="contact" class="contact">
+    <div class="container">
       <!-- Section Header -->
-      <div class="text-center max-w-3xl mx-auto mb-16">
-        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <div class="section-header">
+        <h2>
           {{ $t('contact.title') }}
         </h2>
-        <p class="text-lg text-gray-600">
+        <p>
           {{ $t('contact.subtitle') }}
         </p>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+      <div class="contact__grid">
         <!-- Contact Form -->
-        <div class="lg:col-span-2">
-          <form @submit.prevent="handleSubmit" class="space-y-6">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div>
-                <label for="name" class="block text-gray-700 mb-2">
+        <div class="contact__form-wrap">
+          <form @submit.prevent="handleSubmit" class="contact__form">
+            <div class="contact__form-row">
+              <div class="contact__field">
+                <label for="name" class="form-label">
                   {{ $t('contact.yourName') }}
                 </label>
                 <input
@@ -25,12 +25,12 @@
                   id="name"
                   v-model="formData.name"
                   required
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-600 focus:border-transparent"
+                  class="form-input"
                   :placeholder="$t('contact.yourName')"
                 />
               </div>
-              <div>
-                <label for="email" class="block text-gray-700 mb-2">
+              <div class="contact__field">
+                <label for="email" class="form-label">
                   {{ $t('contact.emailAddress') }}
                 </label>
                 <input
@@ -38,14 +38,14 @@
                   id="email"
                   v-model="formData.email"
                   required
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-600 focus:border-transparent"
+                  class="form-input"
                   :placeholder="$t('contact.emailAddress')"
                 />
               </div>
             </div>
 
-            <div>
-              <label for="message" class="block text-gray-700 mb-2">
+            <div class="contact__field">
+              <label for="message" class="form-label">
                 {{ $t('contact.message') }}
               </label>
               <textarea
@@ -53,78 +53,78 @@
                 v-model="formData.message"
                 required
                 rows="6"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-600 focus:border-transparent resize-none"
+                class="form-textarea"
                 :placeholder="$t('contact.message')"
               ></textarea>
             </div>
 
             <button
               type="submit"
-              class="w-full sm:w-auto px-8 py-4 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors flex items-center justify-center gap-2 font-medium"
+              class="btn--accent-lg contact__submit"
             >
               {{ $t('contact.sendMessage') }}
-              <Send class="w-5 h-5" />
+              <Send class="icon" />
             </button>
           </form>
         </div>
 
         <!-- Contact Information -->
-        <div class="space-y-8">
+        <div class="contact__info">
           <div>
-            <h3 class="text-xl font-bold text-gray-900 mb-6">
+            <h3 class="contact__info-title">
               {{ $t('contact.contactInformation') }}
             </h3>
-            
-            <div class="space-y-6">
-              <div class="flex items-start gap-4">
-                <div class="p-3 bg-blue-100 rounded-lg flex-shrink-0">
-                  <Phone class="w-6 h-6 text-blue-900" />
+
+            <div class="contact__info-list">
+              <div class="contact__info-item">
+                <div class="contact__info-icon">
+                  <Phone class="icon--md" />
                 </div>
                 <div>
-                  <div class="font-semibold text-gray-900 mb-1">{{ $t('contact.phone') }}</div>
-                  <a :href="`tel:${formatPhoneForTel(settings.phoneNumber)}`" class="text-gray-600 hover:text-orange-600 transition-colors">
+                  <div class="contact__info-label">{{ $t('contact.phone') }}</div>
+                  <a :href="`tel:${formatPhoneForTel(settings.phoneNumber)}`" class="contact__info-link">
                     {{ settings.phoneNumber }}
                   </a>
                 </div>
               </div>
 
-              <div class="flex items-start gap-4">
-                <div class="p-3 bg-blue-100 rounded-lg flex-shrink-0">
-                  <Mail class="w-6 h-6 text-blue-900" />
+              <div class="contact__info-item">
+                <div class="contact__info-icon">
+                  <Mail class="icon--md" />
                 </div>
                 <div>
-                  <div class="font-semibold text-gray-900 mb-1">{{ $t('contact.email') }}</div>
-                  <a :href="`mailto:${settings.contactEmail}`" class="text-gray-600 hover:text-orange-600 transition-colors">
+                  <div class="contact__info-label">{{ $t('contact.email') }}</div>
+                  <a :href="`mailto:${settings.contactEmail}`" class="contact__info-link">
                     {{ settings.contactEmail }}
                   </a>
                 </div>
               </div>
 
-              <div class="flex items-start gap-4">
-                <div class="p-3 bg-green-100 rounded-lg flex-shrink-0">
-                  <MessageCircle class="w-6 h-6 text-green-600" />
+              <div class="contact__info-item">
+                <div class="contact__info-icon contact__info-icon--whatsapp">
+                  <MessageCircle class="icon--md" />
                 </div>
                 <div>
-                  <div class="font-semibold text-gray-900 mb-1">{{ $t('contact.whatsapp') }}</div>
-                  <a 
-                    :href="`https://wa.me/${formatPhoneForWhatsApp(settings.phoneNumber)}`" 
+                  <div class="contact__info-label">{{ $t('contact.whatsapp') }}</div>
+                  <a
+                    :href="`https://wa.me/${formatPhoneForWhatsApp(settings.phoneNumber)}`"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="text-gray-600 hover:text-green-600 transition-colors inline-flex items-center gap-1"
+                    class="contact__info-link contact__info-link--whatsapp"
                   >
                     {{ settings.phoneNumber }}
                   </a>
-                  <p class="text-xs text-gray-500 mt-1">{{ $t('contact.chatInstantly') }}</p>
+                  <p class="contact__info-hint">{{ $t('contact.chatInstantly') }}</p>
                 </div>
               </div>
 
-              <div class="flex items-start gap-4">
-                <div class="p-3 bg-blue-100 rounded-lg flex-shrink-0">
-                  <MapPin class="w-6 h-6 text-blue-900" />
+              <div class="contact__info-item">
+                <div class="contact__info-icon">
+                  <MapPin class="icon--md" />
                 </div>
                 <div>
-                  <div class="font-semibold text-gray-900 mb-1">{{ $t('contact.address') }}</div>
-                  <p class="text-gray-600" v-html="settings.address.replace(/\n/g, '<br />')">
+                  <div class="contact__info-label">{{ $t('contact.address') }}</div>
+                  <p class="contact__info-text" v-html="settings.address.replace(/\n/g, '<br />')">
                   </p>
                 </div>
               </div>
@@ -136,19 +136,19 @@
             :href="`https://wa.me/${formatPhoneForWhatsApp(settings.phoneNumber)}?text=Hello! I'm interested in your transport services.`"
             target="_blank"
             rel="noopener noreferrer"
-            class="block w-full p-4 bg-green-600 hover:bg-green-700 text-white rounded-xl transition-colors text-center font-semibold flex items-center justify-center gap-2"
+            class="contact__whatsapp-btn"
           >
-            <MessageCircle class="w-5 h-5" />
+            <MessageCircle class="icon" />
             {{ $t('contact.chatOnWhatsApp') }}
           </a>
 
-          <div class="bg-blue-50 p-6 rounded-xl border border-blue-100">
-            <h4 class="font-semibold text-gray-900 mb-2">{{ $t('contact.businessHours') }}</h4>
-            <div class="text-sm text-gray-600 space-y-1">
+          <div class="contact__hours">
+            <h4 class="contact__hours-title">{{ $t('contact.businessHours') }}</h4>
+            <div class="contact__hours-list">
               <p>{{ $t('contact.mondayFriday') }}</p>
               <p>{{ $t('contact.saturday') }}</p>
               <p>{{ $t('contact.sunday') }}</p>
-              <p class="text-orange-600 font-medium mt-2">{{ $t('contact.emergencySupport') }}</p>
+              <p class="contact__hours-emergency">{{ $t('contact.emergencySupport') }}</p>
             </div>
           </div>
         </div>
@@ -180,3 +180,167 @@ const handleSubmit = () => {
 }
 </script>
 
+<style lang="scss" scoped>
+@use '~/assets/scss/variables' as *;
+@use '~/assets/scss/mixins' as *;
+
+.contact {
+  @include section-pad;
+  background: $color-surface;
+}
+
+.contact__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+
+  @include respond-to(lg) {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.contact__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.contact__form-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+
+  @include respond-to(sm) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.contact__submit {
+  width: 100%;
+
+  @include respond-to(sm) {
+    width: auto;
+  }
+}
+
+.contact__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.contact__info-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: $color-text;
+  margin: 0 0 1.5rem;
+}
+
+.contact__info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.contact__info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.contact__info-icon {
+  padding: 0.75rem;
+  background: $color-brand-light;
+  border-radius: $radius-md;
+  flex-shrink: 0;
+  color: $color-brand;
+
+  &--whatsapp {
+    background: $color-success-light;
+    color: $color-success;
+  }
+}
+
+.contact__info-label {
+  font-weight: 600;
+  color: $color-text;
+  margin-bottom: 0.25rem;
+}
+
+.contact__info-link {
+  color: $color-text-muted;
+  transition: color 0.2s;
+
+  &:hover {
+    color: $color-accent;
+  }
+
+  &--whatsapp {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    &:hover {
+      color: $color-success;
+    }
+  }
+}
+
+.contact__info-hint {
+  font-size: 0.75rem;
+  color: $color-text-faint;
+  margin: 0.25rem 0 0;
+}
+
+.contact__info-text {
+  color: $color-text-muted;
+  margin: 0;
+}
+
+.contact__whatsapp-btn {
+  display: flex;
+  width: 100%;
+  padding: 1rem;
+  background: $color-success;
+  color: $color-text-inverse;
+  border-radius: $radius-xl;
+  transition: background-color 0.2s;
+  text-align: center;
+  font-weight: 600;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  &:hover {
+    background: $color-success-hover;
+  }
+}
+
+.contact__hours {
+  background: $color-brand-tint;
+  padding: 1.5rem;
+  border-radius: $radius-xl;
+  border: 1px solid $color-brand-light;
+}
+
+.contact__hours-title {
+  font-weight: 600;
+  color: $color-text;
+  margin: 0 0 0.5rem;
+}
+
+.contact__hours-list {
+  font-size: 0.875rem;
+  color: $color-text-muted;
+
+  p {
+    margin: 0 0 0.25rem;
+  }
+}
+
+.contact__hours-emergency {
+  color: $color-accent;
+  font-weight: 500;
+  margin-top: 0.5rem !important;
+}
+</style>

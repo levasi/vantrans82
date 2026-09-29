@@ -1,23 +1,23 @@
 <template>
-    <div class="min-h-screen bg-gray-50">
+    <div class="admin-dashboard">
         <AdminHeader @toggle-sidebar="sidebarOpen = !sidebarOpen" />
-        <div class="flex">
+        <div class="admin-dashboard__body">
             <AdminSidebar :is-open="sidebarOpen" @close="sidebarOpen = false" />
-            <main class="flex-1 p-4 sm:p-6 lg:p-8 lg:ml-0">
-                <div class="max-w-7xl mx-auto">
+            <main class="admin-dashboard__main">
+                <div class="admin-dashboard__container">
                     <!-- Welcome Section -->
-                    <div class="mb-6 sm:mb-8">
-                        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Welcome, {{ user?.name || user?.email }}</h1>
-                        <p class="text-sm sm:text-base text-gray-600">Manage your VanTrans82 website from here</p>
+                    <div class="admin-dashboard__welcome">
+                        <h1 class="admin-dashboard__title">Welcome, {{ user?.name || user?.email }}</h1>
+                        <p class="admin-dashboard__subtitle">Manage your VanTrans82 website from here</p>
                     </div>
 
                     <!-- Dashboard Stats -->
                     <AdminStats />
 
                     <!-- Quick Actions -->
-                    <div class="mt-6 sm:mt-8">
-                        <h2 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="admin-dashboard__actions">
+                        <h2 class="admin-dashboard__actions-title">Quick Actions</h2>
+                        <div class="admin-dashboard__actions-grid">
                             <AdminActionCard title="Translations"
                                 description="Edit website translations for all languages" icon="FileText"
                                 @click="navigateTo('/admin/translations')" />
@@ -48,3 +48,99 @@ useHead({
     title: 'Admin Dashboard - VanTrans82'
 })
 </script>
+
+<style lang="scss" scoped>
+@use '~/assets/scss/variables' as *;
+@use '~/assets/scss/mixins' as *;
+
+.admin-dashboard {
+  min-height: 100vh;
+  background: var(--color-muted);
+
+  &__body {
+    display: flex;
+  }
+
+  &__main {
+    flex: 1;
+    padding: 1rem;
+
+    @include respond-to(sm) {
+      padding: 1.5rem;
+    }
+
+    @include respond-to(lg) {
+      padding: 2rem;
+      margin-left: 0;
+    }
+  }
+
+  &__container {
+    max-width: $container-max;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  &__welcome {
+    margin-bottom: 1.5rem;
+
+    @include respond-to(sm) {
+      margin-bottom: 2rem;
+    }
+  }
+
+  &__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0 0 0.5rem;
+
+    @include respond-to(sm) {
+      font-size: 1.875rem;
+    }
+  }
+
+  &__subtitle {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin: 0;
+
+    @include respond-to(sm) {
+      font-size: 1rem;
+    }
+  }
+
+  &__actions {
+    margin-top: 1.5rem;
+
+    @include respond-to(sm) {
+      margin-top: 2rem;
+    }
+  }
+
+  &__actions-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 1rem;
+
+    @include respond-to(sm) {
+      font-size: 1.25rem;
+    }
+  }
+
+  &__actions-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+
+    @include respond-to(md) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include respond-to(lg) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+}
+</style>

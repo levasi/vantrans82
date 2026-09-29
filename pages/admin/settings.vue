@@ -1,64 +1,65 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="admin-settings">
     <AdminHeader @toggle-sidebar="sidebarOpen = !sidebarOpen" />
-    <div class="flex">
+    <div class="admin-settings__body">
       <AdminSidebar :is-open="sidebarOpen" @close="sidebarOpen = false" />
-      <main class="flex-1 p-4 sm:p-6 lg:p-8 lg:ml-0">
-        <div class="max-w-4xl mx-auto">
+      <main class="admin-settings__main">
+        <div class="admin-settings__container">
           <!-- Header -->
-          <div class="mb-6 sm:mb-8">
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Settings</h1>
-            <p class="text-sm sm:text-base text-gray-600">Manage your website settings and configuration</p>
+          <div class="admin-settings__header">
+            <h1 class="admin-settings__title">Settings</h1>
+            <p class="admin-settings__subtitle">Manage your website settings and configuration</p>
           </div>
 
           <!-- Success/Error Messages -->
-          <div v-if="message" :class="[
-            'mb-6 p-4 rounded-lg',
-            messageType === 'success' ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200'
-          ]">
+          <div
+            v-if="message"
+            class="admin-settings__alert"
+            :class="messageType === 'success' ? 'admin-settings__alert--success' : 'admin-settings__alert--error'"
+          >
             {{ message }}
           </div>
 
           <!-- General Settings -->
-          <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 mb-6">
-            <h2 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Globe class="w-5 h-5" />
+          <div class="admin-settings__card">
+            <h2 class="admin-settings__card-title">
+              <Globe class="icon" />
               General Settings
             </h2>
-            <div class="space-y-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Company Name</label>
+            <div class="admin-settings__fields">
+              <div class="admin-settings__field">
+                <label class="admin-settings__label">Company Name</label>
                 <input
                   v-model="settings.companyName"
                   type="text"
-                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent"
+                  class="admin-settings__input"
                   placeholder="VanTrans82"
                 />
               </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Contact Email</label>
+              <div class="admin-settings__field">
+                <label class="admin-settings__label">Contact Email</label>
                 <input
                   v-model="settings.contactEmail"
                   type="email"
-                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent"
+                  class="admin-settings__input"
                   placeholder="contact@vantrans82.ro"
                 />
               </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+              <div class="admin-settings__field">
+                <label class="admin-settings__label">Phone Number</label>
                 <input
                   v-model="settings.phoneNumber"
                   type="tel"
-                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent"
+                  class="admin-settings__input"
                   placeholder="+40 123 456 789"
                 />
               </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Address</label>
+              <div class="admin-settings__field">
+                <label class="admin-settings__label">Address</label>
                 <textarea
                   v-model="settings.address"
                   rows="3"
-                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent"
+                  class="admin-settings__input"
                   placeholder="Str. Logistica nr. 123, Bucharest, Romania"
                 ></textarea>
               </div>
@@ -66,114 +67,114 @@
           </div>
 
           <!-- Email Settings -->
-          <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 mb-6">
-            <h2 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Mail class="w-5 h-5" />
+          <div class="admin-settings__card">
+            <h2 class="admin-settings__card-title">
+              <Mail class="icon" />
               Email Settings
             </h2>
-            <div class="space-y-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">SMTP Host</label>
+            <div class="admin-settings__fields">
+              <div class="admin-settings__field">
+                <label class="admin-settings__label">SMTP Host</label>
                 <input
                   v-model="settings.smtpHost"
                   type="text"
-                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent"
+                  class="admin-settings__input"
                   placeholder="smtp.example.com"
                 />
               </div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">SMTP Port</label>
+              <div class="admin-settings__grid">
+                <div class="admin-settings__field">
+                  <label class="admin-settings__label">SMTP Port</label>
                   <input
                     v-model="settings.smtpPort"
                     type="number"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent"
+                    class="admin-settings__input"
                     placeholder="587"
                   />
                 </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">SMTP Username</label>
+                <div class="admin-settings__field">
+                  <label class="admin-settings__label">SMTP Username</label>
                   <input
                     v-model="settings.smtpUsername"
                     type="text"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent"
+                    class="admin-settings__input"
                     placeholder="your-email@example.com"
                   />
                 </div>
               </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">SMTP Password</label>
+              <div class="admin-settings__field">
+                <label class="admin-settings__label">SMTP Password</label>
                 <input
                   v-model="settings.smtpPassword"
                   type="password"
-                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent"
+                  class="admin-settings__input"
                   placeholder="••••••••"
                 />
               </div>
-              <div>
-                <label class="flex items-center gap-2">
+              <div class="admin-settings__field">
+                <label class="admin-settings__checkbox-label">
                   <input
                     v-model="settings.smtpSecure"
                     type="checkbox"
-                    class="w-4 h-4 text-blue-900 border-gray-300 rounded focus:ring-blue-900"
+                    class="admin-settings__checkbox"
                   />
-                  <span class="text-sm text-gray-700">Use SSL/TLS</span>
+                  <span class="admin-settings__checkbox-text">Use SSL/TLS</span>
                 </label>
               </div>
             </div>
           </div>
 
           <!-- System Information -->
-          <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 mb-6">
-            <h2 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Server class="w-5 h-5" />
+          <div class="admin-settings__card">
+            <h2 class="admin-settings__card-title">
+              <Server class="icon" />
               System Information
             </h2>
-            <div class="space-y-3">
-              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 py-2 border-b border-gray-100">
-                <span class="text-sm text-gray-600">Database Status</span>
-                <span :class="[
-                  'px-3 py-1 rounded-full text-xs font-medium',
-                  systemInfo.dbConnected ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                ]">
+            <div class="admin-settings__sys">
+              <div class="admin-settings__sys-row admin-settings__sys-row--bordered">
+                <span class="admin-settings__sys-label">Database Status</span>
+                <span
+                  class="admin-settings__badge"
+                  :class="systemInfo.dbConnected ? 'admin-settings__badge--success' : 'admin-settings__badge--error'"
+                >
                   {{ systemInfo.dbConnected ? 'Connected' : 'Disconnected' }}
                 </span>
               </div>
-              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 py-2 border-b border-gray-100">
-                <span class="text-sm text-gray-600">Environment</span>
-                <span class="text-sm font-medium text-gray-900">{{ systemInfo.environment }}</span>
+              <div class="admin-settings__sys-row admin-settings__sys-row--bordered">
+                <span class="admin-settings__sys-label">Environment</span>
+                <span class="admin-settings__sys-value">{{ systemInfo.environment }}</span>
               </div>
-              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 py-2 border-b border-gray-100">
-                <span class="text-sm text-gray-600">Node.js Version</span>
-                <span class="text-sm font-medium text-gray-900">{{ systemInfo.nodeVersion }}</span>
+              <div class="admin-settings__sys-row admin-settings__sys-row--bordered">
+                <span class="admin-settings__sys-label">Node.js Version</span>
+                <span class="admin-settings__sys-value">{{ systemInfo.nodeVersion }}</span>
               </div>
-              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 py-2">
-                <span class="text-sm text-gray-600">Uptime</span>
-                <span class="text-sm font-medium text-gray-900">{{ systemInfo.uptime }}</span>
+              <div class="admin-settings__sys-row">
+                <span class="admin-settings__sys-label">Uptime</span>
+                <span class="admin-settings__sys-value">{{ systemInfo.uptime }}</span>
               </div>
             </div>
           </div>
 
           <!-- Account Settings -->
-          <div class="bg-white rounded-xl shadow-sm border border-red-200 p-4 sm:p-6 mb-6">
-            <h2 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Trash2 class="w-5 h-5 text-red-600" />
-              <span class="text-red-600">Danger Zone</span>
+          <div class="admin-settings__card admin-settings__card--danger">
+            <h2 class="admin-settings__card-title">
+              <Trash2 class="icon admin-settings__danger-icon" />
+              <span class="admin-settings__danger-text">Danger Zone</span>
             </h2>
-            <div class="space-y-4">
-              <div>
-                <h3 class="text-base font-medium text-gray-900 mb-2">Delete Account</h3>
-                <p class="text-sm text-gray-600 mb-4">
+            <div class="admin-settings__fields">
+              <div class="admin-settings__field">
+                <h3 class="admin-settings__danger-heading">Delete Account</h3>
+                <p class="admin-settings__danger-desc">
                   Once you delete your account, there is no going back. This action cannot be undone.
                   You will be logged out immediately and will need to create a new account to access the admin area.
                 </p>
                 <button
                   @click="handleDeleteAccount"
                   :disabled="deleting"
-                  class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  class="admin-settings__btn admin-settings__btn--danger"
                 >
-                  <Trash2 v-if="!deleting" class="w-4 h-4" />
-                  <div v-else class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  <Trash2 v-if="!deleting" class="icon icon--sm" />
+                  <div v-else class="admin-settings__spinner admin-settings__spinner--sm"></div>
                   {{ deleting ? 'Deleting...' : 'Delete My Account' }}
                 </button>
               </div>
@@ -181,20 +182,20 @@
           </div>
 
           <!-- Save Button -->
-          <div class="flex flex-col sm:flex-row justify-end gap-4">
+          <div class="admin-settings__actions">
             <button
               @click="loadSettings"
-              class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+              class="admin-settings__btn admin-settings__btn--secondary"
             >
               Reset
             </button>
             <button
               @click="saveSettings"
               :disabled="saving"
-              class="px-6 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-950 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              class="admin-settings__btn admin-settings__btn--primary"
             >
-              <Save v-if="!saving" class="w-5 h-5" />
-              <div v-else class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+              <Save v-if="!saving" class="icon" />
+              <div v-else class="admin-settings__spinner"></div>
               {{ saving ? 'Saving...' : 'Save Settings' }}
             </button>
           </div>
@@ -351,3 +352,330 @@ useHead({
 })
 </script>
 
+<style lang="scss" scoped>
+@use '~/assets/scss/variables' as *;
+@use '~/assets/scss/mixins' as *;
+
+.admin-settings {
+  min-height: 100vh;
+  background: var(--color-muted);
+
+  &__body {
+    display: flex;
+  }
+
+  &__main {
+    flex: 1;
+    padding: 1rem;
+
+    @include respond-to(sm) {
+      padding: 1.5rem;
+    }
+
+    @include respond-to(lg) {
+      padding: 2rem;
+      margin-left: 0;
+    }
+  }
+
+  &__container {
+    max-width: $container-narrow;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  &__header {
+    margin-bottom: 1.5rem;
+
+    @include respond-to(sm) {
+      margin-bottom: 2rem;
+    }
+  }
+
+  &__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0 0 0.5rem;
+
+    @include respond-to(sm) {
+      font-size: 1.875rem;
+    }
+  }
+
+  &__subtitle {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin: 0;
+
+    @include respond-to(sm) {
+      font-size: 1rem;
+    }
+  }
+
+  &__alert {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border-radius: var(--radius-md);
+
+    &--success {
+      background: var(--color-success-light);
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    &--error {
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+  }
+
+  &__card {
+    background: var(--color-surface);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--color-border);
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+
+    @include respond-to(sm) {
+      padding: 1.5rem;
+    }
+
+    &--danger {
+      border-color: #fecaca;
+    }
+  }
+
+  &__card-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    @include respond-to(sm) {
+      font-size: 1.25rem;
+    }
+  }
+
+  &__fields {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  &__field {
+    display: block;
+  }
+
+  &__label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.5rem;
+  }
+
+  &__input {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border: 1px solid $color-border-strong;
+    border-radius: var(--radius-md);
+    outline: none;
+    font-family: inherit;
+    font-size: 1rem;
+    box-sizing: border-box;
+    resize: vertical;
+    transition: box-shadow 0.15s, border-color 0.15s;
+
+    &:focus {
+      border-color: transparent;
+      box-shadow: 0 0 0 2px var(--color-brand);
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+
+    @include respond-to(sm) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  &__checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+  }
+
+  &__checkbox {
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--color-brand);
+    border-radius: $radius-sm;
+  }
+
+  &__checkbox-text {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
+
+  &__sys {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  &__sys-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+
+    @include respond-to(sm) {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    &--bordered {
+      border-bottom: 1px solid #f3f4f6;
+    }
+  }
+
+  &__sys-label {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+  }
+
+  &__sys-value {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text);
+  }
+
+  &__badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: $radius-full;
+    font-size: 0.75rem;
+    font-weight: 500;
+
+    &--success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    &--error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+  }
+
+  &__danger-icon {
+    color: var(--color-danger);
+  }
+
+  &__danger-text {
+    color: var(--color-danger);
+  }
+
+  &__danger-heading {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-text);
+    margin: 0 0 0.5rem;
+  }
+
+  &__danger-desc {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin: 0 0 1rem;
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 1rem;
+
+    @include respond-to(sm) {
+      flex-direction: row;
+    }
+  }
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.5rem;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    font-family: inherit;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &--primary {
+      background: var(--color-brand);
+      color: $color-text-inverse;
+
+      &:hover:not(:disabled) {
+        background: var(--color-brand-dark);
+      }
+    }
+
+    &--secondary {
+      background: #e5e7eb;
+      color: var(--color-text-secondary);
+
+      &:hover {
+        background: $color-border-strong;
+      }
+    }
+
+    &--danger {
+      background: var(--color-danger);
+      color: $color-text-inverse;
+
+      &:hover:not(:disabled) {
+        background: #b91c1c;
+      }
+    }
+  }
+
+  &__spinner {
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: $radius-full;
+    border: 2px solid transparent;
+    border-bottom-color: currentColor;
+    animation: admin-settings-spin 0.75s linear infinite;
+
+    &--sm {
+      width: 1rem;
+      height: 1rem;
+    }
+  }
+}
+
+@keyframes admin-settings-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+</style>

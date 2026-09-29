@@ -1,49 +1,39 @@
 <template>
-  <section class="py-20 md:py-24 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <!-- Section Header -->
-      <div class="text-center max-w-3xl mx-auto mb-16">
-        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-          {{ $t('process.title') }}
-        </h2>
-        <p class="text-lg text-gray-600">
-          {{ $t('process.subtitle') }}
-        </p>
+  <section class="process">
+    <div class="container">
+      <div class="section-header">
+        <h2>{{ $t('process.title') }}</h2>
+        <p>{{ $t('process.subtitle') }}</p>
       </div>
 
-      <!-- Process Steps -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        <div v-for="(step, index) in steps" :key="index" class="relative group">
-          <!-- Connector Line (hidden on mobile and last item) -->
-          <div 
-            v-if="index < steps.length - 1" 
-            class="hidden lg:block absolute top-24 left-1/2 w-full h-0.5 bg-gradient-to-r from-orange-600 to-blue-900 z-0"
+      <div class="process__grid">
+        <div
+          v-for="(step, index) in steps"
+          :key="index"
+          class="process__step"
+        >
+          <div
+            v-if="index < steps.length - 1"
+            class="process__connector"
           ></div>
-          
-          <div class="relative z-10">
-            <!-- Image -->
-            <div class="relative h-48 rounded-xl overflow-hidden mb-6 border-4 border-white shadow-lg group-hover:shadow-xl transition-shadow">
+
+          <div class="process__step-inner">
+            <div class="process__media">
               <img
                 :src="step.image"
                 :alt="step.title"
-                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                class="process__image"
               />
-              <div class="absolute inset-0 bg-gradient-to-t from-blue-900/60 to-transparent"></div>
-              
-              <!-- Step Number -->
-              <div class="absolute top-4 left-4 w-14 h-14 bg-orange-600 rounded-full flex items-center justify-center border-4 border-white shadow-lg">
-                <span class="text-white font-bold text-lg">{{ step.number }}</span>
+              <div class="process__media-overlay"></div>
+
+              <div class="process__number">
+                <span>{{ step.number }}</span>
               </div>
             </div>
 
-            <!-- Content -->
-            <div class="text-center">
-              <h3 class="text-xl font-bold text-gray-900 mb-2">
-                {{ step.title }}
-              </h3>
-              <p class="text-gray-600">
-                {{ step.description }}
-              </p>
+            <div class="process__content">
+              <h3 class="process__step-title">{{ step.title }}</h3>
+              <p class="process__step-desc">{{ step.description }}</p>
             </div>
           </div>
         </div>
@@ -86,3 +76,119 @@ const steps = computed(() => [
 ])
 </script>
 
+<style lang="scss" scoped>
+@use '~/assets/scss/variables' as *;
+@use '~/assets/scss/mixins' as *;
+
+.process {
+  @include section-pad;
+  background: $color-surface;
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+
+    @include respond-to(md) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include respond-to(lg) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  &__step {
+    position: relative;
+  }
+
+  &__connector {
+    display: none;
+
+    @include respond-to(lg) {
+      display: block;
+      position: absolute;
+      top: 6rem;
+      left: 50%;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(to right, $color-accent, $color-brand);
+      z-index: 0;
+    }
+  }
+
+  &__step-inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  &__media {
+    position: relative;
+    height: 12rem;
+    border-radius: $radius-xl;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    border: 4px solid $color-surface;
+    box-shadow: $shadow-lg;
+    transition: box-shadow 0.3s;
+
+    .process__step:hover & {
+      box-shadow: $shadow-xl;
+
+      .process__image {
+        transform: scale(1.1);
+      }
+    }
+  }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+  }
+
+  &__media-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgb(30 58 138 / 0.6), transparent);
+  }
+
+  &__number {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    width: 3.5rem;
+    height: 3.5rem;
+    background: $color-accent;
+    border-radius: $radius-full;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 4px solid $color-surface;
+    box-shadow: $shadow-lg;
+
+    span {
+      color: $color-text-inverse;
+      font-weight: 700;
+      font-size: 1.125rem;
+    }
+  }
+
+  &__content {
+    text-align: center;
+  }
+
+  &__step-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: $color-text;
+    margin: 0 0 0.5rem;
+  }
+
+  &__step-desc {
+    color: $color-text-muted;
+    margin: 0;
+  }
+}
+</style>

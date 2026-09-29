@@ -1,6 +1,6 @@
 # VanTrans82
 
-A Nuxt 3 project with TailwindCSS.
+A Nuxt 3 project with SCSS.
 
 ## Setup
 
@@ -108,5 +108,5 @@ Vercel → Project → **Settings → Domains** → add your domain and follow D
 ## Learn More
 
 - [Nuxt Documentation](https://nuxt.com/docs)
-- [TailwindCSS Documentation](https://tailwindcss.com/docs)
+- [Sass Documentation](https://sass-lang.com/documentation/)
 

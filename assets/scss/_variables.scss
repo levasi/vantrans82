@@ -1,0 +1,87 @@
+// Brand tokens (mapped from previous Tailwind blue-900 / orange-600)
+$color-brand: #1e3a8a;
+$color-brand-dark: #172554;
+$color-brand-mid: #1e40af;
+$color-brand-light: #dbeafe;
+$color-brand-tint: #eff6ff;
+$color-accent: #ea580c;
+$color-accent-hover: #c2410c;
+$color-accent-light: #ffedd5;
+$color-accent-soft: #fed7aa;
+
+$color-surface: #ffffff;
+$color-muted: #f9fafb;
+$color-border: #e5e7eb;
+$color-border-strong: #d1d5db;
+
+$color-text: #111827;
+$color-text-secondary: #374151;
+$color-text-muted: #4b5563;
+$color-text-faint: #6b7280;
+$color-text-inverse: #ffffff;
+
+$color-success: #16a34a;
+$color-success-hover: #15803d;
+$color-success-light: #dcfce7;
+$color-danger: #dc2626;
+$color-purple: #9333ea;
+$color-purple-light: #f3e8ff;
+$color-green: #16a34a;
+
+$color-footer: #111827;
+$color-footer-muted: #1f2937;
+$color-footer-text: #d1d5db;
+$color-footer-faint: #9ca3af;
+
+$container-max: 80rem;
+$container-narrow: 56rem;
+$radius-sm: 0.25rem;
+$radius-md: 0.5rem;
+$radius-lg: 0.75rem;
+$radius-xl: 1rem;
+$radius-2xl: 1rem;
+$radius-full: 9999px;
+
+$bp-sm: 640px;
+$bp-md: 768px;
+$bp-lg: 1024px;
+
+$shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+$shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+$shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+$shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+$shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+
+:root {
+  --color-brand: #{$color-brand};
+  --color-brand-dark: #{$color-brand-dark};
+  --color-brand-mid: #{$color-brand-mid};
+  --color-brand-light: #{$color-brand-light};
+  --color-brand-tint: #{$color-brand-tint};
+  --color-accent: #{$color-accent};
+  --color-accent-hover: #{$color-accent-hover};
+  --color-accent-light: #{$color-accent-light};
+  --color-surface: #{$color-surface};
+  --color-muted: #{$color-muted};
+  --color-border: #{$color-border};
+  --color-border-strong: #{$color-border-strong};
+  --color-text: #{$color-text};
+  --color-text-secondary: #{$color-text-secondary};
+  --color-text-muted: #{$color-text-muted};
+  --color-text-faint: #{$color-text-faint};
+  --color-success: #{$color-success};
+  --color-success-hover: #{$color-success-hover};
+  --color-success-light: #{$color-success-light};
+  --color-danger: #{$color-danger};
+  --color-purple: #{$color-purple};
+  --color-purple-light: #{$color-purple-light};
+  --container-max: #{$container-max};
+  --radius-md: #{$radius-md};
+  --radius-lg: #{$radius-lg};
+  --radius-xl: #{$radius-xl};
+  --shadow-sm: #{$shadow-sm};
+  --shadow-md: #{$shadow-md};
+  --shadow-lg: #{$shadow-lg};
+  --shadow-xl: #{$shadow-xl};
+  --shadow-2xl: #{$shadow-2xl};
+}

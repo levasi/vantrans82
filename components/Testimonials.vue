@@ -1,40 +1,40 @@
 <template>
-  <section class="py-20 md:py-24 bg-blue-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section class="testimonials">
+    <div class="container">
       <!-- Section Header -->
-      <div class="text-center max-w-3xl mx-auto mb-16">
-        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <div class="section-header">
+        <h2>
           {{ $t('testimonials.title') }}
         </h2>
-        <p class="text-lg text-gray-600">
+        <p>
           {{ $t('testimonials.subtitle') }}
         </p>
       </div>
 
       <!-- Testimonial Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="testimonials__grid">
         <div
           v-for="(testimonial, index) in testimonials"
           :key="index"
-          class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+          class="testimonials__card"
         >
-          <div class="mb-6">
-            <Quote class="w-10 h-10 text-orange-600 opacity-50" />
+          <div class="testimonials__quote-icon">
+            <Quote class="icon--xl" />
           </div>
-          <p class="text-gray-700 mb-6 leading-relaxed italic">
+          <p class="testimonials__quote">
             "{{ testimonial.quote }}"
           </p>
-          <div class="pt-4 border-t border-gray-100 flex items-center gap-4">
-            <img 
-              :src="testimonial.image" 
+          <div class="testimonials__author">
+            <img
+              :src="testimonial.image"
               :alt="testimonial.name"
-              class="w-14 h-14 rounded-full object-cover border-2 border-blue-100"
+              class="testimonials__avatar"
             />
             <div>
-              <div class="font-semibold text-gray-900">
+              <div class="testimonials__name">
                 {{ testimonial.name }}
               </div>
-              <div class="text-sm text-gray-600 mt-1">
+              <div class="testimonials__company">
                 {{ testimonial.company }}
               </div>
             </div>
@@ -62,7 +62,7 @@ const testimonials = computed(() => [
     quote: t('testimonials.testimonial2.quote'),
     name: t('testimonials.testimonial2.name'),
     company: t('testimonials.testimonial2.company'),
-    image: "https://images.unsplash.com/photo-1589458223095-03eee50f0054?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYW4lMjBidXNpbmVzcyUyMHByb2Zlc3Npb25hbHxlbnwxfHx8fDE3Njc3MzkxNTN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+    image: "https://images.unsplash.com/photo-1589458223095-03eee50f0054?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYW4lMjBidXNpbmVzcyUyMHByb2Zlc3Npb25hbHxlbnwxfHx8fHwxNzY3NzM5MTUzfDA&ixlib=rb-4.1.0&q=80&w=1080",
   },
   {
     quote: t('testimonials.testimonial3.quote'),
@@ -73,3 +73,75 @@ const testimonials = computed(() => [
 ])
 </script>
 
+<style lang="scss" scoped>
+@use '~/assets/scss/variables' as *;
+@use '~/assets/scss/mixins' as *;
+
+.testimonials {
+  @include section-pad;
+  background: $color-brand-tint;
+}
+
+.testimonials__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+
+  @include respond-to(md) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.testimonials__card {
+  background: $color-surface;
+  padding: 2rem;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-sm;
+  border: 1px solid $color-border;
+  transition: box-shadow 0.2s;
+
+  &:hover {
+    box-shadow: $shadow-md;
+  }
+}
+
+.testimonials__quote-icon {
+  margin-bottom: 1.5rem;
+  color: $color-accent;
+  opacity: 0.5;
+}
+
+.testimonials__quote {
+  color: $color-text-secondary;
+  margin: 0 0 1.5rem;
+  line-height: 1.625;
+  font-style: italic;
+}
+
+.testimonials__author {
+  padding-top: 1rem;
+  border-top: 1px solid #f3f4f6;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.testimonials__avatar {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: $radius-full;
+  object-fit: cover;
+  border: 2px solid $color-brand-light;
+}
+
+.testimonials__name {
+  font-weight: 600;
+  color: $color-text;
+}
+
+.testimonials__company {
+  font-size: 0.875rem;
+  color: $color-text-muted;
+  margin-top: 0.25rem;
+}
+</style>

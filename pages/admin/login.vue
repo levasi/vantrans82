@@ -1,25 +1,25 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 flex items-center justify-center px-4 py-8">
-    <div class="w-full max-w-md mx-auto">
-      <div class="bg-white rounded-2xl shadow-2xl p-6 sm:p-8">
+  <div class="admin-login">
+    <div class="admin-login__wrap">
+      <div class="admin-login__card">
         <!-- Logo -->
-        <div class="flex justify-center mb-8">
-          <NuxtImg src="/vtlogo.png" alt="VanTrans82" class="h-16 w-auto" />
+        <div class="admin-login__logo">
+          <NuxtImg src="/vtlogo.png" alt="VanTrans82" class="admin-login__logo-img" />
         </div>
 
         <!-- Title -->
-        <h1 class="text-3xl font-bold text-gray-900 text-center mb-2">Admin Login</h1>
-        <p class="text-gray-600 text-center mb-8">Sign in to access the admin area</p>
+        <h1 class="admin-login__title">Admin Login</h1>
+        <p class="admin-login__subtitle">Sign in to access the admin area</p>
 
         <!-- Error Message -->
-        <div v-if="error" class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <p class="text-sm text-red-600">{{ error }}</p>
+        <div v-if="error" class="admin-login__alert admin-login__alert--error">
+          <p class="admin-login__alert-text">{{ error }}</p>
         </div>
 
         <!-- Login Form -->
-        <form @submit.prevent="handleLogin" class="space-y-6">
-          <div>
-            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+        <form @submit.prevent="handleLogin" class="admin-login__form">
+          <div class="admin-login__field">
+            <label for="email" class="admin-login__label">
               Email Address
             </label>
             <input
@@ -27,13 +27,13 @@
               v-model="formData.email"
               type="email"
               required
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent"
+              class="admin-login__input"
               placeholder="admin@vantrans82.ro"
             />
           </div>
 
-          <div>
-            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+          <div class="admin-login__field">
+            <label for="password" class="admin-login__label">
               Password
             </label>
             <input
@@ -41,7 +41,7 @@
               v-model="formData.password"
               type="password"
               required
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent"
+              class="admin-login__input"
               placeholder="Enter your password"
             />
           </div>
@@ -49,13 +49,13 @@
           <button
             type="submit"
             :disabled="loading"
-            class="w-full px-6 py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-950 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            class="admin-login__submit"
           >
             <span v-if="!loading">Sign In</span>
-            <span v-else class="flex items-center gap-2">
-              <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            <span v-else class="admin-login__loading">
+              <svg class="admin-login__spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="admin-login__spinner-track" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="admin-login__spinner-head" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
               Signing in...
             </span>
@@ -63,17 +63,17 @@
         </form>
 
         <!-- Register Link -->
-        <div class="mt-6 text-center">
-          <p class="text-sm text-gray-600">
+        <div class="admin-login__footer-link">
+          <p class="admin-login__footer-text">
             Don't have an account?
-            <NuxtLink to="/admin/register" class="text-blue-900 font-medium hover:underline">
+            <NuxtLink to="/admin/register" class="admin-login__link">
               Create one
             </NuxtLink>
           </p>
         </div>
 
         <!-- Footer -->
-        <p class="mt-6 text-center text-sm text-gray-500">
+        <p class="admin-login__portal">
           VanTrans82 Admin Portal
         </p>
       </div>
@@ -127,3 +127,192 @@ useHead({
 })
 </script>
 
+<style lang="scss" scoped>
+@use '~/assets/scss/variables' as *;
+@use '~/assets/scss/mixins' as *;
+
+.admin-login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background: linear-gradient(to bottom right, #172554, $color-brand, $color-brand-mid);
+
+  &__wrap {
+    width: 100%;
+    max-width: 28rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  &__card {
+    background: var(--color-surface);
+    border-radius: $radius-2xl;
+    box-shadow: var(--shadow-2xl);
+    padding: 1.5rem;
+
+    @include respond-to(sm) {
+      padding: 2rem;
+    }
+  }
+
+  &__logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+
+  &__logo-img {
+    height: 4rem;
+    width: auto;
+  }
+
+  &__title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--color-text);
+    text-align: center;
+    margin: 0 0 0.5rem;
+  }
+
+  &__subtitle {
+    color: var(--color-text-muted);
+    text-align: center;
+    margin: 0 0 2rem;
+  }
+
+  &__alert {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border-radius: var(--radius-md);
+
+    &--error {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+    }
+  }
+
+  &__alert-text {
+    font-size: 0.875rem;
+    color: var(--color-danger);
+    margin: 0;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  &__field {
+    display: block;
+  }
+
+  &__label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.5rem;
+  }
+
+  &__input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid $color-border-strong;
+    border-radius: var(--radius-md);
+    outline: none;
+    font-family: inherit;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: box-shadow 0.15s, border-color 0.15s;
+
+    &:focus {
+      border-color: transparent;
+      box-shadow: 0 0 0 2px var(--color-brand);
+    }
+  }
+
+  &__submit {
+    width: 100%;
+    padding: 0.75rem 1.5rem;
+    background: var(--color-brand);
+    color: $color-text-inverse;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    font-family: inherit;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: background-color 0.2s;
+
+    &:hover:not(:disabled) {
+      background: var(--color-brand-dark);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &__loading {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__spinner {
+    height: 1.25rem;
+    width: 1.25rem;
+    animation: admin-login-spin 1s linear infinite;
+  }
+
+  &__spinner-track {
+    opacity: 0.25;
+  }
+
+  &__spinner-head {
+    opacity: 0.75;
+  }
+
+  &__footer-link {
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+
+  &__footer-text {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  &__link {
+    color: var(--color-brand);
+    font-weight: 500;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__portal {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--color-text-faint);
+  }
+}
+
+@keyframes admin-login-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+</style>

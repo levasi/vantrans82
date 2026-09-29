@@ -19,7 +19,6 @@
   "dependencies": {
     "@nuxt/image": "^2.0.0",
     "@nuxtjs/i18n": "^10.2.1",
-    "@nuxtjs/tailwindcss": "^6.8.4",
     "bcryptjs": "^3.0.3",
     "lucide-vue-next": "^0.562.0",
     "nuxt": "^3.8.4",
@@ -29,7 +28,8 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
-    "@types/pg": "^8.16.0"
+    "@types/pg": "^8.16.0",
+    "sass": "^1.105.0"
   },
   "engines": {
     "node": ">=20.19.0"

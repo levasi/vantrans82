@@ -1,17 +1,16 @@
 <template>
-    <header class="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
-        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16 md:h-20">
+    <header class="site-header">
+        <nav class="site-header__nav container">
+            <div class="site-header__bar">
                 <!-- Logo -->
-                <div class="flex-shrink-0">
-                    <button @click="scrollToSection('home')"
-                        class="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                        <NuxtImg src="/vtlogo.png" alt="VanTrans82" class="h-12 w-auto transition-all duration-300" />
+                <div class="site-header__logo">
+                    <button @click="scrollToSection('home')" class="site-header__logo-btn">
+                        <NuxtImg src="/vtlogo.png" alt="VanTrans82" class="site-header__logo-img" />
                     </button>
                 </div>
 
                 <!-- Desktop Navigation -->
-                <div class="hidden md:flex items-center gap-8">
+                <div class="site-header__links">
                     <button @click="scrollToSection('home')"
                         :class="navLinkClass('home')">
                         {{ $t('nav.home') }}
@@ -42,38 +41,36 @@
                 </div>
 
                 <!-- Language Switcher & CTA Button - Desktop -->
-                <div class="hidden md:flex items-center gap-4">
-                    <div v-if="showLanguageSwitch"
-                        class="flex items-center gap-2 border border-gray-300 rounded-lg p-1">
+                <div class="site-header__actions">
+                    <div v-if="showLanguageSwitch" class="lang-switch">
                         <button @click="switchLocale('en')" :class="[
-                            'px-3 py-1 rounded text-sm transition-colors',
-                            locale === 'en' ? 'bg-blue-900 text-white' : 'text-gray-700 hover:bg-gray-100'
+                            'lang-switch__btn',
+                            locale === 'en' ? 'lang-switch__btn--active' : ''
                         ]">
                             EN
                         </button>
                         <button @click="switchLocale('ro')" :class="[
-                            'px-3 py-1 rounded text-sm transition-colors',
-                            locale === 'ro' ? 'bg-blue-900 text-white' : 'text-gray-700 hover:bg-gray-100'
+                            'lang-switch__btn',
+                            locale === 'ro' ? 'lang-switch__btn--active' : ''
                         ]">
                             RO
                         </button>
                     </div>
-                    <button @click="scrollToSection('contact')"
-                        class="px-6 py-2.5 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
+                    <button @click="scrollToSection('contact')" class="btn btn--accent">
                         {{ $t('nav.getQuote') }}
                     </button>
                 </div>
 
                 <!-- Mobile Menu Button -->
-                <button class="md:hidden p-2" @click="mobileMenuOpen = !mobileMenuOpen">
-                    <X v-if="mobileMenuOpen" class="w-6 h-6 text-gray-700" />
-                    <Menu v-else class="w-6 h-6 text-gray-700" />
+                <button class="site-header__menu-btn" @click="mobileMenuOpen = !mobileMenuOpen">
+                    <X v-if="mobileMenuOpen" class="icon icon--md site-header__menu-icon" />
+                    <Menu v-else class="icon icon--md site-header__menu-icon" />
                 </button>
             </div>
 
             <!-- Mobile Navigation -->
-            <div v-if="mobileMenuOpen" class="md:hidden py-4 border-t border-gray-200">
-                <div class="flex flex-col gap-4">
+            <div v-if="mobileMenuOpen" class="site-header__mobile">
+                <div class="site-header__mobile-links">
                     <button @click="scrollToSection('home')"
                         :class="navLinkClass('home', true)">
                         {{ $t('nav.home') }}
@@ -102,23 +99,23 @@
                         :class="navLinkClass('contact', true)">
                         {{ $t('nav.contact') }}
                     </button>
-                    <div v-if="showLanguageSwitch"
-                        class="flex items-center gap-2 border border-gray-300 rounded-lg p-1">
+                    <div v-if="showLanguageSwitch" class="lang-switch">
                         <button @click="switchLocale('en')" :class="[
-                            'px-3 py-1 rounded text-sm transition-colors flex-1',
-                            locale === 'en' ? 'bg-blue-900 text-white' : 'text-gray-700 hover:bg-gray-100'
+                            'lang-switch__btn',
+                            'lang-switch__btn--grow',
+                            locale === 'en' ? 'lang-switch__btn--active' : ''
                         ]">
                             EN
                         </button>
                         <button @click="switchLocale('ro')" :class="[
-                            'px-3 py-1 rounded text-sm transition-colors flex-1',
-                            locale === 'ro' ? 'bg-blue-900 text-white' : 'text-gray-700 hover:bg-gray-100'
+                            'lang-switch__btn',
+                            'lang-switch__btn--grow',
+                            locale === 'ro' ? 'lang-switch__btn--active' : ''
                         ]">
                             RO
                         </button>
                     </div>
-                    <button @click="scrollToSection('contact')"
-                        class="w-full px-6 py-2.5 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
+                    <button @click="scrollToSection('contact')" class="btn btn--accent btn--block">
                         {{ $t('nav.getQuote') }}
                     </button>
                 </div>
@@ -157,12 +154,9 @@ function updateActiveSection() {
 }
 
 function navLinkClass(sectionId, isMobile = false) {
-    const base = isMobile
-        ? 'text-left transition-colors py-2'
-        : 'transition-colors'
-    const active = 'text-blue-900 font-semibold'
-    const inactive = 'text-gray-700 hover:text-blue-900'
-    return [base, activeSection.value === sectionId ? active : inactive].join(' ')
+    const base = isMobile ? 'nav-link nav-link--mobile' : 'nav-link'
+    const active = activeSection.value === sectionId ? 'nav-link--active' : ''
+    return [base, active].filter(Boolean).join(' ')
 }
 
 const scrollToSection = (id) => {
@@ -207,3 +201,160 @@ watch(() => settings.value.showLanguageSwitch, (newValue) => {
     showLanguageSwitch.value = newValue
 }, { immediate: true })
 </script>
+
+<style lang="scss" scoped>
+@use '~/assets/scss/variables' as *;
+@use '~/assets/scss/mixins' as *;
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: $color-surface;
+  border-bottom: 1px solid $color-border;
+  box-shadow: $shadow-sm;
+
+  &__bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 4rem;
+
+    @include respond-to(md) {
+      height: 5rem;
+    }
+  }
+
+  &__logo {
+    flex-shrink: 0;
+  }
+
+  &__logo-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  &__logo-img {
+    height: 3rem;
+    width: auto;
+    transition: all 0.3s;
+  }
+
+  &__links {
+    display: none;
+    align-items: center;
+    gap: 2rem;
+
+    @include respond-to(md) {
+      display: flex;
+    }
+  }
+
+  &__actions {
+    display: none;
+    align-items: center;
+    gap: 1rem;
+
+    @include respond-to(md) {
+      display: flex;
+    }
+  }
+
+  &__menu-btn {
+    display: block;
+    padding: 0.5rem;
+
+    @include respond-to(md) {
+      display: none;
+    }
+  }
+
+  &__menu-icon {
+    color: $color-text-secondary;
+  }
+
+  &__mobile {
+    display: block;
+    padding: 1rem 0;
+    border-top: 1px solid $color-border;
+
+    @include respond-to(md) {
+      display: none;
+    }
+  }
+
+  &__mobile-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+.nav-link {
+  transition: color 0.2s;
+  color: $color-text-secondary;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+
+  &:hover {
+    color: $color-brand;
+  }
+
+  &--active {
+    color: $color-brand;
+    font-weight: 600;
+  }
+
+  &--mobile {
+    text-align: left;
+    padding: 0.5rem 0;
+  }
+}
+
+.lang-switch {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid $color-border-strong;
+  border-radius: $radius-lg;
+  padding: 0.25rem;
+
+  &__btn {
+    padding: 0.25rem 0.75rem;
+    border-radius: $radius-sm;
+    font-size: 0.875rem;
+    transition: background-color 0.2s, color 0.2s;
+    color: $color-text-secondary;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font: inherit;
+
+    &:hover {
+      background: $color-muted;
+    }
+
+    &--active {
+      background: $color-brand;
+      color: $color-text-inverse;
+
+      &:hover {
+        background: $color-brand;
+      }
+    }
+
+    &--grow {
+      flex: 1;
+    }
+  }
+}
+</style>

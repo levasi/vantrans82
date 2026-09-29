@@ -1,66 +1,58 @@
 <template>
-  <section id="home" class="relative text-white overflow-hidden min-h-[90vh] flex items-center">
+  <section id="home" class="hero">
     <!-- Full-Width Background Image -->
-    <div class="absolute inset-0 w-full h-full">
-      <NuxtImg src="/2.png" alt="VanTrans82 Logistics" class="w-full h-full object-cover" loading="eager" format="webp"
+    <div class="hero__bg">
+      <NuxtImg src="/2.png" alt="VanTrans82 Logistics" class="hero__bg-img" loading="eager" format="webp"
         quality="90" />
       <!-- Multi-layer Gradient Overlay for Depth (More Transparent) -->
-      <div class="absolute inset-0 bg-gradient-to-br from-blue-950/50 via-blue-900/45 to-blue-800/40"></div>
+      <div class="hero__overlay hero__overlay--brand"></div>
       <!-- Diagonal accent gradient -->
-      <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-orange-600/10 to-transparent"></div>
+      <div class="hero__overlay hero__overlay--accent"></div>
       <!-- Radial gradient for focus -->
-      <div class="absolute inset-0"
-        style="background: radial-gradient(circle at center, transparent 0%, rgba(15, 23, 42, 0.2) 50%, rgba(15, 23, 42, 0.4) 100%);">
-      </div>
+      <div class="hero__overlay hero__overlay--radial"></div>
       <!-- Subtle pattern overlay for texture -->
-      <div class="absolute inset-0 opacity-5"
-        style="background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.03) 10px, rgba(255,255,255,0.03) 20px);">
-      </div>
+      <div class="hero__overlay hero__overlay--pattern"></div>
     </div>
 
     <!-- Content -->
-    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32 w-full">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <div class="hero__content container">
+      <div class="hero__grid">
         <!-- Left: Text Content -->
-        <div class="backdrop-blur-sm bg-white/5 rounded-2xl p-6 md:p-8 border border-white/10 shadow-2xl">
-          <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight drop-shadow-2xl">
+        <div class="hero__panel">
+          <h1 class="hero__title">
             {{ $t('hero.title') }}
           </h1>
-          <p class="text-lg md:text-xl text-blue-50 mb-8 leading-relaxed drop-shadow-lg">
+          <p class="hero__subtitle">
             {{ $t('hero.subtitle') }}
           </p>
 
           <!-- CTA Buttons -->
-          <div class="flex flex-col sm:flex-row gap-4">
-            <button @click="scrollToSection('contact')"
-              class="px-8 py-4 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-all transform hover:scale-105 shadow-lg shadow-orange-600/50 flex items-center justify-center gap-2 font-medium">
+          <div class="hero__actions">
+            <button @click="scrollToSection('contact')" class="btn btn--accent-lg hero__cta">
               {{ $t('hero.requestQuote') }}
-              <ArrowRight class="w-5 h-5" />
+              <ArrowRight class="icon" />
             </button>
-            <button @click="scrollToSection('services')"
-              class="px-8 py-4 bg-white/10 text-white border-2 border-white/30 rounded-lg hover:bg-white/20 transition-all backdrop-blur-sm font-medium hover:scale-105">
+            <button @click="scrollToSection('services')" class="btn btn--ghost hero__cta-secondary">
               {{ $t('hero.ourServices') }}
             </button>
           </div>
         </div>
 
         <!-- Right: Services -->
-        <div class="relative">
-          <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-4 lg:gap-6">
+        <div class="hero__services">
+          <div class="hero__services-grid">
             <div v-for="(service, index) in heroServices" :key="index"
-              class="backdrop-blur-md bg-white/10 rounded-xl p-6 border border-white/20 shadow-xl transform hover:scale-105 transition-all cursor-pointer group"
+              class="hero-card"
               @click="scrollToSection('services')">
-              <div class="flex items-start gap-4">
-                <div
-                  class="p-3 bg-orange-600/30 rounded-lg backdrop-blur-sm group-hover:bg-orange-600/40 transition-colors">
-                  <component :is="service.icon" class="w-8 h-8 text-orange-300" />
+              <div class="hero-card__inner">
+                <div class="hero-card__icon-wrap">
+                  <component :is="service.icon" class="icon icon--lg hero-card__icon" />
                 </div>
-                <div class="flex-1">
-                  <h3
-                    class="text-lg lg:text-xl font-bold text-white mb-2 group-hover:text-orange-300 transition-colors">
+                <div class="hero-card__body">
+                  <h3 class="hero-card__title">
                     {{ service.title }}
                   </h3>
-                  <p class="text-sm text-blue-100 leading-relaxed line-clamp-2">
+                  <p class="hero-card__desc">
                     {{ service.description }}
                   </p>
                 </div>
@@ -68,12 +60,8 @@
             </div>
           </div>
           <!-- Decorative Glow Effects -->
-          <div
-            class="absolute -bottom-8 -right-8 w-40 h-40 bg-orange-500/20 rounded-full blur-3xl animate-pulse pointer-events-none">
-          </div>
-          <div
-            class="absolute -top-8 -left-8 w-32 h-32 bg-blue-400/20 rounded-full blur-3xl animate-pulse pointer-events-none"
-            style="animation-delay: 1s;"></div>
+          <div class="hero__glow hero__glow--accent animate-pulse"></div>
+          <div class="hero__glow hero__glow--brand animate-pulse"></div>
         </div>
       </div>
     </div>
@@ -123,3 +111,272 @@ const scrollToSection = (id) => {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+@use '~/assets/scss/variables' as *;
+@use '~/assets/scss/mixins' as *;
+
+.hero {
+  position: relative;
+  color: $color-text-inverse;
+  overflow: hidden;
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+
+  &__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  &__bg-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+
+    &--brand {
+      background: linear-gradient(
+        to bottom right,
+        rgb(23 37 84 / 0.5),
+        rgb(30 58 138 / 0.45),
+        rgb(30 64 175 / 0.4)
+      );
+    }
+
+    &--accent {
+      background: linear-gradient(
+        to top right,
+        transparent,
+        rgb(234 88 12 / 0.1),
+        transparent
+      );
+    }
+
+    &--radial {
+      background: radial-gradient(
+        circle at center,
+        transparent 0%,
+        rgb(15 23 42 / 0.2) 50%,
+        rgb(15 23 42 / 0.4) 100%
+      );
+    }
+
+    &--pattern {
+      opacity: 0.05;
+      background-image: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgb(255 255 255 / 0.03) 10px,
+        rgb(255 255 255 / 0.03) 20px
+      );
+    }
+  }
+
+  &__content {
+    position: relative;
+    z-index: 10;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+    width: 100%;
+
+    @include respond-to(md) {
+      padding-top: 8rem;
+      padding-bottom: 8rem;
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    align-items: center;
+
+    @include respond-to(lg) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  &__panel {
+    backdrop-filter: blur(4px);
+    background: rgb(255 255 255 / 0.05);
+    border-radius: $radius-2xl;
+    padding: 1.5rem;
+    border: 1px solid rgb(255 255 255 / 0.1);
+    box-shadow: $shadow-2xl;
+
+    @include respond-to(md) {
+      padding: 2rem;
+    }
+  }
+
+  &__title {
+    font-size: 2.25rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    line-height: 1.25;
+    filter: drop-shadow(0 25px 25px rgb(0 0 0 / 0.15));
+
+    @include respond-to(md) {
+      font-size: 3rem;
+    }
+
+    @include respond-to(lg) {
+      font-size: 3.75rem;
+    }
+  }
+
+  &__subtitle {
+    font-size: 1.125rem;
+    color: #eff6ff;
+    margin-bottom: 2rem;
+    line-height: 1.625;
+    filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.04));
+
+    @include respond-to(md) {
+      font-size: 1.25rem;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    @include respond-to(sm) {
+      flex-direction: row;
+    }
+  }
+
+  &__cta {
+    box-shadow: 0 10px 15px -3px rgb(234 88 12 / 0.5);
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  &__cta-secondary {
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  &__services {
+    position: relative;
+  }
+
+  &__services-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+
+    @include respond-to(sm) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    @include respond-to(lg) {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+
+  &__glow {
+    position: absolute;
+    border-radius: $radius-full;
+    filter: blur(48px);
+    pointer-events: none;
+
+    &--accent {
+      bottom: -2rem;
+      right: -2rem;
+      width: 10rem;
+      height: 10rem;
+      background: rgb(249 115 22 / 0.2);
+    }
+
+    &--brand {
+      top: -2rem;
+      left: -2rem;
+      width: 8rem;
+      height: 8rem;
+      background: rgb(96 165 250 / 0.2);
+      animation-delay: 1s;
+    }
+  }
+}
+
+.hero-card {
+  backdrop-filter: blur(12px);
+  background: rgb(255 255 255 / 0.1);
+  border-radius: $radius-xl;
+  padding: 1.5rem;
+  border: 1px solid rgb(255 255 255 / 0.2);
+  box-shadow: $shadow-xl;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  &__inner {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  &__icon-wrap {
+    padding: 0.75rem;
+    background: rgb(234 88 12 / 0.3);
+    border-radius: $radius-md;
+    backdrop-filter: blur(4px);
+    transition: background-color 0.2s;
+
+    .hero-card:hover & {
+      background: rgb(234 88 12 / 0.4);
+    }
+  }
+
+  &__icon {
+    color: #fdba74;
+  }
+
+  &__body {
+    flex: 1;
+  }
+
+  &__title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: $color-text-inverse;
+    margin-bottom: 0.5rem;
+    transition: color 0.2s;
+
+    @include respond-to(lg) {
+      font-size: 1.25rem;
+    }
+
+    .hero-card:hover & {
+      color: #fdba74;
+    }
+  }
+
+  &__desc {
+    font-size: 0.875rem;
+    color: #dbeafe;
+    line-height: 1.625;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+</style>

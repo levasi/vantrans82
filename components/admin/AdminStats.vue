@@ -1,49 +1,49 @@
 <template>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="bg-white rounded-xl border border-gray-200 p-6">
-            <div class="flex items-center justify-between">
+    <div class="admin-stats">
+        <div class="admin-stats__card">
+            <div class="admin-stats__row">
                 <div>
-                    <p class="text-sm text-gray-600 mb-1">Total Messages</p>
-                    <p class="text-3xl font-bold text-gray-900">0</p>
+                    <p class="admin-stats__label">Total Messages</p>
+                    <p class="admin-stats__value">0</p>
                 </div>
-                <div class="p-3 bg-blue-100 rounded-lg">
-                    <Mail class="w-6 h-6 text-blue-900" />
+                <div class="admin-stats__icon-wrap admin-stats__icon-wrap--brand">
+                    <Mail class="icon icon--md admin-stats__icon admin-stats__icon--brand" />
                 </div>
             </div>
         </div>
 
-        <div class="bg-white rounded-xl border border-gray-200 p-6">
-            <div class="flex items-center justify-between">
+        <div class="admin-stats__card">
+            <div class="admin-stats__row">
                 <div>
-                    <p class="text-sm text-gray-600 mb-1">Pending Requests</p>
-                    <p class="text-3xl font-bold text-gray-900">0</p>
+                    <p class="admin-stats__label">Pending Requests</p>
+                    <p class="admin-stats__value">0</p>
                 </div>
-                <div class="p-3 bg-orange-100 rounded-lg">
-                    <Clock class="w-6 h-6 text-orange-900" />
+                <div class="admin-stats__icon-wrap admin-stats__icon-wrap--accent">
+                    <Clock class="icon icon--md admin-stats__icon admin-stats__icon--accent" />
                 </div>
             </div>
         </div>
 
-        <div class="bg-white rounded-xl border border-gray-200 p-6">
-            <div class="flex items-center justify-between">
+        <div class="admin-stats__card">
+            <div class="admin-stats__row">
                 <div>
-                    <p class="text-sm text-gray-600 mb-1">Active Services</p>
-                    <p class="text-3xl font-bold text-gray-900">4</p>
+                    <p class="admin-stats__label">Active Services</p>
+                    <p class="admin-stats__value">4</p>
                 </div>
-                <div class="p-3 bg-green-100 rounded-lg">
-                    <Truck class="w-6 h-6 text-green-900" />
+                <div class="admin-stats__icon-wrap admin-stats__icon-wrap--success">
+                    <Truck class="icon icon--md admin-stats__icon admin-stats__icon--success" />
                 </div>
             </div>
         </div>
 
-        <div class="bg-white rounded-xl border border-gray-200 p-6">
-            <div class="flex items-center justify-between">
+        <div class="admin-stats__card">
+            <div class="admin-stats__row">
                 <div>
-                    <p class="text-sm text-gray-600 mb-1">Website Status</p>
-                    <p class="text-3xl font-bold text-green-600">Online</p>
+                    <p class="admin-stats__label">Website Status</p>
+                    <p class="admin-stats__value admin-stats__value--online">Online</p>
                 </div>
-                <div class="p-3 bg-green-100 rounded-lg">
-                    <CheckCircle class="w-6 h-6 text-green-900" />
+                <div class="admin-stats__icon-wrap admin-stats__icon-wrap--success">
+                    <CheckCircle class="icon icon--md admin-stats__icon admin-stats__icon--success" />
                 </div>
             </div>
         </div>
@@ -53,3 +53,83 @@
 <script setup>
 import { Mail, Clock, Truck, CheckCircle } from 'lucide-vue-next'
 </script>
+
+<style lang="scss" scoped>
+@use '~/assets/scss/variables' as *;
+@use '~/assets/scss/mixins' as *;
+
+.admin-stats {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+
+  @include respond-to(md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include respond-to(lg) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  &__card {
+    background: var(--color-surface);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--color-border);
+    padding: 1.5rem;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__label {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin: 0 0 0.25rem;
+  }
+
+  &__value {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0;
+
+    &--online {
+      color: var(--color-success);
+    }
+  }
+
+  &__icon-wrap {
+    padding: 0.75rem;
+    border-radius: var(--radius-md);
+
+    &--brand {
+      background: var(--color-brand-light);
+    }
+
+    &--accent {
+      background: var(--color-accent-light);
+    }
+
+    &--success {
+      background: var(--color-success-light);
+    }
+  }
+
+  &__icon {
+    &--brand {
+      color: var(--color-brand);
+    }
+
+    &--accent {
+      color: #7c2d12;
+    }
+
+    &--success {
+      color: #14532d;
+    }
+  }
+}
+</style>

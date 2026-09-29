@@ -1,110 +1,109 @@
 <template>
-    <div class="min-h-screen bg-gray-50">
+    <div class="admin-translations">
         <AdminHeader @toggle-sidebar="sidebarOpen = !sidebarOpen" />
-        <div class="flex">
+        <div class="admin-translations__body">
             <AdminSidebar :is-open="sidebarOpen" @close="sidebarOpen = false" />
-            <main class="flex-1 p-4 sm:p-6 lg:p-8 lg:ml-0 overflow-x-hidden">
-                <div class="max-w-7xl mx-auto w-full">
+            <main class="admin-translations__main">
+                <div class="admin-translations__container">
                     <!-- Header -->
-                    <div class="mb-6 sm:mb-8">
-                        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Translations</h1>
-                        <p class="text-sm sm:text-base text-gray-600">Manage all translated texts for your website</p>
+                    <div class="admin-translations__header">
+                        <h1 class="admin-translations__title">Translations</h1>
+                        <p class="admin-translations__subtitle">Manage all translated texts for your website</p>
                     </div>
 
                     <!-- Language Switch Toggle -->
-                    <div class="mb-6 bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
-                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div class="admin-translations__card admin-translations__card--toggle">
+                        <div class="admin-translations__toggle-row">
                             <div>
-                                <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-1">Language Switcher</h3>
-                                <p class="text-xs sm:text-sm text-gray-600">Show or hide the language switcher in the storefront
+                                <h3 class="admin-translations__toggle-title">Language Switcher</h3>
+                                <p class="admin-translations__toggle-desc">Show or hide the language switcher in the storefront
                                 </p>
                             </div>
-                            <label class="relative inline-flex items-center cursor-pointer">
+                            <label class="admin-translations__switch">
                                 <input type="checkbox" v-model="showLanguageSwitch" @change="saveLanguageSwitchSetting"
-                                    class="sr-only peer" />
-                                <div
-                                    class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-900">
-                                </div>
+                                    class="admin-translations__switch-input" />
+                                <span class="admin-translations__switch-track" aria-hidden="true"></span>
                             </label>
                         </div>
                     </div>
 
                     <!-- Search Bar -->
-                    <div class="mb-6">
-                        <div class="relative">
-                            <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <div class="admin-translations__search">
+                        <div class="admin-translations__search-wrap">
+                            <Search class="icon admin-translations__search-icon" />
                             <input v-model="searchQuery" type="text" placeholder="Search by key or translation..."
-                                class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent" />
+                                class="admin-translations__search-input" />
                             <button v-if="searchQuery" @click="searchQuery = ''"
-                                class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                                <X class="w-5 h-5" />
+                                class="admin-translations__search-clear" type="button">
+                                <X class="icon" />
                             </button>
                         </div>
-                        <div v-if="searchQuery" class="mt-2 text-sm text-gray-600">
+                        <div v-if="searchQuery" class="admin-translations__search-count">
                             Found {{ filteredTranslationsCount }} translation(s)
                         </div>
                     </div>
 
                     <!-- Actions -->
-                    <div class="mb-6 flex flex-col sm:flex-row justify-end gap-3">
+                    <div class="admin-translations__actions">
                         <button @click="importFromFiles" :disabled="importing || saving"
-                            class="w-full sm:w-auto px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
-                            <div v-if="importing" class="animate-spin rounded-full h-5 w-5 border-b-2 border-gray-600"></div>
+                            class="admin-translations__btn admin-translations__btn--secondary" type="button">
+                            <div v-if="importing" class="admin-translations__spinner admin-translations__spinner--muted"></div>
                             {{ importing ? 'Importing...' : 'Import from JSON files' }}
                         </button>
                         <button @click="saveTranslations" :disabled="saving || importing"
-                            class="w-full sm:w-auto px-6 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-950 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
-                            <Save v-if="!saving" class="w-5 h-5" />
-                            <div v-else class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                            class="admin-translations__btn admin-translations__btn--primary" type="button">
+                            <Save v-if="!saving" class="icon" />
+                            <div v-else class="admin-translations__spinner"></div>
                             {{ saving ? 'Saving...' : 'Save Changes' }}
                         </button>
                     </div>
 
                     <!-- Success/Error Messages -->
-                    <div v-if="message" :class="[
-                        'mb-6 p-4 rounded-lg',
-                        messageType === 'success' ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200'
-                    ]">
+                    <div
+                        v-if="message"
+                        class="admin-translations__alert"
+                        :class="messageType === 'success' ? 'admin-translations__alert--success' : 'admin-translations__alert--error'"
+                    >
                         {{ message }}
                     </div>
 
                     <!-- Translations Table -->
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                        <div class="overflow-x-auto">
-                            <table class="w-full min-w-[600px]">
-                                <thead class="bg-gray-50 border-b border-gray-200">
+                    <div class="admin-translations__table-card">
+                        <div class="admin-translations__table-scroll">
+                            <table class="admin-translations__table">
+                                <thead class="admin-translations__thead">
                                     <tr>
-                                        <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-gray-900">Key</th>
-                                        <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-gray-900">
-                                            <div class="flex items-center gap-2">
-                                                <span class="inline-block w-2 h-2 rounded-full bg-blue-600"></span>
-                                                <span class="hidden sm:inline">English (EN)</span>
-                                                <span class="sm:hidden">EN</span>
+                                        <th class="admin-translations__th">Key</th>
+                                        <th class="admin-translations__th">
+                                            <div class="admin-translations__lang">
+                                                <span class="admin-translations__dot admin-translations__dot--en"></span>
+                                                <span class="admin-translations__lang-full">English (EN)</span>
+                                                <span class="admin-translations__lang-short">EN</span>
                                             </div>
                                         </th>
-                                        <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-gray-900">
-                                            <div class="flex items-center gap-2">
-                                                <span class="inline-block w-2 h-2 rounded-full bg-red-600"></span>
-                                                <span class="hidden sm:inline">Română (RO)</span>
-                                                <span class="sm:hidden">RO</span>
+                                        <th class="admin-translations__th">
+                                            <div class="admin-translations__lang">
+                                                <span class="admin-translations__dot admin-translations__dot--ro"></span>
+                                                <span class="admin-translations__lang-full">Română (RO)</span>
+                                                <span class="admin-translations__lang-short">RO</span>
                                             </div>
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-gray-200">
+                                <tbody class="admin-translations__tbody">
                                     <tr v-for="(translation, key) in filteredTranslations" :key="key"
-                                        class="hover:bg-gray-50">
-                                        <td class="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-mono text-gray-600 align-top break-all">
+                                        class="admin-translations__row">
+                                        <td class="admin-translations__td admin-translations__td--key">
                                             <span v-html="highlightMatch(key, searchQuery)"></span>
                                         </td>
-                                        <td class="px-4 sm:px-6 py-3 sm:py-4 align-top">
+                                        <td class="admin-translations__td">
                                             <input v-model="translation.en" type="text"
-                                                class="w-full px-2 sm:px-3 py-2 text-xs sm:text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent"
+                                                class="admin-translations__cell-input"
                                                 placeholder="Enter English translation" />
                                         </td>
-                                        <td class="px-4 sm:px-6 py-3 sm:py-4 align-top">
+                                        <td class="admin-translations__td">
                                             <input v-model="translation.ro" type="text"
-                                                class="w-full px-2 sm:px-3 py-2 text-xs sm:text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent"
+                                                class="admin-translations__cell-input"
                                                 placeholder="Introdu traducerea în română" />
                                         </td>
                                     </tr>
@@ -114,12 +113,12 @@
                     </div>
 
                     <!-- Empty State -->
-                    <div v-if="Object.keys(flattenedTranslations).length === 0" class="text-center py-12">
-                        <p class="text-gray-500">No translations found</p>
+                    <div v-if="Object.keys(flattenedTranslations).length === 0" class="admin-translations__empty">
+                        <p class="admin-translations__empty-text">No translations found</p>
                     </div>
                     <div v-else-if="Object.keys(filteredTranslations).length === 0 && searchQuery"
-                        class="text-center py-12">
-                        <p class="text-gray-500">No translations match your search query</p>
+                        class="admin-translations__empty">
+                        <p class="admin-translations__empty-text">No translations match your search query</p>
                     </div>
                 </div>
             </main>
@@ -187,7 +186,7 @@ const highlightMatch = (text: string, query: string): string => {
     }
 
     const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
-    return text.replace(regex, '<mark class="bg-yellow-200">$1</mark>')
+    return text.replace(regex, '<mark class="admin-translations__highlight">$1</mark>')
 }
 
 const flattenTranslations = (obj: any, prefix = ''): Record<string, string> => {
@@ -385,3 +384,462 @@ useHead({
     title: 'Translations - Admin - VanTrans82'
 })
 </script>
+
+<style lang="scss" scoped>
+@use '~/assets/scss/variables' as *;
+@use '~/assets/scss/mixins' as *;
+
+.admin-translations {
+  min-height: 100vh;
+  background: var(--color-muted);
+
+  &__body {
+    display: flex;
+  }
+
+  &__main {
+    flex: 1;
+    padding: 1rem;
+    overflow-x: hidden;
+
+    @include respond-to(sm) {
+      padding: 1.5rem;
+    }
+
+    @include respond-to(lg) {
+      padding: 2rem;
+      margin-left: 0;
+    }
+  }
+
+  &__container {
+    max-width: $container-max;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  &__header {
+    margin-bottom: 1.5rem;
+
+    @include respond-to(sm) {
+      margin-bottom: 2rem;
+    }
+  }
+
+  &__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0 0 0.5rem;
+
+    @include respond-to(sm) {
+      font-size: 1.875rem;
+    }
+  }
+
+  &__subtitle {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin: 0;
+
+    @include respond-to(sm) {
+      font-size: 1rem;
+    }
+  }
+
+  &__card {
+    background: var(--color-surface);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--color-border);
+
+    &--toggle {
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+
+      @include respond-to(sm) {
+        padding: 1.5rem;
+      }
+    }
+  }
+
+  &__toggle-row {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    @include respond-to(sm) {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  &__toggle-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 0.25rem;
+
+    @include respond-to(sm) {
+      font-size: 1.125rem;
+    }
+  }
+
+  &__toggle-desc {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin: 0;
+
+    @include respond-to(sm) {
+      font-size: 0.875rem;
+    }
+  }
+
+  &__switch {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  &__switch-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+
+    &:focus-visible + .admin-translations__switch-track {
+      box-shadow: 0 0 0 4px rgba($color-brand-mid, 0.35);
+    }
+
+    &:checked + .admin-translations__switch-track {
+      background: var(--color-brand);
+
+      &::after {
+        transform: translateX(1.25rem);
+        border-color: $color-text-inverse;
+      }
+    }
+  }
+
+  &__switch-track {
+    width: 2.75rem;
+    height: 1.5rem;
+    background: #e5e7eb;
+    border-radius: $radius-full;
+    position: relative;
+    transition: background-color 0.2s;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 1.25rem;
+      height: 1.25rem;
+      background: $color-text-inverse;
+      border: 1px solid $color-border-strong;
+      border-radius: $radius-full;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+  }
+
+  &__search {
+    margin-bottom: 1.5rem;
+  }
+
+  &__search-wrap {
+    position: relative;
+  }
+
+  &__search-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-text-faint);
+  }
+
+  &__search-input {
+    width: 100%;
+    padding: 0.75rem 2.5rem 0.75rem 2.5rem;
+    border: 1px solid $color-border-strong;
+    border-radius: var(--radius-md);
+    outline: none;
+    font-family: inherit;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: box-shadow 0.15s, border-color 0.15s;
+
+    &:focus {
+      border-color: transparent;
+      box-shadow: 0 0 0 2px var(--color-brand);
+    }
+  }
+
+  &__search-clear {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--color-text-faint);
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      color: var(--color-text-muted);
+    }
+  }
+
+  &__search-count {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+  }
+
+  &__actions {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 0.75rem;
+
+    @include respond-to(sm) {
+      flex-direction: row;
+    }
+  }
+
+  &__btn {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.5rem;
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    font-family: inherit;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+
+    @include respond-to(sm) {
+      width: auto;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &--primary {
+      background: var(--color-brand);
+      color: $color-text-inverse;
+      border: none;
+
+      &:hover:not(:disabled) {
+        background: var(--color-brand-dark);
+      }
+    }
+
+    &--secondary {
+      background: transparent;
+      color: var(--color-text-secondary);
+      border: 1px solid $color-border-strong;
+
+      &:hover:not(:disabled) {
+        background: var(--color-muted);
+      }
+    }
+  }
+
+  &__spinner {
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: $radius-full;
+    border: 2px solid transparent;
+    border-bottom-color: currentColor;
+    animation: admin-translations-spin 0.75s linear infinite;
+
+    &--muted {
+      border-bottom-color: var(--color-text-muted);
+    }
+  }
+
+  &__alert {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border-radius: var(--radius-md);
+
+    &--success {
+      background: var(--color-success-light);
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    &--error {
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+  }
+
+  &__table-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+  }
+
+  &__table-scroll {
+    overflow-x: auto;
+  }
+
+  &__table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+  }
+
+  &__thead {
+    background: var(--color-muted);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  &__th {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text);
+
+    @include respond-to(sm) {
+      padding: 1rem 1.5rem;
+      font-size: 0.875rem;
+    }
+  }
+
+  &__lang {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__dot {
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: $radius-full;
+
+    &--en {
+      background: $color-brand-mid;
+    }
+
+    &--ro {
+      background: var(--color-danger);
+    }
+  }
+
+  &__lang-full {
+    display: none;
+
+    @include respond-to(sm) {
+      display: inline;
+    }
+  }
+
+  &__lang-short {
+    display: inline;
+
+    @include respond-to(sm) {
+      display: none;
+    }
+  }
+
+  &__tbody {
+    tr + tr {
+      border-top: 1px solid var(--color-border);
+    }
+  }
+
+  &__row {
+    &:hover {
+      background: var(--color-muted);
+    }
+  }
+
+  &__td {
+    padding: 0.75rem 1rem;
+    vertical-align: top;
+
+    @include respond-to(sm) {
+      padding: 0.75rem 1.5rem;
+    }
+
+    &--key {
+      font-size: 0.75rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      color: var(--color-text-muted);
+      word-break: break-all;
+
+      @include respond-to(sm) {
+        font-size: 0.875rem;
+      }
+    }
+  }
+
+  &__cell-input {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 0.75rem;
+    border: 1px solid $color-border-strong;
+    border-radius: var(--radius-md);
+    outline: none;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: box-shadow 0.15s, border-color 0.15s;
+
+    @include respond-to(sm) {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.875rem;
+    }
+
+    &:focus {
+      border-color: transparent;
+      box-shadow: 0 0 0 2px var(--color-brand);
+    }
+  }
+
+  &__empty {
+    text-align: center;
+    padding: 3rem 0;
+  }
+
+  &__empty-text {
+    color: var(--color-text-faint);
+    margin: 0;
+  }
+
+  :deep(.admin-translations__highlight) {
+    background: #fef08a;
+  }
+}
+
+@keyframes admin-translations-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+</style>

@@ -1,41 +1,41 @@
 <template>
-  <section class="py-16 md:py-20 bg-white border-b border-gray-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+  <section class="features">
+    <div class="container">
+      <div class="features__grid">
         <!-- Feature 1 -->
-        <div class="text-center">
-          <div class="inline-flex items-center justify-center w-16 h-16 bg-orange-100 rounded-xl mb-4">
-            <Clock class="w-8 h-8 text-orange-600" />
+        <div class="feature">
+          <div class="feature__icon-wrap feature__icon-wrap--accent">
+            <Clock class="icon icon--lg feature__icon feature__icon--accent" />
           </div>
-          <h3 class="font-bold text-gray-900 mb-2">{{ $t('features.fastDelivery') }}</h3>
-          <p class="text-sm text-gray-600">{{ $t('features.fastDeliveryDesc') }}</p>
+          <h3 class="feature__title">{{ $t('features.fastDelivery') }}</h3>
+          <p class="feature__desc">{{ $t('features.fastDeliveryDesc') }}</p>
         </div>
 
         <!-- Feature 2 -->
-        <div class="text-center">
-          <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-xl mb-4">
-            <Shield class="w-8 h-8 text-blue-900" />
+        <div class="feature">
+          <div class="feature__icon-wrap feature__icon-wrap--brand">
+            <Shield class="icon icon--lg feature__icon feature__icon--brand" />
           </div>
-          <h3 class="font-bold text-gray-900 mb-2">{{ $t('features.secureTransport') }}</h3>
-          <p class="text-sm text-gray-600">{{ $t('features.secureTransportDesc') }}</p>
+          <h3 class="feature__title">{{ $t('features.secureTransport') }}</h3>
+          <p class="feature__desc">{{ $t('features.secureTransportDesc') }}</p>
         </div>
 
         <!-- Feature 3 -->
-        <div class="text-center">
-          <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-xl mb-4">
-            <TrendingUp class="w-8 h-8 text-green-600" />
+        <div class="feature">
+          <div class="feature__icon-wrap feature__icon-wrap--green">
+            <TrendingUp class="icon icon--lg feature__icon feature__icon--green" />
           </div>
-          <h3 class="font-bold text-gray-900 mb-2">{{ $t('features.liveTracking') }}</h3>
-          <p class="text-sm text-gray-600">{{ $t('features.liveTrackingDesc') }}</p>
+          <h3 class="feature__title">{{ $t('features.liveTracking') }}</h3>
+          <p class="feature__desc">{{ $t('features.liveTrackingDesc') }}</p>
         </div>
 
         <!-- Feature 4 -->
-        <div class="text-center">
-          <div class="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-xl mb-4">
-            <Headphones class="w-8 h-8 text-purple-600" />
+        <div class="feature">
+          <div class="feature__icon-wrap feature__icon-wrap--purple">
+            <Headphones class="icon icon--lg feature__icon feature__icon--purple" />
           </div>
-          <h3 class="font-bold text-gray-900 mb-2">{{ $t('features.support') }}</h3>
-          <p class="text-sm text-gray-600">{{ $t('features.supportDesc') }}</p>
+          <h3 class="feature__title">{{ $t('features.support') }}</h3>
+          <p class="feature__desc">{{ $t('features.supportDesc') }}</p>
         </div>
       </div>
     </div>
@@ -46,3 +46,89 @@
 import { Clock, Shield, TrendingUp, Headphones } from 'lucide-vue-next'
 </script>
 
+<style lang="scss" scoped>
+@use '~/assets/scss/variables' as *;
+@use '~/assets/scss/mixins' as *;
+
+.features {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+  background: $color-surface;
+  border-bottom: 1px solid #f3f4f6;
+
+  @include respond-to(md) {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+
+    @include respond-to(md) {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 3rem;
+    }
+  }
+}
+
+.feature {
+  text-align: center;
+
+  &__icon-wrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: $radius-xl;
+    margin-bottom: 1rem;
+
+    &--accent {
+      background: $color-accent-light;
+    }
+
+    &--brand {
+      background: $color-brand-light;
+    }
+
+    &--green {
+      background: $color-success-light;
+    }
+
+    &--purple {
+      background: $color-purple-light;
+    }
+  }
+
+  &__icon {
+    &--accent {
+      color: $color-accent;
+    }
+
+    &--brand {
+      color: $color-brand;
+    }
+
+    &--green {
+      color: $color-green;
+    }
+
+    &--purple {
+      color: $color-purple;
+    }
+  }
+
+  &__title {
+    font-weight: 700;
+    color: $color-text;
+    margin-bottom: 0.5rem;
+  }
+
+  &__desc {
+    font-size: 0.875rem;
+    color: $color-text-muted;
+  }
+}
+</style>
