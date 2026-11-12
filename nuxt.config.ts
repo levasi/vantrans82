@@ -11,16 +11,16 @@ export default defineNuxtConfig({
   i18n: {
     locales: [
       {
-        code: 'en',
-        iso: 'en-US',
-        name: 'English',
-        file: 'en.json'
-      },
-      {
         code: 'ro',
         iso: 'ro-RO',
         name: 'Română',
         file: 'ro.json'
+      },
+      {
+        code: 'en',
+        iso: 'en-US',
+        name: 'English',
+        file: 'en.json'
       }
     ],
     lazy: true,
@@ -49,12 +49,8 @@ export default defineNuxtConfig({
       'admin/homepage/fleet': false,
       'admin/homepage/coverage': false
     },
-    detectBrowserLanguage: {
-      useCookie: true,
-      cookieKey: 'i18n_redirected',
-      redirectOn: 'root',
-      alwaysRedirect: false
-    },
+    // Homepage stays Romanian by default; users can still switch via the language toggle
+    detectBrowserLanguage: false,
     // Enable dynamic loading
     compilation: {
       strictMessage: false
