@@ -11,32 +11,13 @@
 
                 <!-- Desktop Navigation -->
                 <div class="site-header__links">
-                    <button @click="scrollToSection('home')"
-                        :class="navLinkClass('home')">
-                        {{ $t('nav.home') }}
-                    </button>
-                    <button @click="scrollToSection('services')"
-                        :class="navLinkClass('services')">
-                        {{ $t('nav.services') }}
-                    </button>
-                    <button @click="scrollToSection('fleet')"
-                        :class="navLinkClass('fleet')">
-                        {{ $t('nav.fleet') }}
-                    </button>
-                    <button @click="scrollToSection('coverage')"
-                        :class="navLinkClass('coverage')">
-                        {{ $t('nav.coverage') }}
-                    </button>
-                    <button @click="scrollToSection('about')"
-                        :class="navLinkClass('about')">
-                        {{ $t('nav.about') }}
-                    </button>
-                    <button @click="scrollToSection('faq')" :class="navLinkClass('faq')">
-                        {{ $t('nav.faq') }}
-                    </button>
-                    <button @click="scrollToSection('contact')"
-                        :class="navLinkClass('contact')">
-                        {{ $t('nav.contact') }}
+                    <button
+                        v-for="item in visibleNavItems"
+                        :key="item.id"
+                        @click="scrollToSection(item.id)"
+                        :class="navLinkClass(item.id)"
+                    >
+                        {{ $t(`nav.${item.labelKey}`) }}
                     </button>
                 </div>
 
@@ -56,7 +37,11 @@
                             RO
                         </button>
                     </div>
-                    <button @click="scrollToSection('contact')" class="btn btn--accent">
+                    <button
+                        v-if="isSectionVisible('contact')"
+                        @click="scrollToSection('contact')"
+                        class="btn btn--accent"
+                    >
                         {{ $t('nav.getQuote') }}
                     </button>
                 </div>
@@ -71,33 +56,13 @@
             <!-- Mobile Navigation -->
             <div v-if="mobileMenuOpen" class="site-header__mobile">
                 <div class="site-header__mobile-links">
-                    <button @click="scrollToSection('home')"
-                        :class="navLinkClass('home', true)">
-                        {{ $t('nav.home') }}
-                    </button>
-                    <button @click="scrollToSection('services')"
-                        :class="navLinkClass('services', true)">
-                        {{ $t('nav.services') }}
-                    </button>
-                    <button @click="scrollToSection('fleet')"
-                        :class="navLinkClass('fleet', true)">
-                        {{ $t('nav.fleet') }}
-                    </button>
-                    <button @click="scrollToSection('coverage')"
-                        :class="navLinkClass('coverage', true)">
-                        {{ $t('nav.coverage') }}
-                    </button>
-                    <button @click="scrollToSection('about')"
-                        :class="navLinkClass('about', true)">
-                        {{ $t('nav.about') }}
-                    </button>
-                    <button @click="scrollToSection('faq')"
-                        :class="navLinkClass('faq', true)">
-                        {{ $t('nav.faq') }}
-                    </button>
-                    <button @click="scrollToSection('contact')"
-                        :class="navLinkClass('contact', true)">
-                        {{ $t('nav.contact') }}
+                    <button
+                        v-for="item in visibleNavItems"
+                        :key="`mobile-${item.id}`"
+                        @click="scrollToSection(item.id)"
+                        :class="navLinkClass(item.id, true)"
+                    >
+                        {{ $t(`nav.${item.labelKey}`) }}
                     </button>
                     <div v-if="showLanguageSwitch" class="lang-switch">
                         <button @click="switchLocale('en')" :class="[
@@ -115,7 +80,11 @@
                             RO
                         </button>
                     </div>
-                    <button @click="scrollToSection('contact')" class="btn btn--accent btn--block">
+                    <button
+                        v-if="isSectionVisible('contact')"
+                        @click="scrollToSection('contact')"
+                        class="btn btn--accent btn--block"
+                    >
                         {{ $t('nav.getQuote') }}
                     </button>
                 </div>
@@ -125,7 +94,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { computed, ref, onMounted, onUnmounted, watch } from 'vue'
 import { Menu, X } from 'lucide-vue-next'
 
 const { locale, setLocale } = useI18n()
@@ -133,24 +102,41 @@ const mobileMenuOpen = ref(false)
 const showLanguageSwitch = ref(true)
 const activeSection = ref('home')
 
-const navSections = ['home', 'services', 'fleet', 'coverage', 'about', 'faq', 'contact']
+const { loadVisibility, isSectionVisible } = useHomepageVisibility()
+
+const navItems = [
+    { id: 'home', labelKey: 'home', visibilityKey: 'hero' },
+    { id: 'services', labelKey: 'services', visibilityKey: 'services' },
+    { id: 'fleet', labelKey: 'fleet', visibilityKey: 'fleet' },
+    { id: 'coverage', labelKey: 'coverage', visibilityKey: 'coverage' },
+    { id: 'about', labelKey: 'about', visibilityKey: 'about' },
+    { id: 'faq', labelKey: 'faq', visibilityKey: 'faq' },
+    { id: 'contact', labelKey: 'contact', visibilityKey: 'contact' }
+]
+
+const visibleNavItems = computed(() =>
+    navItems.filter((item) => isSectionVisible(item.visibilityKey))
+)
+
+const navSections = computed(() => visibleNavItems.value.map((item) => item.id))
 
 function updateActiveSection() {
     const header = document.querySelector('header')
     const headerHeight = header ? header.offsetHeight : 80
     const offset = headerHeight + 80
+    const sections = navSections.value
 
-    for (let i = navSections.length - 1; i >= 0; i--) {
-        const el = document.getElementById(navSections[i])
+    for (let i = sections.length - 1; i >= 0; i--) {
+        const el = document.getElementById(sections[i])
         if (el) {
             const top = el.getBoundingClientRect().top
             if (top <= offset) {
-                activeSection.value = navSections[i]
+                activeSection.value = sections[i]
                 return
             }
         }
     }
-    activeSection.value = 'home'
+    activeSection.value = sections[0] || 'home'
 }
 
 function navLinkClass(sectionId, isMobile = false) {
@@ -186,8 +172,9 @@ const switchLocale = (newLocale) => {
 // Load settings
 const { settings, loadSettings } = useSettings()
 
-onMounted(() => {
+onMounted(async () => {
     loadSettings()
+    await loadVisibility()
     updateActiveSection()
     window.addEventListener('scroll', updateActiveSection, { passive: true })
 })

@@ -2,7 +2,7 @@
   <section id="home" class="hero">
     <!-- Full-Width Background Image -->
     <div class="hero__bg">
-      <NuxtImg src="/2.png" alt="VanTrans82 Logistics" class="hero__bg-img" loading="eager" format="webp"
+      <NuxtImg :src="backgroundImage" alt="VanTrans82 Logistics" class="hero__bg-img" loading="eager" format="webp"
         quality="90" />
       <!-- Multi-layer Gradient Overlay for Depth (More Transparent) -->
       <div class="hero__overlay hero__overlay--brand"></div>
@@ -20,20 +20,20 @@
         <!-- Left: Text Content -->
         <div class="hero__panel">
           <h1 class="hero__title">
-            {{ $t('hero.title') }}
+            {{ title }}
           </h1>
           <p class="hero__subtitle">
-            {{ $t('hero.subtitle') }}
+            {{ subtitle }}
           </p>
 
           <!-- CTA Buttons -->
           <div class="hero__actions">
             <button @click="scrollToSection('contact')" class="btn btn--accent-lg hero__cta">
-              {{ $t('hero.requestQuote') }}
+              {{ requestQuote }}
               <ArrowRight class="icon" />
             </button>
             <button @click="scrollToSection('services')" class="btn btn--ghost hero__cta-secondary">
-              {{ $t('hero.ourServices') }}
+              {{ ourServices }}
             </button>
           </div>
         </div>
@@ -41,8 +41,7 @@
         <!-- Right: Services -->
         <div class="hero__services">
           <div class="hero__services-grid">
-            <div v-for="(service, index) in heroServices" :key="index"
-              class="hero-card"
+            <div v-for="(service, index) in heroServices" :key="index" class="hero-card"
               @click="scrollToSection('services')">
               <div class="hero-card__inner">
                 <div class="hero-card__icon-wrap">
@@ -69,29 +68,86 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { ArrowRight, Truck, Zap, Globe } from 'lucide-vue-next'
+import { computed, onMounted } from 'vue'
+import { ArrowRight, Truck, Zap, Settings, Warehouse } from 'lucide-vue-next'
 import { useI18n } from '#imports'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
-const heroServices = computed(() => [
-  {
-    icon: Truck,
-    title: t('services.roadTransport'),
-    description: t('services.roadTransportDesc')
-  },
-  {
-    icon: Zap,
-    title: t('services.expressDelivery'),
-    description: t('services.expressDeliveryDesc')
-  },
-  {
-    icon: Globe,
-    title: t('services.internationalFreight'),
-    description: t('services.internationalFreightDesc')
+const {
+  content: heroContent,
+  load: loadHero,
+  pick: pickHero
+} = useHomepageSection('hero', {
+  title_ro: '',
+  title_en: '',
+  subtitle_ro: '',
+  subtitle_en: '',
+  request_quote_ro: '',
+  request_quote_en: '',
+  our_services_ro: '',
+  our_services_en: '',
+  background_image_url: '/2.png'
+})
+
+const {
+  content: servicesContent,
+  load: loadServices,
+  isRo
+} = useHomepageSection('services', {
+  items: []
+})
+
+const iconMap = { Truck, Zap, Settings, Warehouse }
+
+const title = computed(() => pickHero('title_ro', 'title_en', locale.value, t('hero.title')))
+const subtitle = computed(() => pickHero('subtitle_ro', 'subtitle_en', locale.value, t('hero.subtitle')))
+const requestQuote = computed(() =>
+  pickHero('request_quote_ro', 'request_quote_en', locale.value, t('hero.requestQuote'))
+)
+const ourServices = computed(() =>
+  pickHero('our_services_ro', 'our_services_en', locale.value, t('hero.ourServices'))
+)
+const backgroundImage = computed(() => heroContent.value.background_image_url || '/2.png')
+
+const heroServices = computed(() => {
+  const items = Array.isArray(servicesContent.value.items) ? servicesContent.value.items : []
+  if (items.length) {
+    return items.map((item) => ({
+      icon: iconMap[item.icon] || Truck,
+      title: isRo(locale.value) ? item.title_ro : item.title_en,
+      description: isRo(locale.value) ? item.description_ro : item.description_en
+    }))
   }
-])
+
+  return [
+    {
+      icon: Truck,
+      title: t('services.roadTransport'),
+      description: t('services.roadTransportDesc')
+    },
+    {
+      icon: Warehouse,
+      title: t('services.customLogistics'),
+      description: t('services.customLogisticsDesc')
+    },
+    {
+      icon: Zap,
+      title: t('services.expressDelivery'),
+      description: t('services.expressDeliveryDesc')
+    },
+    {
+      icon: Settings,
+      title: t('services.internationalFreight'),
+      description: t('services.internationalFreightDesc')
+    }
+  ]
+})
+
+onMounted(() => {
+  loadHero()
+  loadServices()
+})
 
 const scrollToSection = (id) => {
   const element = document.getElementById(id)
@@ -142,49 +198,41 @@ const scrollToSection = (id) => {
     inset: 0;
 
     &--brand {
-      background: linear-gradient(
-        to bottom right,
-        rgb(23 37 84 / 0.5),
-        rgb(30 58 138 / 0.45),
-        rgb(30 64 175 / 0.4)
-      );
+      background: linear-gradient(to bottom right,
+          rgb(23 37 84 / 0.5),
+          rgb(30 58 138 / 0.45),
+          rgb(30 64 175 / 0.4));
     }
 
     &--accent {
-      background: linear-gradient(
-        to top right,
-        transparent,
-        rgb(234 88 12 / 0.1),
-        transparent
-      );
+      background: linear-gradient(to top right,
+          transparent,
+          rgb(234 88 12 / 0.1),
+          transparent);
     }
 
     &--radial {
-      background: radial-gradient(
-        circle at center,
-        transparent 0%,
-        rgb(15 23 42 / 0.2) 50%,
-        rgb(15 23 42 / 0.4) 100%
-      );
+      background: radial-gradient(circle at center,
+          transparent 0%,
+          rgb(15 23 42 / 0.2) 50%,
+          rgb(15 23 42 / 0.4) 100%);
     }
 
     &--pattern {
       opacity: 0.05;
-      background-image: repeating-linear-gradient(
-        45deg,
-        transparent,
-        transparent 10px,
-        rgb(255 255 255 / 0.03) 10px,
-        rgb(255 255 255 / 0.03) 20px
-      );
+      background-image: repeating-linear-gradient(45deg,
+          transparent,
+          transparent 10px,
+          rgb(255 255 255 / 0.03) 10px,
+          rgb(255 255 255 / 0.03) 20px);
     }
   }
 
   &__content {
     position: relative;
     z-index: 10;
-    padding-top: 5rem;
-    padding-bottom: 5rem;
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
     width: 100%;
 
     @include respond-to(md) {
@@ -279,7 +327,7 @@ const scrollToSection = (id) => {
     gap: 1rem;
 
     @include respond-to(sm) {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
     }
 
     @include respond-to(lg) {

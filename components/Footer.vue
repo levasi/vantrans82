@@ -12,7 +12,7 @@
                     <p class="footer__desc">
                         {{ $t('footer.description') }}
                     </p>
-                    <div class="footer__social">
+                    <!-- <div class="footer__social">
                         <a href="#" class="footer__social-link" aria-label="Facebook">
                             <Facebook class="icon" />
                         </a>
@@ -25,7 +25,7 @@
                         <a :href="`mailto:${settings.contactEmail}`" class="footer__social-link" aria-label="Email">
                             <Mail class="icon" />
                         </a>
-                    </div>
+                    </div> -->
                 </div>
 
                 <!-- Quick Links -->
@@ -107,7 +107,7 @@
 </template>
 
 <script setup>
-import { Facebook, Linkedin, Twitter, Mail } from 'lucide-vue-next'
+// import { Facebook, Linkedin, Twitter, Mail } from 'lucide-vue-next'
 import { onMounted } from 'vue'
 
 const { settings, loadSettings, formatPhoneForTel } = useSettings()
@@ -144,8 +144,8 @@ const scrollToSection = (id) => {
   color: $color-footer-text;
 
   &__inner {
-    padding-top: 3rem;
-    padding-bottom: 3rem;
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
 
     @include respond-to(md) {
       padding-top: 4rem;

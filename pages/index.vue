@@ -2,23 +2,26 @@
   <div class="page">
     <Header />
     <main>
-      <Hero />
-      <Features />
-      <Services />
-      <Process />
-      <Fleet />
-      <Coverage />
-      <CTASection />
-      <Testimonials />
-      <About />
-      <FAQ />
-      <Contact />
+      <Hero v-if="isSectionVisible('hero')" />
+      <Features v-if="isSectionVisible('features')" />
+      <Services v-if="isSectionVisible('services')" />
+      <Fleet v-if="isSectionVisible('fleet')" />
+      <Coverage v-if="isSectionVisible('coverage')" />
+      <CTASection v-if="isSectionVisible('cta')" />
+      <Testimonials v-if="isSectionVisible('testimonials')" />
+      <About v-if="isSectionVisible('about')" />
+      <FAQ v-if="isSectionVisible('faq')" />
+      <Contact v-if="isSectionVisible('contact')" />
     </main>
     <Footer />
   </div>
 </template>
 
 <script setup>
+const { loadVisibility, isSectionVisible } = useHomepageVisibility()
+
+await loadVisibility()
+
 useHead({
   title: 'VanTrans82 - Fast & Reliable Freight Transport',
   meta: [

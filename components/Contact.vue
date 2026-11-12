@@ -4,10 +4,10 @@
       <!-- Section Header -->
       <div class="section-header">
         <h2>
-          {{ $t('contact.title') }}
+          {{ copy.title }}
         </h2>
         <p>
-          {{ $t('contact.subtitle') }}
+          {{ copy.subtitle }}
         </p>
       </div>
 
@@ -18,7 +18,7 @@
             <div class="contact__form-row">
               <div class="contact__field">
                 <label for="name" class="form-label">
-                  {{ $t('contact.yourName') }}
+                  {{ copy.yourName }}
                 </label>
                 <input
                   type="text"
@@ -26,12 +26,12 @@
                   v-model="formData.name"
                   required
                   class="form-input"
-                  :placeholder="$t('contact.yourName')"
+                  :placeholder="copy.yourName"
                 />
               </div>
               <div class="contact__field">
                 <label for="email" class="form-label">
-                  {{ $t('contact.emailAddress') }}
+                  {{ copy.emailAddress }}
                 </label>
                 <input
                   type="email"
@@ -39,14 +39,14 @@
                   v-model="formData.email"
                   required
                   class="form-input"
-                  :placeholder="$t('contact.emailAddress')"
+                  :placeholder="copy.emailAddress"
                 />
               </div>
             </div>
 
             <div class="contact__field">
               <label for="message" class="form-label">
-                {{ $t('contact.message') }}
+                {{ copy.message }}
               </label>
               <textarea
                 id="message"
@@ -54,7 +54,7 @@
                 required
                 rows="6"
                 class="form-textarea"
-                :placeholder="$t('contact.message')"
+                :placeholder="copy.message"
               ></textarea>
             </div>
 
@@ -62,7 +62,7 @@
               type="submit"
               class="btn--accent-lg contact__submit"
             >
-              {{ $t('contact.sendMessage') }}
+              {{ copy.sendMessage }}
               <Send class="icon" />
             </button>
           </form>
@@ -72,7 +72,7 @@
         <div class="contact__info">
           <div>
             <h3 class="contact__info-title">
-              {{ $t('contact.contactInformation') }}
+              {{ copy.contactInformation }}
             </h3>
 
             <div class="contact__info-list">
@@ -81,7 +81,7 @@
                   <Phone class="icon--md" />
                 </div>
                 <div>
-                  <div class="contact__info-label">{{ $t('contact.phone') }}</div>
+                  <div class="contact__info-label">{{ copy.phoneLabel }}</div>
                   <a :href="`tel:${formatPhoneForTel(settings.phoneNumber)}`" class="contact__info-link">
                     {{ settings.phoneNumber }}
                   </a>
@@ -93,7 +93,7 @@
                   <Mail class="icon--md" />
                 </div>
                 <div>
-                  <div class="contact__info-label">{{ $t('contact.email') }}</div>
+                  <div class="contact__info-label">{{ copy.emailLabel }}</div>
                   <a :href="`mailto:${settings.contactEmail}`" class="contact__info-link">
                     {{ settings.contactEmail }}
                   </a>
@@ -105,7 +105,7 @@
                   <MessageCircle class="icon--md" />
                 </div>
                 <div>
-                  <div class="contact__info-label">{{ $t('contact.whatsapp') }}</div>
+                  <div class="contact__info-label">{{ copy.whatsappLabel }}</div>
                   <a
                     :href="`https://wa.me/${formatPhoneForWhatsApp(settings.phoneNumber)}`"
                     target="_blank"
@@ -114,7 +114,7 @@
                   >
                     {{ settings.phoneNumber }}
                   </a>
-                  <p class="contact__info-hint">{{ $t('contact.chatInstantly') }}</p>
+                  <p class="contact__info-hint">{{ copy.chatInstantly }}</p>
                 </div>
               </div>
 
@@ -123,7 +123,7 @@
                   <MapPin class="icon--md" />
                 </div>
                 <div>
-                  <div class="contact__info-label">{{ $t('contact.address') }}</div>
+                  <div class="contact__info-label">{{ copy.addressLabel }}</div>
                   <p class="contact__info-text" v-html="settings.address.replace(/\n/g, '<br />')">
                   </p>
                 </div>
@@ -139,16 +139,16 @@
             class="contact__whatsapp-btn"
           >
             <MessageCircle class="icon" />
-            {{ $t('contact.chatOnWhatsApp') }}
+            {{ copy.chatOnWhatsApp }}
           </a>
 
           <div class="contact__hours">
-            <h4 class="contact__hours-title">{{ $t('contact.businessHours') }}</h4>
+            <h4 class="contact__hours-title">{{ copy.businessHours }}</h4>
             <div class="contact__hours-list">
-              <p>{{ $t('contact.mondayFriday') }}</p>
-              <p>{{ $t('contact.saturday') }}</p>
-              <p>{{ $t('contact.sunday') }}</p>
-              <p class="contact__hours-emergency">{{ $t('contact.emergencySupport') }}</p>
+              <p>{{ copy.mondayFriday }}</p>
+              <p>{{ copy.saturday }}</p>
+              <p>{{ copy.sunday }}</p>
+              <p class="contact__hours-emergency">{{ copy.emergencySupport }}</p>
             </div>
           </div>
         </div>
@@ -158,13 +158,90 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { Mail, Phone, MapPin, Send, MessageCircle } from 'lucide-vue-next'
+import { useI18n } from '#imports'
 
+const { t, locale } = useI18n()
 const { settings, loadSettings, formatPhoneForTel, formatPhoneForWhatsApp } = useSettings()
+const { load, pick } = useHomepageSection('contact', {
+  title_ro: '',
+  title_en: '',
+  subtitle_ro: '',
+  subtitle_en: '',
+  your_name_ro: '',
+  your_name_en: '',
+  email_address_ro: '',
+  email_address_en: '',
+  message_ro: '',
+  message_en: '',
+  send_message_ro: '',
+  send_message_en: '',
+  contact_information_ro: '',
+  contact_information_en: '',
+  phone_label_ro: '',
+  phone_label_en: '',
+  email_label_ro: '',
+  email_label_en: '',
+  whatsapp_label_ro: '',
+  whatsapp_label_en: '',
+  chat_instantly_ro: '',
+  chat_instantly_en: '',
+  address_label_ro: '',
+  address_label_en: '',
+  chat_on_whatsapp_ro: '',
+  chat_on_whatsapp_en: '',
+  business_hours_ro: '',
+  business_hours_en: '',
+  monday_friday_ro: '',
+  monday_friday_en: '',
+  saturday_ro: '',
+  saturday_en: '',
+  sunday_ro: '',
+  sunday_en: '',
+  emergency_support_ro: '',
+  emergency_support_en: ''
+})
+
+const copy = computed(() => ({
+  title: pick('title_ro', 'title_en', locale.value, t('contact.title')),
+  subtitle: pick('subtitle_ro', 'subtitle_en', locale.value, t('contact.subtitle')),
+  yourName: pick('your_name_ro', 'your_name_en', locale.value, t('contact.yourName')),
+  emailAddress: pick('email_address_ro', 'email_address_en', locale.value, t('contact.emailAddress')),
+  message: pick('message_ro', 'message_en', locale.value, t('contact.message')),
+  sendMessage: pick('send_message_ro', 'send_message_en', locale.value, t('contact.sendMessage')),
+  contactInformation: pick(
+    'contact_information_ro',
+    'contact_information_en',
+    locale.value,
+    t('contact.contactInformation')
+  ),
+  phoneLabel: pick('phone_label_ro', 'phone_label_en', locale.value, t('contact.phone')),
+  emailLabel: pick('email_label_ro', 'email_label_en', locale.value, t('contact.email')),
+  whatsappLabel: pick('whatsapp_label_ro', 'whatsapp_label_en', locale.value, t('contact.whatsapp')),
+  chatInstantly: pick('chat_instantly_ro', 'chat_instantly_en', locale.value, t('contact.chatInstantly')),
+  addressLabel: pick('address_label_ro', 'address_label_en', locale.value, t('contact.address')),
+  chatOnWhatsApp: pick(
+    'chat_on_whatsapp_ro',
+    'chat_on_whatsapp_en',
+    locale.value,
+    t('contact.chatOnWhatsApp')
+  ),
+  businessHours: pick('business_hours_ro', 'business_hours_en', locale.value, t('contact.businessHours')),
+  mondayFriday: pick('monday_friday_ro', 'monday_friday_en', locale.value, t('contact.mondayFriday')),
+  saturday: pick('saturday_ro', 'saturday_en', locale.value, t('contact.saturday')),
+  sunday: pick('sunday_ro', 'sunday_en', locale.value, t('contact.sunday')),
+  emergencySupport: pick(
+    'emergency_support_ro',
+    'emergency_support_en',
+    locale.value,
+    t('contact.emergencySupport')
+  )
+}))
 
 onMounted(() => {
   loadSettings()
+  load()
 })
 
 const formData = ref({

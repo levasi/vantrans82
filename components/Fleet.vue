@@ -8,8 +8,8 @@
 
       <div class="fleet__grid">
         <div
-          v-for="(vehicle, index) in vehicles"
-          :key="index"
+          v-for="vehicle in vehicles"
+          :key="vehicle.id"
           class="fleet__card"
         >
           <div class="fleet__media">
@@ -34,35 +34,82 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { Package, Truck, Container } from 'lucide-vue-next'
+import { computed, ref, onMounted } from 'vue'
+import { Package, Truck, Container, Warehouse, Bus, Car, Ship } from 'lucide-vue-next'
 import { useI18n } from '#imports'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
-const vehicles = computed(() => [
+const iconMap = {
+  Package,
+  Truck,
+  Container,
+  Warehouse,
+  Bus,
+  Car,
+  Ship
+}
+
+const fallbackVehicles = computed(() => [
   {
+    id: 'vans',
     icon: Package,
     name: t('fleet.vans'),
     capacity: t('fleet.vansCapacity'),
     description: t('fleet.vansDesc'),
-    image: 'https://images.unsplash.com/photo-1761454200783-ca533f7928e3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkZWxpdmVyeSUyMHZhbiUyMHZlaGljbGV8ZW58MXx8fHwxNzY3NzM4ODM1fDA&ixlib=rb-4.1.0&q=80&w=1080',
+    image: 'https://images.unsplash.com/photo-1761454200783-ca533f7928e3?auto=format&fit=crop&w=1080&q=80'
   },
   {
+    id: 'trucks',
     icon: Truck,
     name: t('fleet.trucks'),
     capacity: t('fleet.trucksCapacity'),
     description: t('fleet.trucksDesc'),
-    image: 'https://images.unsplash.com/photo-1738507869660-b44ea20ab037?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0cnVjayUyMGhpZ2h3YXklMjBsb2dpc3RpY3N8ZW58MXx8fHwxNzY3NzM0MzUzfDA&ixlib=rb-4.1.0&q=80&w=1080',
+    image: 'https://images.unsplash.com/photo-1738507869660-b44ea20ab037?auto=format&fit=crop&w=1080&q=80'
   },
   {
+    id: 'trailers',
     icon: Container,
     name: t('fleet.trailers'),
     capacity: t('fleet.trailersCapacity'),
     description: t('fleet.trailersDesc'),
-    image: 'https://images.unsplash.com/photo-1703977883249-d959f2b0c1ae?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjYXJnbyUyMHRyYW5zcG9ydCUyMHNoaXBwaW5nfGVufDF8fHx8MTc2NzczODgzNXww&ixlib=rb-4.1.0&q=80&w=1080',
-  },
+    image: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1080&q=80'
+  }
 ])
+
+const remoteVehicles = ref(null)
+
+const mapVehicle = (vehicle) => {
+  const isRo = String(locale.value).startsWith('ro')
+  return {
+    id: vehicle.id ?? vehicle.slug,
+    icon: iconMap[vehicle.icon] || Truck,
+    name: isRo ? vehicle.name_ro : vehicle.name_en,
+    capacity: isRo ? vehicle.capacity_ro : vehicle.capacity_en,
+    description: isRo ? vehicle.description_ro : vehicle.description_en,
+    image: vehicle.image_url
+  }
+}
+
+const vehicles = computed(() => {
+  if (remoteVehicles.value?.length) {
+    return remoteVehicles.value.map(mapVehicle)
+  }
+  return fallbackVehicles.value
+})
+
+const loadFleet = async () => {
+  try {
+    const response = await $fetch('/api/fleet')
+    if (response?.vehicles?.length) {
+      remoteVehicles.value = response.vehicles
+    }
+  } catch (error) {
+    console.error('Failed to load fleet:', error)
+  }
+}
+
+onMounted(loadFleet)
 </script>
 
 <style lang="scss" scoped>
@@ -79,7 +126,7 @@ const vehicles = computed(() => [
     gap: 2rem;
 
     @include respond-to(md) {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
     }
   }
 

@@ -8,14 +8,32 @@
                         <Menu class="icon icon--md admin-header__menu-icon" />
                     </button>
                     <NuxtImg src="/vtlogo.png" alt="VanTrans82" class="admin-header__logo" />
-                    <span class="admin-header__title">Admin Panel</span>
+                    <span class="admin-header__title">{{ $t('admin.panel') }}</span>
                 </div>
                 <div class="admin-header__actions">
+                    <div class="admin-header__lang" role="group" :aria-label="$t('admin.translations')">
+                        <button
+                            type="button"
+                            class="admin-header__lang-btn"
+                            :class="{ 'admin-header__lang-btn--active': locale === 'en' }"
+                            @click="switchLocale('en')"
+                        >
+                            EN
+                        </button>
+                        <button
+                            type="button"
+                            class="admin-header__lang-btn"
+                            :class="{ 'admin-header__lang-btn--active': locale === 'ro' }"
+                            @click="switchLocale('ro')"
+                        >
+                            RO
+                        </button>
+                    </div>
                     <a href="/" target="_blank" rel="noopener noreferrer"
                         class="admin-header__btn admin-header__btn--website">
                         <ExternalLink class="icon icon--sm" />
-                        <span class="admin-header__btn-label admin-header__btn-label--full">See Website</span>
-                        <span class="admin-header__btn-label admin-header__btn-label--short">Website</span>
+                        <span class="admin-header__btn-label admin-header__btn-label--full">{{ $t('admin.seeWebsite') }}</span>
+                        <span class="admin-header__btn-label admin-header__btn-label--short">{{ $t('admin.website') }}</span>
                     </a>
                     <div class="admin-header__user">
                         {{ user?.name || user?.email }}
@@ -23,7 +41,7 @@
                     <button @click="handleLogout"
                         class="admin-header__btn admin-header__btn--logout" type="button">
                         <LogOut class="icon icon--sm" />
-                        <span class="admin-header__btn-label admin-header__btn-label--full">Logout</span>
+                        <span class="admin-header__btn-label admin-header__btn-label--full">{{ $t('admin.logout') }}</span>
                     </button>
                 </div>
             </div>
@@ -38,6 +56,12 @@ defineEmits(['toggleSidebar'])
 
 const { user, logout } = useAuth()
 const router = useRouter()
+const { locale, setLocale } = useI18n()
+
+const switchLocale = (nextLocale) => {
+    if (locale.value === nextLocale) return
+    setLocale(nextLocale)
+}
 
 const handleLogout = () => {
     logout()
@@ -125,6 +149,39 @@ const handleLogout = () => {
 
     @include respond-to(sm) {
       gap: 1rem;
+    }
+  }
+
+  &__lang {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-muted);
+  }
+
+  &__lang-btn {
+    border: none;
+    background: transparent;
+    color: var(--color-text-secondary);
+    font: inherit;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1;
+    padding: 0.4rem 0.55rem;
+    border-radius: calc(var(--radius-md) - 2px);
+    cursor: pointer;
+
+    @include respond-to(sm) {
+      font-size: 0.8125rem;
+      padding: 0.45rem 0.65rem;
+    }
+
+    &--active {
+      background: var(--color-surface);
+      color: var(--color-brand);
+      box-shadow: var(--shadow-sm);
     }
   }
 

@@ -3,31 +3,17 @@
     <div class="container">
       <div class="coverage__layout">
         <div class="coverage__content">
-          <h2 class="coverage__title">{{ $t('coverage.title') }}</h2>
-          <p class="coverage__subtitle">{{ $t('coverage.subtitle') }}</p>
+          <h2 class="coverage__title">{{ title }}</h2>
+          <p class="coverage__subtitle">{{ subtitle }}</p>
 
           <div class="coverage__regions">
             <div
-              v-for="(region, index) in regions"
-              :key="index"
+              v-for="region in regions"
+              :key="region.id"
               class="coverage__region"
             >
               <CheckCircle class="icon coverage__check" />
-              <span>{{ region }}</span>
-            </div>
-          </div>
-
-          <div class="coverage__callout">
-            <div class="coverage__callout-inner">
-              <MapPin class="icon icon--md coverage__pin" />
-              <div>
-                <h4 class="coverage__callout-title">
-                  {{ $t('coverage.strategicLocations') }}
-                </h4>
-                <p class="coverage__callout-desc">
-                  {{ $t('coverage.strategicLocationsDesc') }}
-                </p>
-              </div>
+              <span>{{ region.name }}</span>
             </div>
           </div>
         </div>
@@ -35,22 +21,16 @@
         <div class="coverage__map-wrap">
           <div class="coverage__map-card">
             <div class="coverage__map">
-              <img
-                src="https://images.unsplash.com/photo-1730317195704-29f7ced19356?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxldXJvcGUlMjBtYXAlMjBnZW9ncmFwaHl8ZW58MXx8fHwxNzY3NzM5MTUxfDA&ixlib=rb-4.1.0&q=80&w=1080"
-                alt="Europe Coverage Map"
-                class="coverage__map-image"
-              />
-              <div class="coverage__map-overlay"></div>
-
-              <div class="coverage__markers">
-                <div class="coverage__markers-inner">
-                  <div class="coverage__marker coverage__marker--center">
-                    <div class="coverage__ping animate-ping"></div>
-                    <div class="coverage__dot coverage__dot--accent"></div>
-                  </div>
-                  <div class="coverage__dot coverage__dot--secondary coverage__dot--nw"></div>
-                  <div class="coverage__dot coverage__dot--secondary coverage__dot--se"></div>
-                </div>
+              <iframe
+                class="coverage__map-frame"
+                :title="pinLabel"
+                src="https://www.openstreetmap.org/export/embed.html?bbox=23.95%2C45.72%2C24.35%2C45.87&layer=mapnik&marker=45.7936%2C24.1510"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+              ></iframe>
+              <div class="coverage__map-label">
+                <MapPin class="icon coverage__map-pin" />
+                <span>{{ pinLabel }}</span>
               </div>
             </div>
           </div>
@@ -64,20 +44,58 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { MapPin, CheckCircle } from 'lucide-vue-next'
 import { useI18n } from '#imports'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
-const regions = computed(() => [
-  t('coverage.regions.bucharest'),
-  t('coverage.regions.transylvania'),
-  t('coverage.regions.moldova'),
-  t('coverage.regions.muntenia'),
-  t('coverage.regions.westernEurope'),
-  t('coverage.regions.centralEurope'),
-])
+const remote = ref(null)
+
+const isRo = computed(() => String(locale.value).startsWith('ro'))
+
+const title = computed(() =>
+  remote.value?.content
+    ? (isRo.value ? remote.value.content.title_ro : remote.value.content.title_en)
+    : t('coverage.title')
+)
+
+const subtitle = computed(() =>
+  remote.value?.content
+    ? (isRo.value ? remote.value.content.subtitle_ro : remote.value.content.subtitle_en)
+    : t('coverage.subtitle')
+)
+
+const pinLabel = computed(() => t('coverage.pinLabel'))
+
+const regions = computed(() => {
+  if (remote.value?.regions?.length) {
+    return remote.value.regions.map((region) => ({
+      id: region.id,
+      name: isRo.value ? region.name_ro : region.name_en
+    }))
+  }
+
+  return [
+    { id: 'bucharest', name: t('coverage.regions.bucharest') },
+    { id: 'transylvania', name: t('coverage.regions.transylvania') },
+    { id: 'muntenia', name: t('coverage.regions.muntenia') },
+    { id: 'westernEurope', name: t('coverage.regions.westernEurope') }
+  ]
+})
+
+const loadCoverage = async () => {
+  try {
+    const response = await $fetch('/api/coverage')
+    if (response?.content) {
+      remote.value = response
+    }
+  } catch (error) {
+    console.error('Failed to load coverage:', error)
+  }
+}
+
+onMounted(loadCoverage)
 </script>
 
 <style lang="scss" scoped>
@@ -142,39 +160,6 @@ const regions = computed(() => [
     flex-shrink: 0;
   }
 
-  &__callout {
-    margin-top: 2rem;
-    padding: 1.5rem;
-    background: $color-brand-tint;
-    border: 1px solid $color-brand-light;
-    border-radius: $radius-xl;
-  }
-
-  &__callout-inner {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-  }
-
-  &__pin {
-    color: $color-brand;
-    flex-shrink: 0;
-    margin-top: 0.25rem;
-  }
-
-  &__callout-title {
-    font-weight: 600;
-    color: $color-text;
-    margin: 0 0 0.5rem;
-  }
-
-  &__callout-desc {
-    color: $color-text-muted;
-    font-size: 0.875rem;
-    line-height: 1.625;
-    margin: 0;
-  }
-
   &__map-wrap {
     position: relative;
   }
@@ -192,77 +177,35 @@ const regions = computed(() => [
     height: 500px;
   }
 
-  &__map-image {
+  &__map-frame {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    border: 0;
   }
 
-  &__map-overlay {
+  &__map-label {
     position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgb(30 58 138 / 0.4), transparent);
-  }
-
-  &__markers {
-    position: absolute;
-    inset: 0;
+    left: 1rem;
+    bottom: 1rem;
+    z-index: 1;
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.875rem;
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $radius-full;
+    box-shadow: $shadow-lg;
+    color: $color-text;
+    font-size: 0.875rem;
+    font-weight: 600;
   }
 
-  &__markers-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    max-width: 28rem;
-  }
-
-  &__marker {
-    &--center {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-  }
-
-  &__ping {
-    position: absolute;
+  &__map-pin {
     width: 1rem;
     height: 1rem;
-    background: $color-accent;
-    border-radius: $radius-full;
-  }
-
-  &__dot {
-    border-radius: $radius-full;
-    border: 2px solid $color-surface;
-    box-shadow: $shadow-lg;
-
-    &--accent {
-      width: 1rem;
-      height: 1rem;
-      background: $color-accent;
-    }
-
-    &--secondary {
-      position: absolute;
-      width: 0.75rem;
-      height: 0.75rem;
-      background: #60a5fa;
-    }
-
-    &--nw {
-      top: 33.333%;
-      left: 25%;
-    }
-
-    &--se {
-      top: 66.666%;
-      left: 66.666%;
-    }
+    color: $color-brand;
+    flex-shrink: 0;
   }
 
   &__blob {

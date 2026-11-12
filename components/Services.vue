@@ -2,8 +2,8 @@
   <section id="services" class="services">
     <div class="container">
       <div class="section-header">
-        <h2>{{ $t('services.title') }}</h2>
-        <p>{{ $t('services.subtitle') }}</p>
+        <h2>{{ title }}</h2>
+        <p>{{ subtitle }}</p>
       </div>
 
       <div class="services__grid">
@@ -35,38 +35,64 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { Truck, Zap, Globe, Settings } from 'lucide-vue-next'
+import { computed, onMounted } from 'vue'
+import { Truck, Zap, Settings, Warehouse } from 'lucide-vue-next'
 import { useI18n } from '#imports'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
+const { content, load, pick, isRo } = useHomepageSection('services', {
+  title_ro: '',
+  title_en: '',
+  subtitle_ro: '',
+  subtitle_en: '',
+  items: []
+})
 
-const services = computed(() => [
+const iconMap = { Truck, Zap, Settings, Warehouse }
+
+const title = computed(() => pick('title_ro', 'title_en', locale.value, t('services.title')))
+const subtitle = computed(() => pick('subtitle_ro', 'subtitle_en', locale.value, t('services.subtitle')))
+
+const fallbackServices = computed(() => [
   {
     icon: Truck,
     title: t('services.roadTransport'),
     description: t('services.roadTransportDesc'),
-    image: 'https://images.unsplash.com/photo-1643119270753-9f506b137e38?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyb2FkJTIwaGlnaHdheSUyMHRyYW5zcG9ydHxlbnwxfHx8fDE3Njc3MzkxNTN8MA&ixlib=rb-4.1.0&q=80&w=1080',
+    image: 'https://images.unsplash.com/photo-1643119270753-9f506b137e38?auto=format&fit=crop&w=1080&q=80'
   },
   {
     icon: Zap,
     title: t('services.expressDelivery'),
     description: t('services.expressDeliveryDesc'),
-    image: 'https://images.unsplash.com/photo-1761454200783-ca533f7928e3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkZWxpdmVyeSUyMHZhbiUyMHZlaGljbGV8ZW58MXx8fHwxNzY3NzM4ODM1fDA&ixlib=rb-4.1.0&q=80&w=1080',
-  },
-  {
-    icon: Globe,
-    title: t('services.internationalFreight'),
-    description: t('services.internationalFreightDesc'),
-    image: 'https://images.unsplash.com/photo-1663103746090-2e4274c6c7ac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaGlwcGluZyUyMGNvbnRhaW5lciUyMHBvcnR8ZW58MXx8fHwxNzY3NzM5MTUyfDA&ixlib=rb-4.1.0&q=80&w=1080',
+    image: 'https://images.unsplash.com/photo-1761454200783-ca533f7928e3?auto=format&fit=crop&w=1080&q=80'
   },
   {
     icon: Settings,
+    title: t('services.internationalFreight'),
+    description: t('services.internationalFreightDesc'),
+    image: 'https://images.unsplash.com/photo-1663103746090-2e4274c6c7ac?auto=format&fit=crop&w=1080&q=80'
+  },
+  {
+    icon: Warehouse,
     title: t('services.customLogistics'),
     description: t('services.customLogisticsDesc'),
-    image: 'https://images.unsplash.com/photo-1726866672851-5b99c837603c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXJlaG91c2UlMjBtb2Rlcm4lMjBmYWNpbGl0eXxlbnwxfHx8fDE3Njc3MzkxNTF8MA&ixlib=rb-4.1.0&q=80&w=1080',
-  },
+    image: 'https://images.unsplash.com/photo-1726866672851-5b99c837603c?auto=format&fit=crop&w=1080&q=80'
+  }
 ])
+
+const services = computed(() => {
+  const items = Array.isArray(content.value.items) ? content.value.items : []
+  if (!items.length) return fallbackServices.value
+
+  return items.map((item) => ({
+    icon: iconMap[item.icon] || Truck,
+    title: isRo(locale.value) ? item.title_ro : item.title_en,
+    description: isRo(locale.value) ? item.description_ro : item.description_en,
+    image: item.image_url
+  }))
+})
+
+onMounted(load)
 </script>
 
 <style lang="scss" scoped>

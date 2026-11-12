@@ -1,5 +1,23 @@
 <template>
   <div class="admin-login">
+    <div class="admin-login__lang">
+      <button
+        type="button"
+        class="admin-login__lang-btn"
+        :class="{ 'admin-login__lang-btn--active': locale === 'en' }"
+        @click="switchLocale('en')"
+      >
+        EN
+      </button>
+      <button
+        type="button"
+        class="admin-login__lang-btn"
+        :class="{ 'admin-login__lang-btn--active': locale === 'ro' }"
+        @click="switchLocale('ro')"
+      >
+        RO
+      </button>
+    </div>
     <div class="admin-login__wrap">
       <div class="admin-login__card">
         <!-- Logo -->
@@ -8,8 +26,8 @@
         </div>
 
         <!-- Title -->
-        <h1 class="admin-login__title">Admin Login</h1>
-        <p class="admin-login__subtitle">Sign in to access the admin area</p>
+        <h1 class="admin-login__title">{{ $t('admin.loginTitle') }}</h1>
+        <p class="admin-login__subtitle">{{ $t('admin.loginSubtitle') }}</p>
 
         <!-- Error Message -->
         <div v-if="error" class="admin-login__alert admin-login__alert--error">
@@ -20,7 +38,7 @@
         <form @submit.prevent="handleLogin" class="admin-login__form">
           <div class="admin-login__field">
             <label for="email" class="admin-login__label">
-              Email Address
+              {{ $t('admin.emailAddress') }}
             </label>
             <input
               id="email"
@@ -34,7 +52,7 @@
 
           <div class="admin-login__field">
             <label for="password" class="admin-login__label">
-              Password
+              {{ $t('admin.password') }}
             </label>
             <input
               id="password"
@@ -42,7 +60,7 @@
               type="password"
               required
               class="admin-login__input"
-              placeholder="Enter your password"
+              :placeholder="$t('admin.passwordPlaceholder')"
             />
           </div>
 
@@ -51,13 +69,13 @@
             :disabled="loading"
             class="admin-login__submit"
           >
-            <span v-if="!loading">Sign In</span>
+            <span v-if="!loading">{{ $t('admin.signIn') }}</span>
             <span v-else class="admin-login__loading">
               <svg class="admin-login__spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="admin-login__spinner-track" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="admin-login__spinner-head" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              Signing in...
+              {{ $t('admin.signingIn') }}
             </span>
           </button>
         </form>
@@ -65,16 +83,16 @@
         <!-- Register Link -->
         <div class="admin-login__footer-link">
           <p class="admin-login__footer-text">
-            Don't have an account?
+            {{ $t('admin.noAccount') }}
             <NuxtLink to="/admin/register" class="admin-login__link">
-              Create one
+              {{ $t('admin.createOne') }}
             </NuxtLink>
           </p>
         </div>
 
         <!-- Footer -->
         <p class="admin-login__portal">
-          VanTrans82 Admin Portal
+          {{ $t('admin.portal') }}
         </p>
       </div>
     </div>
@@ -92,6 +110,12 @@ definePageMeta({
 
 const { login } = useAuth()
 const router = useRouter()
+const { locale, setLocale } = useI18n()
+
+const switchLocale = (nextLocale) => {
+  if (locale.value === nextLocale) return
+  setLocale(nextLocale)
+}
 
 const formData = ref({
   email: '',
@@ -132,6 +156,7 @@ useHead({
 @use '~/assets/scss/mixins' as *;
 
 .admin-login {
+  position: relative;
   min-height: 100vh;
   min-height: 100dvh;
   width: 100%;
@@ -140,6 +165,37 @@ useHead({
   padding: 2rem 1rem;
   box-sizing: border-box;
   background: linear-gradient(to bottom right, #172554, $color-brand, $color-brand-mid);
+
+  &__lang {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem;
+    border: 1px solid rgb(255 255 255 / 0.25);
+    border-radius: var(--radius-md);
+    background: rgb(255 255 255 / 0.12);
+    backdrop-filter: blur(8px);
+  }
+
+  &__lang-btn {
+    border: none;
+    background: transparent;
+    color: rgb(255 255 255 / 0.75);
+    font: inherit;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1;
+    padding: 0.45rem 0.65rem;
+    border-radius: calc(var(--radius-md) - 2px);
+    cursor: pointer;
+
+    &--active {
+      background: $color-text-inverse;
+      color: $color-brand;
+    }
+  }
 
   &__wrap {
     width: 100%;

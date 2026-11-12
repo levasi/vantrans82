@@ -26,3 +26,8 @@ logs
 !.env.example
 
 .env*
+
+# Local uploaded images (use Vercel Blob in production)
+public/uploads/*
+!public/uploads/.gitkeep
+

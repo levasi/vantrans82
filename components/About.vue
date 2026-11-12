@@ -5,18 +5,18 @@
         <!-- Left: Text Content -->
         <div class="about__content">
           <h2 class="about__title">
-            {{ $t('about.title') }}
+            {{ title }}
           </h2>
           <p class="about__text">
-            {{ $t('about.description1') }}
+            {{ description1 }}
           </p>
           <p class="about__text about__text--spaced">
-            {{ $t('about.description2') }}
+            {{ description2 }}
           </p>
 
           <!-- Values -->
           <div class="about__values">
-            <h3 class="about__values-title">{{ $t('about.coreValues') }}</h3>
+            <h3 class="about__values-title">{{ coreValues }}</h3>
             <div v-for="(value, index) in values" :key="index" class="about__value">
               <div class="about__value-icon">
                 <component :is="value.icon" class="icon--md" />
@@ -37,16 +37,10 @@
         <div class="about__media">
           <div class="about__image-wrap">
             <img
-              src="https://images.unsplash.com/photo-1657819547860-ea03df0eafa8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXJlaG91c2UlMjBsb2dpc3RpY3MlMjB0ZWFtfGVufDF8fHx8MTc2NzczODgzNXww&ixlib=rb-4.1.0&q=80&w=1080"
+              :src="imageUrl"
               alt="VanTrans82 Team"
               class="about__image"
             />
-          </div>
-
-          <!-- Stats Overlay -->
-          <div class="about__stat">
-            <div class="about__stat-value">500+</div>
-            <div class="about__stat-label">{{ $t('about.satisfiedClients') }}</div>
           </div>
 
           <!-- Decorative Elements -->
@@ -58,28 +52,73 @@
 </template>
 
 <script setup>
+import { computed, onMounted } from 'vue'
 import { Shield, Zap, Users } from 'lucide-vue-next'
 import { useI18n } from '#imports'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
+const { content, load, pick, isRo } = useHomepageSection('about', {
+  title_ro: '',
+  title_en: '',
+  description1_ro: '',
+  description1_en: '',
+  description2_ro: '',
+  description2_en: '',
+  core_values_ro: '',
+  core_values_en: '',
+  image_url:
+    'https://images.unsplash.com/photo-1657819547860-ea03df0eafa8?auto=format&fit=crop&w=1080&q=80',
+  values: []
+})
 
-const values = computed(() => [
-  {
-    icon: Shield,
-    title: t('about.safety'),
-    description: t('about.safetyDesc'),
-  },
-  {
-    icon: Zap,
-    title: t('about.speed'),
-    description: t('about.speedDesc'),
-  },
-  {
-    icon: Users,
-    title: t('about.trust'),
-    description: t('about.trustDesc'),
-  },
-])
+const iconMap = { Shield, Zap, Users }
+
+const title = computed(() => pick('title_ro', 'title_en', locale.value, t('about.title')))
+const description1 = computed(() =>
+  pick('description1_ro', 'description1_en', locale.value, t('about.description1'))
+)
+const description2 = computed(() =>
+  pick('description2_ro', 'description2_en', locale.value, t('about.description2'))
+)
+const coreValues = computed(() =>
+  pick('core_values_ro', 'core_values_en', locale.value, t('about.coreValues'))
+)
+const imageUrl = computed(
+  () =>
+    content.value.image_url ||
+    'https://images.unsplash.com/photo-1657819547860-ea03df0eafa8?auto=format&fit=crop&w=1080&q=80'
+)
+
+const values = computed(() => {
+  const items = Array.isArray(content.value.values) ? content.value.values : []
+  if (!items.length) {
+    return [
+      {
+        icon: Shield,
+        title: t('about.safety'),
+        description: t('about.safetyDesc')
+      },
+      {
+        icon: Zap,
+        title: t('about.speed'),
+        description: t('about.speedDesc')
+      },
+      {
+        icon: Users,
+        title: t('about.trust'),
+        description: t('about.trustDesc')
+      }
+    ]
+  }
+
+  return items.map((item) => ({
+    icon: iconMap[item.icon] || Shield,
+    title: isRo(locale.value) ? item.title_ro : item.title_en,
+    description: isRo(locale.value) ? item.description_ro : item.description_en
+  }))
+})
+
+onMounted(load)
 </script>
 
 <style lang="scss" scoped>
@@ -179,29 +218,6 @@ const values = computed(() => [
   width: 100%;
   height: 500px;
   object-fit: cover;
-}
-
-.about__stat {
-  position: absolute;
-  bottom: -1.5rem;
-  left: -1.5rem;
-  background: $color-surface;
-  padding: 1.5rem;
-  border-radius: $radius-xl;
-  box-shadow: $shadow-xl;
-  border: 1px solid $color-border;
-}
-
-.about__stat-value {
-  font-size: 2.25rem;
-  font-weight: 700;
-  color: $color-brand;
-  margin-bottom: 0.25rem;
-}
-
-.about__stat-label {
-  font-size: 0.875rem;
-  color: $color-text-muted;
 }
 
 .about__decor {

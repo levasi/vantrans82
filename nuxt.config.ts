@@ -27,6 +27,28 @@ export default defineNuxtConfig({
     langDir: 'locales',
     defaultLocale: 'ro',
     strategy: 'prefix_except_default',
+    // Keep admin URLs stable (no /en prefix) so refresh never 404s
+    customRoutes: 'config',
+    pages: {
+      'admin/index': false,
+      'admin/login': false,
+      'admin/register': false,
+      'admin/settings': false,
+      'admin/translations': false,
+      'admin/fleet': false,
+      'admin/coverage': false,
+      'admin/homepage/index': false,
+      'admin/homepage/hero': false,
+      'admin/homepage/features': false,
+      'admin/homepage/services': false,
+      'admin/homepage/cta': false,
+      'admin/homepage/testimonials': false,
+      'admin/homepage/about': false,
+      'admin/homepage/faq': false,
+      'admin/homepage/contact': false,
+      'admin/homepage/fleet': false,
+      'admin/homepage/coverage': false
+    },
     detectBrowserLanguage: {
       useCookie: true,
       cookieKey: 'i18n_redirected',
@@ -39,4 +61,5 @@ export default defineNuxtConfig({
     }
   }
 })
+
 

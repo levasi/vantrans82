@@ -2,40 +2,19 @@
   <section class="features">
     <div class="container">
       <div class="features__grid">
-        <!-- Feature 1 -->
-        <div class="feature">
-          <div class="feature__icon-wrap feature__icon-wrap--accent">
-            <Clock class="icon icon--lg feature__icon feature__icon--accent" />
+        <div v-for="(feature, index) in features" :key="index" class="feature">
+          <div
+            class="feature__icon-wrap"
+            :class="`feature__icon-wrap--${feature.color}`"
+          >
+            <component
+              :is="feature.icon"
+              class="icon icon--lg feature__icon"
+              :class="`feature__icon--${feature.color}`"
+            />
           </div>
-          <h3 class="feature__title">{{ $t('features.fastDelivery') }}</h3>
-          <p class="feature__desc">{{ $t('features.fastDeliveryDesc') }}</p>
-        </div>
-
-        <!-- Feature 2 -->
-        <div class="feature">
-          <div class="feature__icon-wrap feature__icon-wrap--brand">
-            <Shield class="icon icon--lg feature__icon feature__icon--brand" />
-          </div>
-          <h3 class="feature__title">{{ $t('features.secureTransport') }}</h3>
-          <p class="feature__desc">{{ $t('features.secureTransportDesc') }}</p>
-        </div>
-
-        <!-- Feature 3 -->
-        <div class="feature">
-          <div class="feature__icon-wrap feature__icon-wrap--green">
-            <TrendingUp class="icon icon--lg feature__icon feature__icon--green" />
-          </div>
-          <h3 class="feature__title">{{ $t('features.liveTracking') }}</h3>
-          <p class="feature__desc">{{ $t('features.liveTrackingDesc') }}</p>
-        </div>
-
-        <!-- Feature 4 -->
-        <div class="feature">
-          <div class="feature__icon-wrap feature__icon-wrap--purple">
-            <Headphones class="icon icon--lg feature__icon feature__icon--purple" />
-          </div>
-          <h3 class="feature__title">{{ $t('features.support') }}</h3>
-          <p class="feature__desc">{{ $t('features.supportDesc') }}</p>
+          <h3 class="feature__title">{{ feature.title }}</h3>
+          <p class="feature__desc">{{ feature.description }}</p>
         </div>
       </div>
     </div>
@@ -43,7 +22,55 @@
 </template>
 
 <script setup>
+import { computed, onMounted } from 'vue'
 import { Clock, Shield, TrendingUp, Headphones } from 'lucide-vue-next'
+import { useI18n } from '#imports'
+
+const { t, locale } = useI18n()
+const { content, load, isRo } = useHomepageSection('features', { items: [] })
+
+const iconMap = { Clock, Shield, TrendingUp, Headphones }
+
+const fallbackFeatures = computed(() => [
+  {
+    icon: Clock,
+    color: 'accent',
+    title: t('features.fastDelivery'),
+    description: t('features.fastDeliveryDesc')
+  },
+  {
+    icon: Shield,
+    color: 'brand',
+    title: t('features.secureTransport'),
+    description: t('features.secureTransportDesc')
+  },
+  {
+    icon: TrendingUp,
+    color: 'green',
+    title: t('features.liveTracking'),
+    description: t('features.liveTrackingDesc')
+  },
+  {
+    icon: Headphones,
+    color: 'purple',
+    title: t('features.support'),
+    description: t('features.supportDesc')
+  }
+])
+
+const features = computed(() => {
+  const items = Array.isArray(content.value.items) ? content.value.items : []
+  if (!items.length) return fallbackFeatures.value
+
+  return items.map((item) => ({
+    icon: iconMap[item.icon] || Clock,
+    color: item.color || 'brand',
+    title: isRo(locale.value) ? item.title_ro : item.title_en,
+    description: isRo(locale.value) ? item.description_ro : item.description_en
+  }))
+})
+
+onMounted(load)
 </script>
 
 <style lang="scss" scoped>
@@ -51,8 +78,8 @@ import { Clock, Shield, TrendingUp, Headphones } from 'lucide-vue-next'
 @use '~/assets/scss/mixins' as *;
 
 .features {
-  padding-top: 4rem;
-  padding-bottom: 4rem;
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
   background: $color-surface;
   border-bottom: 1px solid #f3f4f6;
 

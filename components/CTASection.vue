@@ -3,7 +3,7 @@
     <!-- Background Image with Overlay -->
     <div class="cta-section__bg">
       <img
-        src="https://images.unsplash.com/photo-1763736809655-9337caf643cc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsb2dpc3RpY3MlMjBjb250cm9sJTIwY2VudGVyfGVufDF8fHx8MTc2NzczOTE1Mnww&ixlib=rb-4.1.0&q=80&w=1080"
+        :src="backgroundImage"
         alt="Logistics Center"
         class="cta-section__bg-img"
       />
@@ -13,10 +13,10 @@
     <div class="container cta-section__inner">
       <div class="cta-section__content">
         <h2 class="cta-section__title">
-          {{ $t('cta.title') }}
+          {{ title }}
         </h2>
         <p class="cta-section__subtitle">
-          {{ $t('cta.subtitle') }}
+          {{ subtitle }}
         </p>
 
         <div class="cta-section__actions">
@@ -24,7 +24,7 @@
             @click="scrollToContact"
             class="btn--accent-lg"
           >
-            {{ $t('cta.getQuote') }}
+            {{ getQuote }}
             <ArrowRight class="icon" />
           </button>
           <a
@@ -37,7 +37,7 @@
         </div>
 
         <p class="cta-section__note">
-          {{ $t('cta.available') }}
+          {{ available }}
         </p>
       </div>
     </div>
@@ -45,13 +45,38 @@
 </template>
 
 <script setup>
+import { computed, onMounted } from 'vue'
 import { ArrowRight, Phone } from 'lucide-vue-next'
-import { onMounted } from 'vue'
+import { useI18n } from '#imports'
 
+const { t, locale } = useI18n()
 const { settings, loadSettings, formatPhoneForTel } = useSettings()
+const { content, load, pick } = useHomepageSection('cta', {
+  title_ro: '',
+  title_en: '',
+  subtitle_ro: '',
+  subtitle_en: '',
+  get_quote_ro: '',
+  get_quote_en: '',
+  available_ro: '',
+  available_en: '',
+  background_image_url:
+    'https://images.unsplash.com/photo-1763736809655-9337caf643cc?auto=format&fit=crop&w=1080&q=80'
+})
+
+const title = computed(() => pick('title_ro', 'title_en', locale.value, t('cta.title')))
+const subtitle = computed(() => pick('subtitle_ro', 'subtitle_en', locale.value, t('cta.subtitle')))
+const getQuote = computed(() => pick('get_quote_ro', 'get_quote_en', locale.value, t('cta.getQuote')))
+const available = computed(() => pick('available_ro', 'available_en', locale.value, t('cta.available')))
+const backgroundImage = computed(
+  () =>
+    content.value.background_image_url ||
+    'https://images.unsplash.com/photo-1763736809655-9337caf643cc?auto=format&fit=crop&w=1080&q=80'
+)
 
 onMounted(() => {
   loadSettings()
+  load()
 })
 
 const scrollToContact = () => {

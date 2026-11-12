@@ -1,4 +1,5 @@
 import { initDb } from '~/server/utils/db'
+import { seedHomepageSectionsIfEmpty } from '~/server/utils/homepage-sections-db'
 import { seedTranslationsIfEmpty } from '~/server/utils/translation-db'
 
 export default defineNitroPlugin(async (nitroApp) => {
@@ -22,6 +23,7 @@ export default defineNitroPlugin(async (nitroApp) => {
     try {
       await initDb()
       await seedTranslationsIfEmpty()
+      await seedHomepageSectionsIfEmpty()
     } catch (error) {
       console.error('Failed to initialize database:', error)
       // Don't throw - allow app to start even if DB init fails

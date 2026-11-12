@@ -3,7 +3,7 @@
         <div class="admin-stats__card">
             <div class="admin-stats__row">
                 <div>
-                    <p class="admin-stats__label">Total Messages</p>
+                    <p class="admin-stats__label">{{ $t('admin.totalMessages') }}</p>
                     <p class="admin-stats__value">0</p>
                 </div>
                 <div class="admin-stats__icon-wrap admin-stats__icon-wrap--brand">
@@ -15,7 +15,7 @@
         <div class="admin-stats__card">
             <div class="admin-stats__row">
                 <div>
-                    <p class="admin-stats__label">Pending Requests</p>
+                    <p class="admin-stats__label">{{ $t('admin.pendingRequests') }}</p>
                     <p class="admin-stats__value">0</p>
                 </div>
                 <div class="admin-stats__icon-wrap admin-stats__icon-wrap--accent">
@@ -27,7 +27,7 @@
         <div class="admin-stats__card">
             <div class="admin-stats__row">
                 <div>
-                    <p class="admin-stats__label">Active Services</p>
+                    <p class="admin-stats__label">{{ $t('admin.activeServices') }}</p>
                     <p class="admin-stats__value">4</p>
                 </div>
                 <div class="admin-stats__icon-wrap admin-stats__icon-wrap--success">
@@ -39,8 +39,8 @@
         <div class="admin-stats__card">
             <div class="admin-stats__row">
                 <div>
-                    <p class="admin-stats__label">Website Status</p>
-                    <p class="admin-stats__value admin-stats__value--online">Online</p>
+                    <p class="admin-stats__label">{{ $t('admin.websiteStatus') }}</p>
+                    <p class="admin-stats__value admin-stats__value--online">{{ $t('admin.online') }}</p>
                 </div>
                 <div class="admin-stats__icon-wrap admin-stats__icon-wrap--success">
                     <CheckCircle class="icon icon--md admin-stats__icon admin-stats__icon--success" />

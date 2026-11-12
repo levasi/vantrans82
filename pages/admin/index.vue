@@ -7,8 +7,10 @@
                 <div class="admin-dashboard__container">
                     <!-- Welcome Section -->
                     <div class="admin-dashboard__welcome">
-                        <h1 class="admin-dashboard__title">Welcome, {{ user?.name || user?.email }}</h1>
-                        <p class="admin-dashboard__subtitle">Manage your VanTrans82 website from here</p>
+                        <h1 class="admin-dashboard__title">
+                            {{ $t('admin.welcome', { name: user?.name || user?.email }) }}
+                        </h1>
+                        <p class="admin-dashboard__subtitle">{{ $t('admin.welcomeSubtitle') }}</p>
                     </div>
 
                     <!-- Dashboard Stats -->
@@ -16,14 +18,17 @@
 
                     <!-- Quick Actions -->
                     <div class="admin-dashboard__actions">
-                        <h2 class="admin-dashboard__actions-title">Quick Actions</h2>
+                        <h2 class="admin-dashboard__actions-title">{{ $t('admin.quickActions') }}</h2>
                         <div class="admin-dashboard__actions-grid">
-                            <AdminActionCard title="Translations"
-                                description="Edit website translations for all languages" icon="FileText"
+                            <AdminActionCard :title="$t('admin.homepage')"
+                                :description="$t('admin.homepageDesc')" icon="Home"
+                                @click="navigateTo('/admin/homepage')" />
+                            <AdminActionCard :title="$t('admin.translations')"
+                                :description="$t('admin.translationsDesc')" icon="FileText"
                                 @click="navigateTo('/admin/translations')" />
-                            <AdminActionCard title="View Messages" description="Check contact form submissions"
+                            <AdminActionCard :title="$t('admin.messages')" :description="$t('admin.messagesDesc')"
                                 icon="Mail" @click="navigateTo('/admin/messages')" />
-                            <AdminActionCard title="Settings" description="Configure website settings" icon="Settings"
+                            <AdminActionCard :title="$t('admin.settings')" :description="$t('admin.settingsDesc')" icon="Settings"
                                 @click="navigateTo('/admin/settings')" />
                         </div>
                     </div>

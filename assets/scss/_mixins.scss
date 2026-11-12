@@ -30,8 +30,8 @@
 }
 
 @mixin section-pad {
-  padding-top: 5rem;
-  padding-bottom: 5rem;
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
 
   @include respond-to(md) {
     padding-top: 6rem;

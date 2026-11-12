@@ -4,10 +4,10 @@
       <!-- Section Header -->
       <div class="section-header">
         <h2>
-          {{ $t('faq.title') }}
+          {{ title }}
         </h2>
         <p>
-          {{ $t('faq.subtitle') }}
+          {{ subtitle }}
         </p>
       </div>
 
@@ -42,13 +42,13 @@
       <!-- Additional Help -->
       <div class="faq__help">
         <p class="faq__help-text">
-          {{ $t('faq.stillHaveQuestions') }}
+          {{ stillHaveQuestions }}
         </p>
         <button
           @click="scrollToContact"
           class="faq__help-link"
         >
-          {{ $t('faq.contactUs') }}
+          {{ contactUs }}
         </button>
       </div>
     </div>
@@ -56,12 +56,29 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { ChevronDown } from 'lucide-vue-next'
 import { useI18n } from '#imports'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
+const { settings, loadSettings } = useSettings()
+const { content, load, pick, isRo } = useHomepageSection('faq', {
+  title_ro: '',
+  title_en: '',
+  subtitle_ro: '',
+  subtitle_en: '',
+  still_have_questions_ro: '',
+  still_have_questions_en: '',
+  contact_us_ro: '',
+  contact_us_en: '',
+  items: []
+})
 const openIndex = ref(null)
+
+onMounted(() => {
+  loadSettings()
+  load()
+})
 
 const toggleFaq = (index) => {
   openIndex.value = openIndex.value === index ? null : index
@@ -85,32 +102,54 @@ const scrollToContact = () => {
   }
 }
 
-const faqs = computed(() => [
-  {
-    question: t('faq.questions.q1.question'),
-    answer: t('faq.questions.q1.answer'),
-  },
-  {
-    question: t('faq.questions.q2.question'),
-    answer: t('faq.questions.q2.answer'),
-  },
-  {
-    question: t('faq.questions.q3.question'),
-    answer: t('faq.questions.q3.answer'),
-  },
-  {
-    question: t('faq.questions.q4.question'),
-    answer: t('faq.questions.q4.answer'),
-  },
-  {
-    question: t('faq.questions.q5.question'),
-    answer: t('faq.questions.q5.answer'),
-  },
-  {
-    question: t('faq.questions.q6.question'),
-    answer: t('faq.questions.q6.answer'),
-  },
-])
+const title = computed(() => pick('title_ro', 'title_en', locale.value, t('faq.title')))
+const subtitle = computed(() => pick('subtitle_ro', 'subtitle_en', locale.value, t('faq.subtitle')))
+const stillHaveQuestions = computed(() =>
+  pick('still_have_questions_ro', 'still_have_questions_en', locale.value, t('faq.stillHaveQuestions'))
+)
+const contactUs = computed(() =>
+  pick('contact_us_ro', 'contact_us_en', locale.value, t('faq.contactUs'))
+)
+
+const withEmail = (answer) =>
+  String(answer || '').replaceAll('{email}', settings.value.contactEmail || '')
+
+const faqs = computed(() => {
+  const items = Array.isArray(content.value.items) ? content.value.items : []
+  if (items.length) {
+    return items.map((item) => ({
+      question: isRo(locale.value) ? item.question_ro : item.question_en,
+      answer: withEmail(isRo(locale.value) ? item.answer_ro : item.answer_en)
+    }))
+  }
+
+  return [
+    {
+      question: t('faq.questions.q1.question'),
+      answer: t('faq.questions.q1.answer')
+    },
+    {
+      question: t('faq.questions.q2.question'),
+      answer: t('faq.questions.q2.answer', { email: settings.value.contactEmail })
+    },
+    {
+      question: t('faq.questions.q3.question'),
+      answer: t('faq.questions.q3.answer')
+    },
+    {
+      question: t('faq.questions.q4.question'),
+      answer: t('faq.questions.q4.answer')
+    },
+    {
+      question: t('faq.questions.q5.question'),
+      answer: t('faq.questions.q5.answer')
+    },
+    {
+      question: t('faq.questions.q6.question'),
+      answer: t('faq.questions.q6.answer')
+    }
+  ]
+})
 </script>
 
 <style lang="scss" scoped>
