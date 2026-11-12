@@ -133,17 +133,18 @@ useHead({
 
 .admin-login {
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  min-height: 100dvh;
+  width: 100%;
+  display: grid;
+  place-items: center;
   padding: 2rem 1rem;
+  box-sizing: border-box;
   background: linear-gradient(to bottom right, #172554, $color-brand, $color-brand-mid);
 
   &__wrap {
     width: 100%;
     max-width: 28rem;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto;
   }
 
   &__card {

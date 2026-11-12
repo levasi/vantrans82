@@ -379,7 +379,7 @@ useHead({
   }
 
   &__container {
-    max-width: $container-narrow;
+    max-width: $container-max;
     margin-left: auto;
     margin-right: auto;
   }
