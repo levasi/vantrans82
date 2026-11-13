@@ -2,9 +2,9 @@ export const useSettings = () => {
   const settings = useState('publicSettings', () => ({
     showLanguageSwitch: true,
     companyName: 'VanTrans82',
-    phoneNumber: '+40 123 456 789',
-    contactEmail: 'contact@vantrans82.ro',
-    address: 'Str. Logistica nr. 123\nBucharest, Romania'
+    phoneNumber: '0743981279',
+    contactEmail: 'office@vantrans82.ro',
+    address: 'Str Doamna Stanca nr 39\nSelimbar jud Sibiu'
   }))
 
   const isLoading = useState('settingsLoading', () => false)
@@ -29,9 +29,9 @@ export const useSettings = () => {
         settings.value = {
           showLanguageSwitch: response.showLanguageSwitch ?? settings.value.showLanguageSwitch,
           companyName: response.companyName ?? settings.value.companyName,
-          phoneNumber: response.phoneNumber ?? settings.value.phoneNumber,
-          contactEmail: response.contactEmail ?? settings.value.contactEmail,
-          address: response.address ?? settings.value.address
+          phoneNumber: response.phoneNumber || '',
+          contactEmail: response.contactEmail || '',
+          address: response.address || ''
         }
         isLoaded.value = true
       }

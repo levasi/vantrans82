@@ -33,7 +33,7 @@ const DEFAULT_FLEET: Omit<FleetVehicle, 'id'>[] = [
     slug: 'vans',
     icon: 'Package',
     image_url:
-      'https://images.unsplash.com/photo-1761454200783-ca533f7928e3?auto=format&fit=crop&w=1080&q=80',
+      'https://images.unsplash.com/photo-1563010502-4714d64a19b8?auto=format&fit=crop&w=1080&q=80',
     sort_order: 0,
     name_ro: 'Dubă',
     name_en: 'Vans',

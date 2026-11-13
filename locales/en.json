@@ -128,7 +128,7 @@
       },
       "q2": {
         "question": "How do I get a transport quote?",
-        "answer": "You can request a quote by filling out our contact form, calling us directly at +40 123 456 789, or sending us an email. We typically respond within 2 hours during business hours and provide detailed pricing based on your specific needs."
+        "answer": "You can request a quote by filling out our contact form or sending us an email at {email}. We typically respond within 2 hours during business hours and provide detailed pricing based on your specific needs."
       },
       "q3": {
         "question": "Do you offer tracking for shipments?",

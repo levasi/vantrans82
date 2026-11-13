@@ -42,7 +42,7 @@
                   v-model="settings.contactEmail"
                   type="email"
                   class="admin-settings__input"
-                  placeholder="contact@vantrans82.ro"
+                  placeholder="office@vantrans82.ro"
                 />
               </div>
               <div class="admin-settings__field">
@@ -51,7 +51,7 @@
                   v-model="settings.phoneNumber"
                   type="tel"
                   class="admin-settings__input"
-                  placeholder="+40 123 456 789"
+                  placeholder="0743981279"
                 />
               </div>
               <div class="admin-settings__field">
@@ -60,7 +60,7 @@
                   v-model="settings.address"
                   rows="3"
                   class="admin-settings__input"
-                  placeholder="Str. Logistica nr. 123, Bucharest, Romania"
+                  placeholder="Str Doamna Stanca nr 39, Selimbar jud Sibiu"
                 ></textarea>
               </div>
             </div>
@@ -220,9 +220,9 @@ const sidebarOpen = ref(false)
 
 const settings = ref({
   companyName: 'VanTrans82',
-  contactEmail: 'contact@vantrans82.ro',
-  phoneNumber: '+40 123 456 789',
-  address: 'Str. Logistica nr. 123\nBucharest, Romania',
+  contactEmail: 'office@vantrans82.ro',
+  phoneNumber: '0743981279',
+  address: 'Str Doamna Stanca nr 39\nSelimbar jud Sibiu',
   smtpHost: '',
   smtpPort: '587',
   smtpUsername: '',

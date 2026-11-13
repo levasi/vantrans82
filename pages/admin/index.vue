@@ -23,9 +23,6 @@
                             <AdminActionCard :title="$t('admin.homepage')"
                                 :description="$t('admin.homepageDesc')" icon="Home"
                                 @click="navigateTo('/admin/homepage')" />
-                            <AdminActionCard :title="$t('admin.translations')"
-                                :description="$t('admin.translationsDesc')" icon="FileText"
-                                @click="navigateTo('/admin/translations')" />
                             <AdminActionCard :title="$t('admin.messages')" :description="$t('admin.messagesDesc')"
                                 icon="Mail" @click="navigateTo('/admin/messages')" />
                             <AdminActionCard :title="$t('admin.settings')" :description="$t('admin.settingsDesc')" icon="Settings"

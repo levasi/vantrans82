@@ -28,6 +28,7 @@
             <ArrowRight class="icon" />
           </button>
           <a
+            v-if="settings.phoneNumber"
             :href="`tel:${formatPhoneForTel(settings.phoneNumber)}`"
             class="btn--ghost"
           >

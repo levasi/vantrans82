@@ -8,9 +8,9 @@ export default defineEventHandler(async (event) => {
     const defaultSettings = {
       showLanguageSwitch: true,
       companyName: 'VanTrans82',
-      phoneNumber: '+40 123 456 789',
-      contactEmail: 'contact@vantrans82.ro',
-      address: 'Str. Logistica nr. 123\nBucharest, Romania'
+      phoneNumber: '0743981279',
+      contactEmail: 'office@vantrans82.ro',
+      address: 'Str Doamna Stanca nr 39\nSelimbar jud Sibiu'
     }
     
     if (!db) {
@@ -58,9 +58,9 @@ export default defineEventHandler(async (event) => {
       success: true,
       showLanguageSwitch: true,
       companyName: 'VanTrans82',
-      phoneNumber: '+40 123 456 789',
-      contactEmail: 'contact@vantrans82.ro',
-      address: 'Str. Logistica nr. 123\nBucharest, Romania'
+      phoneNumber: '0743981279',
+      contactEmail: 'office@vantrans82.ro',
+      address: 'Str Doamna Stanca nr 39\nSelimbar jud Sibiu'
     }
   }
 })

@@ -128,7 +128,7 @@
       },
       "q2": {
         "question": "Cum obțin o ofertă de transport?",
-        "answer": "Poți solicita o ofertă completând formularul nostru de contact, sunându-ne direct la +40 123 456 789 sau trimitându-ne un email. Răspundem de obicei în 2 ore în timpul orelor de lucru și oferim prețuri detaliate bazate pe nevoile tale specifice."
+        "answer": "Poți solicita o ofertă completând formularul nostru de contact sau trimitându-ne un email la {email}. Răspundem de obicei în 2 ore în timpul orelor de lucru și oferim prețuri detaliate bazate pe nevoile tale specifice."
       },
       "q3": {
         "question": "Oferiți urmărire pentru expedieri?",

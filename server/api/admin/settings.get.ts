@@ -10,9 +10,9 @@ export default defineEventHandler(async (event) => {
                 success: true,
                 settings: {
                     companyName: 'VanTrans82',
-                    contactEmail: 'contact@vantrans82.ro',
-                    phoneNumber: '+40 123 456 789',
-                    address: 'Str. Logistica nr. 123\nBucharest, Romania',
+                    contactEmail: 'office@vantrans82.ro',
+                    phoneNumber: '0743981279',
+                    address: 'Str Doamna Stanca nr 39\nSelimbar jud Sibiu',
                     smtpHost: '',
                     smtpPort: '587',
                     smtpUsername: '',
@@ -48,9 +48,9 @@ export default defineEventHandler(async (event) => {
         // Merge with defaults
         const defaultSettings = {
             companyName: 'VanTrans82',
-            contactEmail: 'contact@vantrans82.ro',
-            phoneNumber: '+40 123 456 789',
-            address: 'Str. Logistica nr. 123\nBucharest, Romania',
+            contactEmail: 'office@vantrans82.ro',
+            phoneNumber: '0743981279',
+            address: 'Str Doamna Stanca nr 39\nSelimbar jud Sibiu',
             smtpHost: '',
             smtpPort: '587',
             smtpUsername: '',

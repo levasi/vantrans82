@@ -84,7 +84,7 @@ const DEFAULTS: Record<HomepageSectionKey, Record<string, unknown>> = {
       {
         icon: 'Zap',
         image_url:
-          'https://images.unsplash.com/photo-1761454200783-ca533f7928e3?auto=format&fit=crop&w=1080&q=80',
+          'https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?auto=format&fit=crop&w=1080&q=80',
         title_ro: 'Livrare Expres',
         title_en: 'Express Delivery',
         description_ro:

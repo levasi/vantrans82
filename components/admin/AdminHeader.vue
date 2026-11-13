@@ -11,7 +11,7 @@
                     <span class="admin-header__title">{{ $t('admin.panel') }}</span>
                 </div>
                 <div class="admin-header__actions">
-                    <div class="admin-header__lang" role="group" :aria-label="$t('admin.translations')">
+                    <div class="admin-header__lang" role="group" aria-label="Language">
                         <button
                             type="button"
                             class="admin-header__lang-btn"

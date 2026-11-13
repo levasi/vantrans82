@@ -72,15 +72,6 @@
                     </ul>
                 </li>
                 <li>
-                    <NuxtLink to="/admin/translations"
-                        @click="$emit('close')"
-                        class="admin-sidebar__link"
-                        :class="{ 'admin-sidebar__link--active': isActive('/admin/translations') }">
-                        <FileText class="icon" />
-                        <span>{{ $t('admin.translations') }}</span>
-                    </NuxtLink>
-                </li>
-                <li>
                     <NuxtLink to="/admin/settings"
                         @click="$emit('close')"
                         class="admin-sidebar__link"
@@ -96,7 +87,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
-import { LayoutDashboard, FileText, Settings, Home, ChevronDown, X, Eye, EyeOff } from 'lucide-vue-next'
+import { LayoutDashboard, Settings, Home, ChevronDown, X, Eye, EyeOff } from 'lucide-vue-next'
 import { HOMEPAGE_SECTION_META } from '~/utils/homepage-section-forms'
 import type { HomepageVisibilityKey } from '~/utils/homepage-visibility'
 

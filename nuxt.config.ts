@@ -34,7 +34,6 @@ export default defineNuxtConfig({
       'admin/login': false,
       'admin/register': false,
       'admin/settings': false,
-      'admin/translations': false,
       'admin/fleet': false,
       'admin/coverage': false,
       'admin/homepage/index': false,

@@ -70,17 +70,17 @@
                 <div class="footer__col">
                     <h3 class="footer__heading">{{ $t('footer.contact') }}</h3>
                     <ul class="footer__list">
-                        <li class="footer__item">
+                        <li v-if="settings.phoneNumber" class="footer__item">
                             <a :href="`tel:${formatPhoneForTel(settings.phoneNumber)}`" class="footer__link">
                                 {{ settings.phoneNumber }}
                             </a>
                         </li>
-                        <li class="footer__item">
+                        <li v-if="settings.contactEmail" class="footer__item">
                             <a :href="`mailto:${settings.contactEmail}`" class="footer__link">
                                 {{ settings.contactEmail }}
                             </a>
                         </li>
-                        <li class="footer__item" v-html="settings.address.replace(/\n/g, '<br />')">
+                        <li v-if="settings.address" class="footer__item" v-html="settings.address.replace(/\n/g, '<br />')">
                         </li>
                     </ul>
                 </div>

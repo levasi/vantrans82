@@ -19,8 +19,9 @@
 
 <script setup>
 const { loadVisibility, isSectionVisible } = useHomepageVisibility()
+const { loadSettings } = useSettings()
 
-await loadVisibility()
+await Promise.all([loadVisibility(), loadSettings()])
 
 useHead({
   title: 'VanTrans82 - Fast & Reliable Freight Transport',

@@ -76,7 +76,7 @@
             </h3>
 
             <div class="contact__info-list">
-              <div class="contact__info-item">
+              <div v-if="settings.phoneNumber" class="contact__info-item">
                 <div class="contact__info-icon">
                   <Phone class="icon--md" />
                 </div>
@@ -88,7 +88,7 @@
                 </div>
               </div>
 
-              <div class="contact__info-item">
+              <div v-if="settings.contactEmail" class="contact__info-item">
                 <div class="contact__info-icon">
                   <Mail class="icon--md" />
                 </div>
@@ -100,7 +100,7 @@
                 </div>
               </div>
 
-              <div class="contact__info-item">
+              <div v-if="settings.phoneNumber" class="contact__info-item">
                 <div class="contact__info-icon contact__info-icon--whatsapp">
                   <MessageCircle class="icon--md" />
                 </div>
@@ -118,7 +118,7 @@
                 </div>
               </div>
 
-              <div class="contact__info-item">
+              <div v-if="settings.address" class="contact__info-item">
                 <div class="contact__info-icon">
                   <MapPin class="icon--md" />
                 </div>
@@ -133,6 +133,7 @@
 
           <!-- WhatsApp Quick Action -->
           <a
+            v-if="settings.phoneNumber"
             :href="`https://wa.me/${formatPhoneForWhatsApp(settings.phoneNumber)}?text=Hello! I'm interested in your transport services.`"
             target="_blank"
             rel="noopener noreferrer"
