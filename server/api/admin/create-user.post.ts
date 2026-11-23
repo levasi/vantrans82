@@ -1,4 +1,5 @@
 import bcrypt from 'bcryptjs'
+import { OWNER_EMAIL } from '~/server/utils/admin-session'
 import { getDb } from '~/server/utils/db'
 
 export default defineEventHandler(async (event) => {
@@ -41,9 +42,14 @@ export default defineEventHandler(async (event) => {
     const passwordHash = await bcrypt.hash(password, saltRounds)
 
     // Create user
+    const normalizedEmail = email.toLowerCase()
+    const role = normalizedEmail === OWNER_EMAIL ? 'owner' : 'member'
+
     const result = await db.query(
-      'INSERT INTO admin_users (email, password_hash, name) VALUES ($1, $2, $3) RETURNING id, email, name',
-      [email.toLowerCase(), passwordHash, name || null]
+      `INSERT INTO admin_users (email, password_hash, name, role, role_request)
+       VALUES ($1, $2, $3, $4, 'none')
+       RETURNING id, email, name, role, role_request`,
+      [normalizedEmail, passwordHash, name || null, role]
     )
 
     const user = result.rows[0]

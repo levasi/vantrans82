@@ -1,4 +1,5 @@
 import bcrypt from 'bcryptjs'
+import { toPublicAdminUser } from '~/server/utils/admin-session'
 import { getDb } from '~/server/utils/db'
 
 export default defineEventHandler(async (event) => {
@@ -24,7 +25,7 @@ export default defineEventHandler(async (event) => {
     
     // Find user by email
     const result = await db.query(
-      'SELECT id, email, password_hash, name FROM admin_users WHERE email = $1',
+      'SELECT id, email, password_hash, name, role, role_request FROM admin_users WHERE email = $1',
       [email.toLowerCase()]
     )
 
@@ -53,11 +54,7 @@ export default defineEventHandler(async (event) => {
     // Return user data (without password)
     return {
       success: true,
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name
-      },
+      user: toPublicAdminUser(user),
       token: sessionToken
     }
   } catch (error: any) {

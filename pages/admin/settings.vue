@@ -155,32 +155,6 @@
             </div>
           </div>
 
-          <!-- Account Settings -->
-          <div class="admin-settings__card admin-settings__card--danger">
-            <h2 class="admin-settings__card-title">
-              <Trash2 class="icon admin-settings__danger-icon" />
-              <span class="admin-settings__danger-text">Danger Zone</span>
-            </h2>
-            <div class="admin-settings__fields">
-              <div class="admin-settings__field">
-                <h3 class="admin-settings__danger-heading">Delete Account</h3>
-                <p class="admin-settings__danger-desc">
-                  Once you delete your account, there is no going back. This action cannot be undone.
-                  You will be logged out immediately and will need to create a new account to access the admin area.
-                </p>
-                <button
-                  @click="handleDeleteAccount"
-                  :disabled="deleting"
-                  class="admin-settings__btn admin-settings__btn--danger"
-                >
-                  <Trash2 v-if="!deleting" class="icon icon--sm" />
-                  <div v-else class="admin-settings__spinner admin-settings__spinner--sm"></div>
-                  {{ deleting ? 'Deleting...' : 'Delete My Account' }}
-                </button>
-              </div>
-            </div>
-          </div>
-
           <!-- Save Button -->
           <div class="admin-settings__actions">
             <button
@@ -207,7 +181,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { Save, Globe, Mail, Server, Trash2 } from 'lucide-vue-next'
+import { Save, Globe, Mail, Server } from 'lucide-vue-next'
 
 definePageMeta({
   middleware: 'admin',
@@ -239,11 +213,8 @@ const systemInfo = ref({
 })
 
 const saving = ref(false)
-const deleting = ref(false)
 const message = ref('')
 const messageType = ref<'success' | 'error'>('success')
-const { user, logout } = useAuth()
-const router = useRouter()
 
 // Load settings
 const loadSettings = async () => {
@@ -283,62 +254,6 @@ const saveSettings = async () => {
     messageType.value = 'error'
   } finally {
     saving.value = false
-  }
-}
-
-// Delete account
-const handleDeleteAccount = async () => {
-  const confirmed = confirm(
-    '⚠️ WARNING: This will permanently delete your account!\n\n' +
-    'This action cannot be undone. You will be logged out immediately.\n\n' +
-    'Are you absolutely sure you want to delete your account?'
-  )
-
-  if (!confirmed) {
-    return
-  }
-
-  // Double confirmation
-  const doubleConfirmed = confirm(
-    'This is your last chance to cancel.\n\n' +
-    'Click OK to permanently delete your account.'
-  )
-
-  if (!doubleConfirmed) {
-    return
-  }
-
-  deleting.value = true
-  message.value = ''
-
-  try {
-    const token = sessionStorage.getItem('admin_token')
-    if (!token) {
-      throw new Error('No authentication token found')
-    }
-
-    await $fetch('/api/admin/delete-account', {
-      method: 'POST',
-      query: { token }
-    })
-
-    message.value = 'Account deleted successfully. Logging out...'
-    messageType.value = 'success'
-
-    // Logout and redirect after a short delay
-    setTimeout(() => {
-      logout()
-      router.push('/admin/login')
-    }, 1500)
-  } catch (error: unknown) {
-    if (error && typeof error === 'object' && 'data' in error) {
-      const errorData = error as { data?: { message?: string } }
-      message.value = errorData.data?.message || 'Failed to delete account'
-    } else {
-      message.value = 'An error occurred while deleting your account'
-    }
-    messageType.value = 'error'
-    deleting.value = false
   }
 }
 

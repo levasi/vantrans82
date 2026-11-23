@@ -1,6 +1,17 @@
+export type AuthUser = {
+  id: number
+  email: string
+  name?: string | null
+  role?: 'member' | 'admin' | 'owner'
+  roleRequest?: 'none' | 'pending' | 'rejected'
+}
+
+export const adminHomePath = (role?: AuthUser['role']) =>
+  role === 'member' ? '/admin/access' : '/admin'
+
 export const useAuth = () => {
   const isAuthenticated = useState('auth.isAuthenticated', () => false)
-  const user = useState('auth.user', () => null as { id: number; email: string; name?: string } | null)
+  const user = useState('auth.user', () => null as AuthUser | null)
   const isCheckingAuth = useState('auth.isChecking', () => false)
 
   // Note: Auth state restoration is now handled by plugins/auth.client.ts
@@ -38,6 +49,18 @@ export const useAuth = () => {
     }
   }
 
+  const updateUser = (nextUser: AuthUser) => {
+    user.value = {
+      ...user.value,
+      ...nextUser,
+      role: nextUser.role ?? user.value?.role,
+      roleRequest: nextUser.roleRequest ?? user.value?.roleRequest
+    }
+    if (process.client) {
+      sessionStorage.setItem('admin_user', JSON.stringify(user.value))
+    }
+  }
+
   const logout = () => {
     isAuthenticated.value = false
     user.value = null
@@ -51,11 +74,6 @@ export const useAuth = () => {
     if (process.client) {
       // If already checking, don't check again
       if (isCheckingAuth.value) {
-        return
-      }
-
-      // If already authenticated, skip the check to avoid flicker
-      if (isAuthenticated.value) {
         return
       }
 
@@ -107,6 +125,7 @@ export const useAuth = () => {
     isCheckingAuth: readonly(isCheckingAuth),
     login,
     logout,
+    updateUser,
     checkAuth
   }
 }

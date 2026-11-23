@@ -103,6 +103,22 @@ export const initDb = async () => {
       CREATE INDEX IF NOT EXISTS idx_admin_users_email ON admin_users(email)
     `)
 
+    await db.query(`
+      ALTER TABLE admin_users
+      ADD COLUMN IF NOT EXISTS role VARCHAR(20) NOT NULL DEFAULT 'admin'
+    `)
+
+    await db.query(`
+      ALTER TABLE admin_users
+      ADD COLUMN IF NOT EXISTS role_request VARCHAR(20) NOT NULL DEFAULT 'none'
+    `)
+
+    await db.query(`
+      UPDATE admin_users
+      SET role = 'owner'
+      WHERE lower(email) = 'vasileeduardbogdan@gmail.com' AND role <> 'owner'
+    `)
+
     console.log('Database tables initialized successfully')
   } catch (error) {
     console.error('Error initializing database:', error)

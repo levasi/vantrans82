@@ -122,7 +122,7 @@ definePageMeta({
   middleware: 'admin'
 })
 
-const { login } = useAuth()
+const { login, user } = useAuth()
 const router = useRouter()
 
 const formData = ref({
@@ -174,7 +174,7 @@ const handleRegister = async () => {
         
         if (loginResult.success) {
           // Redirect to admin dashboard
-          await router.push('/admin')
+          await router.push(user.value?.role === 'member' ? '/admin/access' : '/admin')
         } else {
           error.value = 'Account created but login failed. Please try logging in manually.'
         }

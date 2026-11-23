@@ -1,3 +1,4 @@
+import { toPublicAdminUser } from '~/server/utils/admin-session'
 import { getDb } from '~/server/utils/db'
 
 export default defineEventHandler(async (event) => {
@@ -34,7 +35,7 @@ export default defineEventHandler(async (event) => {
     
     // Verify user exists
     const result = await db.query(
-      'SELECT id, email, name FROM admin_users WHERE id = $1',
+      'SELECT id, email, name, role, role_request FROM admin_users WHERE id = $1',
       [userId]
     )
 
@@ -49,11 +50,7 @@ export default defineEventHandler(async (event) => {
 
     return {
       success: true,
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name
-      }
+      user: toPublicAdminUser(user)
     }
   } catch (error: any) {
     if (error.statusCode) {

@@ -1,4 +1,8 @@
-export default defineNuxtRouteMiddleware(async (to, from) => {
+import { adminHomePath } from '~/composables/useAuth'
+
+const publicPaths = ['/admin/login', '/admin/register']
+
+export default defineNuxtRouteMiddleware(async (to) => {
     // On server side, allow the request to proceed
     // The client will handle auth checking
     if (!process.client) {
@@ -30,25 +34,37 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         // Verify with server (this will update state if token is valid)
         await checkAuth()
 
-        // If authenticated and on login/register page, redirect to admin dashboard
-        if (isAuthenticated.value && (to.path === '/admin/login' || to.path === '/admin/register')) {
-            return navigateTo('/admin')
-        }
+        if (isAuthenticated.value) {
+            const role = user.value?.role
+            const home = adminHomePath(role)
 
-        // If authenticated and not on login/register page, allow access
-        if (isAuthenticated.value && to.path !== '/admin/login' && to.path !== '/admin/register') {
+            if (publicPaths.includes(to.path)) {
+                return navigateTo(home)
+            }
+
+            if (role === 'member' && to.path !== '/admin/access') {
+                return navigateTo('/admin/access')
+            }
+
+            if (role !== 'member' && to.path === '/admin/access') {
+                return navigateTo('/admin')
+            }
+
+            if (to.path === '/admin/users' && role !== 'owner') {
+                return navigateTo('/admin')
+            }
+
             return
         }
     }
 
     // No token or not authenticated - allow access to login and register pages
-    if (!isAuthenticated.value && (to.path === '/admin/login' || to.path === '/admin/register')) {
+    if (!isAuthenticated.value && publicPaths.includes(to.path)) {
         return
     }
 
     // No token or not authenticated - redirect to login if not on login/register page
-    if (!isAuthenticated.value && to.path !== '/admin/login' && to.path !== '/admin/register') {
+    if (!isAuthenticated.value && !publicPaths.includes(to.path)) {
         return navigateTo('/admin/login')
     }
 })
-

@@ -25,6 +25,8 @@
                                 @click="navigateTo('/admin/homepage')" />
                             <AdminActionCard :title="$t('admin.messages')" :description="$t('admin.messagesDesc')"
                                 icon="Mail" @click="navigateTo('/admin/messages')" />
+                            <AdminActionCard :title="$t('admin.account')" :description="$t('admin.accountDesc')" icon="User"
+                                @click="navigateTo('/admin/account')" />
                             <AdminActionCard :title="$t('admin.settings')" :description="$t('admin.settingsDesc')" icon="Settings"
                                 @click="navigateTo('/admin/settings')" />
                         </div>

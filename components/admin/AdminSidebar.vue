@@ -71,6 +71,24 @@
                         </li>
                     </ul>
                 </li>
+                <li v-if="isOwner">
+                    <NuxtLink to="/admin/users"
+                        @click="$emit('close')"
+                        class="admin-sidebar__link"
+                        :class="{ 'admin-sidebar__link--active': isActive('/admin/users') }">
+                        <Users class="icon" />
+                        <span>{{ $t('admin.users') }}</span>
+                    </NuxtLink>
+                </li>
+                <li>
+                    <NuxtLink to="/admin/account"
+                        @click="$emit('close')"
+                        class="admin-sidebar__link"
+                        :class="{ 'admin-sidebar__link--active': isActive('/admin/account') }">
+                        <User class="icon" />
+                        <span>{{ $t('admin.account') }}</span>
+                    </NuxtLink>
+                </li>
                 <li>
                     <NuxtLink to="/admin/settings"
                         @click="$emit('close')"
@@ -87,7 +105,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
-import { LayoutDashboard, Settings, Home, ChevronDown, X, Eye, EyeOff } from 'lucide-vue-next'
+import { LayoutDashboard, Settings, Home, ChevronDown, X, Eye, EyeOff, User, Users } from 'lucide-vue-next'
 import { HOMEPAGE_SECTION_META } from '~/utils/homepage-section-forms'
 import type { HomepageVisibilityKey } from '~/utils/homepage-visibility'
 
@@ -102,6 +120,8 @@ defineEmits<{
 const route = useRoute()
 
 const { t } = useI18n()
+const { user } = useAuth()
+const isOwner = computed(() => user.value?.role === 'owner')
 const {
   loadVisibility,
   isSectionVisible,

@@ -2,6 +2,13 @@
 export default defineNuxtConfig({
   devtools: { enabled: process.env.NODE_ENV === 'development' },
   modules: ['@nuxt/image', '@nuxtjs/i18n'],
+  // Admin auth lives in sessionStorage, so the server always rendered the dashboard.
+  // A client redirect to /admin/login then hydrated into that HTML and left the
+  // login form inside the dashboard layout. Render admin only in the browser.
+  routeRules: {
+    '/admin': { ssr: false },
+    '/admin/**': { ssr: false }
+  },
   css: ['~/assets/scss/main.scss'],
   // Vercel: serverless preset (auto when VERCEL=1). Local prod: node-server via `npm run start`.
   nitro: {
@@ -34,6 +41,9 @@ export default defineNuxtConfig({
       'admin/login': false,
       'admin/register': false,
       'admin/settings': false,
+      'admin/account': false,
+      'admin/access': false,
+      'admin/users': false,
       'admin/fleet': false,
       'admin/coverage': false,
       'admin/homepage/index': false,
