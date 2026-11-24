@@ -1,16 +1,16 @@
+import { requireAdmin } from '~/server/utils/admin-session'
 import { listFleetVehicles } from '~/server/utils/fleet-db'
+import { publicServerError } from '~/server/utils/http'
 
-export default defineEventHandler(async () => {
+export default defineEventHandler(async (event) => {
   try {
+    await requireAdmin(event)
     const vehicles = await listFleetVehicles()
     return {
       success: true,
       vehicles
     }
-  } catch (error: any) {
-    throw createError({
-      statusCode: 500,
-      message: error.message || 'Failed to load fleet'
-    })
+  } catch (error: unknown) {
+    publicServerError(error, 'Failed to load fleet')
   }
 })

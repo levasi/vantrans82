@@ -68,7 +68,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed } from 'vue'
 import { ArrowRight, Truck, Zap, Settings, Warehouse } from 'lucide-vue-next'
 import { useI18n } from '#imports'
 
@@ -127,27 +127,24 @@ const heroServices = computed(() => {
       description: t('services.roadTransportDesc')
     },
     {
-      icon: Warehouse,
-      title: t('services.customLogistics'),
-      description: t('services.customLogisticsDesc')
-    },
-    {
       icon: Zap,
       title: t('services.expressDelivery'),
       description: t('services.expressDeliveryDesc')
     },
     {
       icon: Settings,
+      title: t('services.customLogistics'),
+      description: t('services.customLogisticsDesc')
+    },
+    {
+      icon: Warehouse,
       title: t('services.internationalFreight'),
       description: t('services.internationalFreightDesc')
     }
   ]
 })
 
-onMounted(() => {
-  loadHero()
-  loadServices()
-})
+await Promise.all([loadHero(), loadServices()])
 
 const scrollToSection = (id) => {
   const element = document.getElementById(id)

@@ -1,180 +1,183 @@
 <template>
   <div class="admin-settings">
-    <AdminHeader @toggle-sidebar="sidebarOpen = !sidebarOpen" />
-    <div class="admin-settings__body">
-      <AdminSidebar :is-open="sidebarOpen" @close="sidebarOpen = false" />
-      <main class="admin-settings__main">
-        <div class="admin-settings__container">
-          <!-- Header -->
-          <div class="admin-settings__header">
-            <h1 class="admin-settings__title">Settings</h1>
-            <p class="admin-settings__subtitle">Manage your website settings and configuration</p>
-          </div>
+    <!-- Header -->
+    <div class="admin-settings__header">
+      <div>
+        <h1 class="admin-settings__title">Settings</h1>
+        <p class="admin-settings__subtitle">Manage your website settings and configuration</p>
+      </div>
+      <button
+        @click="saveSettings"
+        :disabled="saving"
+        class="admin-settings__btn admin-settings__btn--primary"
+      >
+        <Save v-if="!saving" class="icon" />
+        <div v-else class="admin-settings__spinner"></div>
+        {{ saving ? 'Saving...' : 'Save Settings' }}
+      </button>
+    </div>
 
-          <!-- Success/Error Messages -->
-          <div
-            v-if="message"
-            class="admin-settings__alert"
-            :class="messageType === 'success' ? 'admin-settings__alert--success' : 'admin-settings__alert--error'"
-          >
-            {{ message }}
-          </div>
+    <!-- Success/Error Messages -->
+    <div
+      v-if="message"
+      class="admin-settings__alert"
+      :class="messageType === 'success' ? 'admin-settings__alert--success' : 'admin-settings__alert--error'"
+    >
+      {{ message }}
+    </div>
 
-          <!-- General Settings -->
-          <div class="admin-settings__card">
-            <h2 class="admin-settings__card-title">
-              <Globe class="icon" />
-              General Settings
-            </h2>
-            <div class="admin-settings__fields">
-              <div class="admin-settings__field">
-                <label class="admin-settings__label">Company Name</label>
-                <input
-                  v-model="settings.companyName"
-                  type="text"
-                  class="admin-settings__input"
-                  placeholder="VanTrans82"
-                />
-              </div>
-              <div class="admin-settings__field">
-                <label class="admin-settings__label">Contact Email</label>
-                <input
-                  v-model="settings.contactEmail"
-                  type="email"
-                  class="admin-settings__input"
-                  placeholder="office@vantrans82.ro"
-                />
-              </div>
-              <div class="admin-settings__field">
-                <label class="admin-settings__label">Phone Number</label>
-                <input
-                  v-model="settings.phoneNumber"
-                  type="tel"
-                  class="admin-settings__input"
-                  placeholder="0743981279"
-                />
-              </div>
-              <div class="admin-settings__field">
-                <label class="admin-settings__label">Address</label>
-                <textarea
-                  v-model="settings.address"
-                  rows="3"
-                  class="admin-settings__input"
-                  placeholder="Str Doamna Stanca nr 39, Selimbar jud Sibiu"
-                ></textarea>
-              </div>
-            </div>
-          </div>
+    <!-- General Settings -->
+    <div class="admin-settings__card">
+      <h2 class="admin-settings__card-title">
+        <Globe class="icon" />
+        General Settings
+      </h2>
+      <div class="admin-settings__fields">
+        <div class="admin-settings__field">
+          <label class="admin-settings__label">Company Name</label>
+          <input
+            v-model="settings.companyName"
+            type="text"
+            class="admin-settings__input"
+            placeholder="VanTrans82"
+          />
+        </div>
+        <div class="admin-settings__field">
+          <label class="admin-settings__label">Contact Email</label>
+          <input
+            v-model="settings.contactEmail"
+            type="email"
+            class="admin-settings__input"
+            placeholder="office@vantrans82.ro"
+          />
+        </div>
+        <div class="admin-settings__field">
+          <label class="admin-settings__label">Phone Number</label>
+          <input
+            v-model="settings.phoneNumber"
+            type="tel"
+            class="admin-settings__input"
+            placeholder="0743981279"
+          />
+        </div>
+        <div class="admin-settings__field">
+          <label class="admin-settings__label">Address</label>
+          <textarea
+            v-model="settings.address"
+            rows="3"
+            class="admin-settings__input"
+            placeholder="Str Doamna Stanca nr 39, Selimbar jud Sibiu"
+          ></textarea>
+        </div>
+      </div>
+    </div>
 
-          <!-- Email Settings -->
-          <div class="admin-settings__card">
-            <h2 class="admin-settings__card-title">
-              <Mail class="icon" />
-              Email Settings
-            </h2>
-            <div class="admin-settings__fields">
-              <div class="admin-settings__field">
-                <label class="admin-settings__label">SMTP Host</label>
-                <input
-                  v-model="settings.smtpHost"
-                  type="text"
-                  class="admin-settings__input"
-                  placeholder="smtp.example.com"
-                />
-              </div>
-              <div class="admin-settings__grid">
-                <div class="admin-settings__field">
-                  <label class="admin-settings__label">SMTP Port</label>
-                  <input
-                    v-model="settings.smtpPort"
-                    type="number"
-                    class="admin-settings__input"
-                    placeholder="587"
-                  />
-                </div>
-                <div class="admin-settings__field">
-                  <label class="admin-settings__label">SMTP Username</label>
-                  <input
-                    v-model="settings.smtpUsername"
-                    type="text"
-                    class="admin-settings__input"
-                    placeholder="your-email@example.com"
-                  />
-                </div>
-              </div>
-              <div class="admin-settings__field">
-                <label class="admin-settings__label">SMTP Password</label>
-                <input
-                  v-model="settings.smtpPassword"
-                  type="password"
-                  class="admin-settings__input"
-                  placeholder="••••••••"
-                />
-              </div>
-              <div class="admin-settings__field">
-                <label class="admin-settings__checkbox-label">
-                  <input
-                    v-model="settings.smtpSecure"
-                    type="checkbox"
-                    class="admin-settings__checkbox"
-                  />
-                  <span class="admin-settings__checkbox-text">Use SSL/TLS</span>
-                </label>
-              </div>
-            </div>
+    <!-- Email Settings -->
+    <div class="admin-settings__card">
+      <h2 class="admin-settings__card-title">
+        <Mail class="icon" />
+        Email Settings
+      </h2>
+      <div class="admin-settings__fields">
+        <div class="admin-settings__field">
+          <label class="admin-settings__label">SMTP Host</label>
+          <input
+            v-model="settings.smtpHost"
+            type="text"
+            class="admin-settings__input"
+            placeholder="smtp.example.com"
+          />
+        </div>
+        <div class="admin-settings__grid">
+          <div class="admin-settings__field">
+            <label class="admin-settings__label">SMTP Port</label>
+            <input
+              v-model="settings.smtpPort"
+              type="number"
+              class="admin-settings__input"
+              placeholder="587"
+            />
           </div>
-
-          <!-- System Information -->
-          <div class="admin-settings__card">
-            <h2 class="admin-settings__card-title">
-              <Server class="icon" />
-              System Information
-            </h2>
-            <div class="admin-settings__sys">
-              <div class="admin-settings__sys-row admin-settings__sys-row--bordered">
-                <span class="admin-settings__sys-label">Database Status</span>
-                <span
-                  class="admin-settings__badge"
-                  :class="systemInfo.dbConnected ? 'admin-settings__badge--success' : 'admin-settings__badge--error'"
-                >
-                  {{ systemInfo.dbConnected ? 'Connected' : 'Disconnected' }}
-                </span>
-              </div>
-              <div class="admin-settings__sys-row admin-settings__sys-row--bordered">
-                <span class="admin-settings__sys-label">Environment</span>
-                <span class="admin-settings__sys-value">{{ systemInfo.environment }}</span>
-              </div>
-              <div class="admin-settings__sys-row admin-settings__sys-row--bordered">
-                <span class="admin-settings__sys-label">Node.js Version</span>
-                <span class="admin-settings__sys-value">{{ systemInfo.nodeVersion }}</span>
-              </div>
-              <div class="admin-settings__sys-row">
-                <span class="admin-settings__sys-label">Uptime</span>
-                <span class="admin-settings__sys-value">{{ systemInfo.uptime }}</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Save Button -->
-          <div class="admin-settings__actions">
-            <button
-              @click="loadSettings"
-              class="admin-settings__btn admin-settings__btn--secondary"
-            >
-              Reset
-            </button>
-            <button
-              @click="saveSettings"
-              :disabled="saving"
-              class="admin-settings__btn admin-settings__btn--primary"
-            >
-              <Save v-if="!saving" class="icon" />
-              <div v-else class="admin-settings__spinner"></div>
-              {{ saving ? 'Saving...' : 'Save Settings' }}
-            </button>
+          <div class="admin-settings__field">
+            <label class="admin-settings__label">SMTP Username</label>
+            <input
+              v-model="settings.smtpUsername"
+              type="text"
+              class="admin-settings__input"
+              placeholder="your-email@example.com"
+            />
           </div>
         </div>
-      </main>
+        <div class="admin-settings__field">
+          <label class="admin-settings__label">SMTP Password</label>
+          <input
+            v-model="settings.smtpPassword"
+            type="password"
+            class="admin-settings__input"
+            placeholder="••••••••"
+          />
+        </div>
+        <div class="admin-settings__field">
+          <label class="admin-settings__checkbox-label">
+            <input
+              v-model="settings.smtpSecure"
+              type="checkbox"
+              class="admin-settings__checkbox"
+            />
+            <span class="admin-settings__checkbox-text">Use SSL/TLS</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- System Information -->
+    <div class="admin-settings__card">
+      <h2 class="admin-settings__card-title">
+        <Server class="icon" />
+        System Information
+      </h2>
+      <div class="admin-settings__sys">
+        <div class="admin-settings__sys-row admin-settings__sys-row--bordered">
+          <span class="admin-settings__sys-label">Database Status</span>
+          <span
+            class="admin-settings__badge"
+            :class="systemInfo.dbConnected ? 'admin-settings__badge--success' : 'admin-settings__badge--error'"
+          >
+            {{ systemInfo.dbConnected ? 'Connected' : 'Disconnected' }}
+          </span>
+        </div>
+        <div class="admin-settings__sys-row admin-settings__sys-row--bordered">
+          <span class="admin-settings__sys-label">Environment</span>
+          <span class="admin-settings__sys-value">{{ systemInfo.environment }}</span>
+        </div>
+        <div class="admin-settings__sys-row admin-settings__sys-row--bordered">
+          <span class="admin-settings__sys-label">Node.js Version</span>
+          <span class="admin-settings__sys-value">{{ systemInfo.nodeVersion }}</span>
+        </div>
+        <div class="admin-settings__sys-row">
+          <span class="admin-settings__sys-label">Uptime</span>
+          <span class="admin-settings__sys-value">{{ systemInfo.uptime }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Save Button -->
+    <div class="admin-settings__actions">
+      <button
+        @click="loadSettings"
+        class="admin-settings__btn admin-settings__btn--secondary"
+      >
+        Reset
+      </button>
+      <button
+        @click="saveSettings"
+        :disabled="saving"
+        class="admin-settings__btn admin-settings__btn--primary"
+      >
+        <Save v-if="!saving" class="icon" />
+        <div v-else class="admin-settings__spinner"></div>
+        {{ saving ? 'Saving...' : 'Save Settings' }}
+      </button>
     </div>
   </div>
 </template>
@@ -185,10 +188,9 @@ import { Save, Globe, Mail, Server } from 'lucide-vue-next'
 
 definePageMeta({
   middleware: 'admin',
-  layout: false
+  layout: 'admin'
 })
 
-const sidebarOpen = ref(false)
 
 // Auth is handled by middleware
 
@@ -272,38 +274,16 @@ useHead({
 @use '~/assets/scss/mixins' as *;
 
 .admin-settings {
-  min-height: 100vh;
-  background: var(--color-muted);
-
-  &__body {
-    display: flex;
-  }
-
-  &__main {
-    flex: 1;
-    padding: 1rem;
-
-    @include respond-to(sm) {
-      padding: 1.5rem;
-    }
-
-    @include respond-to(lg) {
-      padding: 2rem;
-      margin-left: 0;
-    }
-  }
-
-  &__container {
-    max-width: $container-max;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
   &__header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
     margin-bottom: 1.5rem;
 
     @include respond-to(sm) {
-      margin-bottom: 2rem;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
     }
   }
 

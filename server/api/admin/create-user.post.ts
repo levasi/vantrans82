@@ -1,11 +1,13 @@
 import bcrypt from 'bcryptjs'
-import { OWNER_EMAIL } from '~/server/utils/admin-session'
 import { getDb } from '~/server/utils/db'
+import { publicServerError } from '~/server/utils/http'
 
 export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event)
-    const { email, password, name } = body
+    const email = String(body?.email || '').trim().toLowerCase()
+    const password = String(body?.password || '')
+    const name = String(body?.name || '').trim()
 
     if (!email || !password) {
       throw createError({
@@ -14,20 +16,25 @@ export default defineEventHandler(async (event) => {
       })
     }
 
+    if (password.length < 8) {
+      throw createError({
+        statusCode: 400,
+        message: 'Password must be at least 8 characters'
+      })
+    }
+
     const db = getDb()
-    
+
     if (!db) {
       throw createError({
         statusCode: 503,
-        message:
-          'Database not available. For local dev: copy .env.example to .env, run npm run db:start, then restart npm run dev.'
+        message: 'Database not available'
       })
     }
-    
-    // Check if user already exists
+
     const existingUser = await db.query(
       'SELECT id FROM admin_users WHERE email = $1',
-      [email.toLowerCase()]
+      [email]
     )
 
     if (existingUser.rows.length > 0) {
@@ -37,19 +44,13 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    // Hash password
-    const saltRounds = 10
-    const passwordHash = await bcrypt.hash(password, saltRounds)
-
-    // Create user
-    const normalizedEmail = email.toLowerCase()
-    const role = normalizedEmail === OWNER_EMAIL ? 'owner' : 'member'
+    const passwordHash = await bcrypt.hash(password, 10)
 
     const result = await db.query(
       `INSERT INTO admin_users (email, password_hash, name, role, role_request)
-       VALUES ($1, $2, $3, $4, 'none')
+       VALUES ($1, $2, $3, 'member', 'none')
        RETURNING id, email, name, role, role_request`,
-      [normalizedEmail, passwordHash, name || null, role]
+      [email, passwordHash, name || null]
     )
 
     const user = result.rows[0]
@@ -59,17 +60,11 @@ export default defineEventHandler(async (event) => {
       user: {
         id: user.id,
         email: user.email,
-        name: user.name
+        name: user.name,
+        role: user.role
       }
     }
-  } catch (error: any) {
-    if (error.statusCode) {
-      throw error
-    }
-    throw createError({
-      statusCode: 500,
-      message: error.message || 'An error occurred while creating user'
-    })
+  } catch (error: unknown) {
+    publicServerError(error, 'An error occurred while creating user')
   }
 })
-

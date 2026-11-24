@@ -1,5 +1,5 @@
-import en from '../../locales/en.json'
-import ro from '../../locales/ro.json'
+import en from '../../i18n/locales/en.json'
+import ro from '../../i18n/locales/ro.json'
 
 const localeFiles: Record<string, Record<string, unknown>> = {
   en: en as Record<string, unknown>,

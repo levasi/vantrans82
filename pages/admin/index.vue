@@ -1,90 +1,57 @@
 <template>
-    <div class="admin-dashboard">
-        <AdminHeader @toggle-sidebar="sidebarOpen = !sidebarOpen" />
-        <div class="admin-dashboard__body">
-            <AdminSidebar :is-open="sidebarOpen" @close="sidebarOpen = false" />
-            <main class="admin-dashboard__main">
-                <div class="admin-dashboard__container">
-                    <!-- Welcome Section -->
-                    <div class="admin-dashboard__welcome">
-                        <h1 class="admin-dashboard__title">
-                            {{ $t('admin.welcome', { name: user?.name || user?.email }) }}
-                        </h1>
-                        <p class="admin-dashboard__subtitle">{{ $t('admin.welcomeSubtitle') }}</p>
-                    </div>
-
-                    <!-- Dashboard Stats -->
-                    <AdminStats />
-
-                    <!-- Quick Actions -->
-                    <div class="admin-dashboard__actions">
-                        <h2 class="admin-dashboard__actions-title">{{ $t('admin.quickActions') }}</h2>
-                        <div class="admin-dashboard__actions-grid">
-                            <AdminActionCard :title="$t('admin.homepage')"
-                                :description="$t('admin.homepageDesc')" icon="Home"
-                                @click="navigateTo('/admin/homepage')" />
-                            <AdminActionCard :title="$t('admin.messages')" :description="$t('admin.messagesDesc')"
-                                icon="Mail" @click="navigateTo('/admin/messages')" />
-                            <AdminActionCard :title="$t('admin.account')" :description="$t('admin.accountDesc')" icon="User"
-                                @click="navigateTo('/admin/account')" />
-                            <AdminActionCard :title="$t('admin.settings')" :description="$t('admin.settingsDesc')" icon="Settings"
-                                @click="navigateTo('/admin/settings')" />
-                        </div>
-                    </div>
-                </div>
-            </main>
-        </div>
+  <div class="admin-dashboard">
+    <div class="admin-dashboard__welcome">
+      <h1 class="admin-dashboard__title">
+        {{ $t('admin.welcome', { name: user?.name || user?.email }) }}
+      </h1>
+      <p class="admin-dashboard__subtitle">{{ $t('admin.welcomeSubtitle') }}</p>
     </div>
+
+    <AdminStats />
+
+    <div class="admin-dashboard__actions">
+      <h2 class="admin-dashboard__actions-title">{{ $t('admin.quickActions') }}</h2>
+      <div class="admin-dashboard__actions-grid">
+        <AdminActionCard
+          :title="$t('admin.homepage')"
+          :description="$t('admin.homepageDesc')"
+          icon="Home"
+          @click="navigateTo('/admin/homepage')"
+        />
+        <AdminActionCard
+          :title="$t('admin.account')"
+          :description="$t('admin.accountDesc')"
+          icon="User"
+          @click="navigateTo('/admin/account')"
+        />
+        <AdminActionCard
+          :title="$t('admin.settings')"
+          :description="$t('admin.settingsDesc')"
+          icon="Settings"
+          @click="navigateTo('/admin/settings')"
+        />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-
 definePageMeta({
-    middleware: 'admin',
-    layout: false
+  middleware: 'admin',
+  layout: 'admin'
 })
 
 const { user } = useAuth()
-const sidebarOpen = ref(false)
 
 useHead({
-    title: 'Admin Dashboard - VanTrans82'
+  title: 'Admin Dashboard - VanTrans82'
 })
 </script>
 
 <style lang="scss" scoped>
-@use '~/assets/scss/variables' as *;
 @use '~/assets/scss/mixins' as *;
 
 .admin-dashboard {
-  min-height: 100vh;
-  background: var(--color-muted);
-
-  &__body {
-    display: flex;
-  }
-
-  &__main {
-    flex: 1;
-    padding: 1rem;
-
-    @include respond-to(sm) {
-      padding: 1.5rem;
-    }
-
-    @include respond-to(lg) {
-      padding: 2rem;
-      margin-left: 0;
-    }
-  }
-
-  &__container {
-    max-width: $container-max;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
   &__welcome {
     margin-bottom: 1.5rem;
 

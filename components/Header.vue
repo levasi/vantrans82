@@ -5,7 +5,7 @@
                 <!-- Logo -->
                 <div class="site-header__logo">
                     <button @click="scrollToSection('home')" class="site-header__logo-btn">
-                        <NuxtImg src="/vtlogo.png" alt="VanTrans82" class="site-header__logo-img" />
+                        <BrandLogo class="site-header__logo-img" />
                     </button>
                 </div>
 

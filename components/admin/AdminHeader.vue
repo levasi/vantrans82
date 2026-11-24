@@ -7,7 +7,7 @@
                         class="admin-header__menu-btn" type="button">
                         <Menu class="icon icon--md admin-header__menu-icon" />
                     </button>
-                    <NuxtImg src="/vtlogo.png" alt="VanTrans82" class="admin-header__logo" />
+                    <BrandLogo class="admin-header__logo" />
                     <span class="admin-header__title">{{ $t('admin.panel') }}</span>
                 </div>
                 <div class="admin-header__actions">
@@ -63,9 +63,9 @@ const switchLocale = (nextLocale) => {
     setLocale(nextLocale)
 }
 
-const handleLogout = () => {
-    logout()
-    router.push('/admin/login')
+const handleLogout = async () => {
+    await logout()
+    await router.push('/admin/login')
 }
 </script>
 

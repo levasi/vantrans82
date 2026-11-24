@@ -1,126 +1,125 @@
 <template>
   <div class="admin-fleet">
-    <AdminHeader @toggle-sidebar="sidebarOpen = !sidebarOpen" />
-    <div class="admin-fleet__body">
-      <AdminSidebar :is-open="sidebarOpen" @close="sidebarOpen = false" />
-      <main class="admin-fleet__main">
-        <div class="admin-fleet__container">
-          <div class="admin-fleet__header">
-            <div>
-              <h1 class="admin-fleet__title">Fleet</h1>
-              <p class="admin-fleet__subtitle">Manage fleet cards shown on the landing page</p>
-            </div>
-            <button class="admin-fleet__btn admin-fleet__btn--secondary" type="button" @click="addVehicle">
-              <Plus class="icon" />
-              Add vehicle
+    <div class="admin-fleet__header">
+      <div>
+        <h1 class="admin-fleet__title">Fleet</h1>
+        <p class="admin-fleet__subtitle">Manage fleet cards shown on the landing page</p>
+      </div>
+      <div class="admin-fleet__header-actions">
+        <button class="admin-fleet__btn admin-fleet__btn--primary" type="button" :disabled="saving || loading" @click="saveFleet">
+          <Save v-if="!saving" class="icon" />
+          <div v-else class="admin-fleet__spinner"></div>
+          {{ saving ? 'Saving…' : 'Save Fleet' }}
+        </button>
+        <button class="admin-fleet__btn admin-fleet__btn--secondary" type="button" @click="addVehicle">
+          <Plus class="icon" />
+          Add vehicle
+        </button>
+      </div>
+    </div>
+
+    <div
+      v-if="message"
+      class="admin-fleet__alert"
+      :class="messageType === 'success' ? 'admin-fleet__alert--success' : 'admin-fleet__alert--error'"
+    >
+      {{ message }}
+    </div>
+
+    <div v-if="loading" class="admin-fleet__loading">Loading fleet…</div>
+
+    <div v-else class="admin-fleet__list">
+      <div v-for="(vehicle, index) in vehicles" :key="vehicle._key" class="admin-fleet__card">
+        <div class="admin-fleet__card-top">
+          <h2 class="admin-fleet__card-title">Vehicle {{ index + 1 }}</h2>
+          <div class="admin-fleet__card-actions">
+            <button
+              class="admin-fleet__icon-btn"
+              type="button"
+              :disabled="index === 0"
+              title="Move up"
+              @click="moveVehicle(index, -1)"
+            >
+              <ArrowUp class="icon" />
             </button>
-          </div>
-
-          <div
-            v-if="message"
-            class="admin-fleet__alert"
-            :class="messageType === 'success' ? 'admin-fleet__alert--success' : 'admin-fleet__alert--error'"
-          >
-            {{ message }}
-          </div>
-
-          <div v-if="loading" class="admin-fleet__loading">Loading fleet…</div>
-
-          <div v-else class="admin-fleet__list">
-            <div v-for="(vehicle, index) in vehicles" :key="vehicle._key" class="admin-fleet__card">
-              <div class="admin-fleet__card-top">
-                <h2 class="admin-fleet__card-title">Vehicle {{ index + 1 }}</h2>
-                <div class="admin-fleet__card-actions">
-                  <button
-                    class="admin-fleet__icon-btn"
-                    type="button"
-                    :disabled="index === 0"
-                    title="Move up"
-                    @click="moveVehicle(index, -1)"
-                  >
-                    <ArrowUp class="icon" />
-                  </button>
-                  <button
-                    class="admin-fleet__icon-btn"
-                    type="button"
-                    :disabled="index === vehicles.length - 1"
-                    title="Move down"
-                    @click="moveVehicle(index, 1)"
-                  >
-                    <ArrowDown class="icon" />
-                  </button>
-                  <button
-                    class="admin-fleet__icon-btn admin-fleet__icon-btn--danger"
-                    type="button"
-                    title="Remove"
-                    @click="removeVehicle(index)"
-                  >
-                    <Trash2 class="icon" />
-                  </button>
-                </div>
-              </div>
-
-              <div class="admin-fleet__fields admin-fleet__fields--media-left">
-                <div class="admin-fleet__media">
-                  <AdminImageField v-model="vehicle.image_url" label="Image" />
-                </div>
-
-                <div class="admin-fleet__fields-main">
-                  <div class="admin-fleet__grid">
-                    <div class="admin-fleet__field">
-                      <label class="admin-fleet__label">Name (RO)</label>
-                      <input v-model="vehicle.name_ro" type="text" class="admin-fleet__input" placeholder="Remorci" />
-                    </div>
-                    <div class="admin-fleet__field">
-                      <label class="admin-fleet__label">Name (EN)</label>
-                      <input v-model="vehicle.name_en" type="text" class="admin-fleet__input" placeholder="Trailers" />
-                    </div>
-                  </div>
-
-                  <div class="admin-fleet__grid">
-                    <div class="admin-fleet__field">
-                      <label class="admin-fleet__label">Capacity (RO)</label>
-                      <input v-model="vehicle.capacity_ro" type="text" class="admin-fleet__input" placeholder="Până la 24 tone" />
-                    </div>
-                    <div class="admin-fleet__field">
-                      <label class="admin-fleet__label">Capacity (EN)</label>
-                      <input v-model="vehicle.capacity_en" type="text" class="admin-fleet__input" placeholder="Up to 24 tons" />
-                    </div>
-                  </div>
-
-                  <div class="admin-fleet__field">
-                    <label class="admin-fleet__label">Description (RO)</label>
-                    <textarea v-model="vehicle.description_ro" rows="3" class="admin-fleet__input" />
-                  </div>
-
-                  <div class="admin-fleet__field">
-                    <label class="admin-fleet__label">Description (EN)</label>
-                    <textarea v-model="vehicle.description_en" rows="3" class="admin-fleet__input" />
-                  </div>
-
-                  <div class="admin-fleet__field">
-                    <label class="admin-fleet__label">Icon</label>
-                    <select v-model="vehicle.icon" class="admin-fleet__input">
-                      <option v-for="icon in iconOptions" :key="icon" :value="icon">{{ icon }}</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="admin-fleet__actions">
-            <button class="admin-fleet__btn admin-fleet__btn--secondary" type="button" :disabled="saving" @click="loadFleet">
-              Reset
+            <button
+              class="admin-fleet__icon-btn"
+              type="button"
+              :disabled="index === vehicles.length - 1"
+              title="Move down"
+              @click="moveVehicle(index, 1)"
+            >
+              <ArrowDown class="icon" />
             </button>
-            <button class="admin-fleet__btn admin-fleet__btn--primary" type="button" :disabled="saving || loading" @click="saveFleet">
-              <Save v-if="!saving" class="icon" />
-              <div v-else class="admin-fleet__spinner"></div>
-              {{ saving ? 'Saving…' : 'Save Fleet' }}
+            <button
+              class="admin-fleet__icon-btn admin-fleet__icon-btn--danger"
+              type="button"
+              title="Remove"
+              @click="removeVehicle(index)"
+            >
+              <Trash2 class="icon" />
             </button>
           </div>
         </div>
-      </main>
+
+        <div class="admin-fleet__fields admin-fleet__fields--media-left">
+          <div class="admin-fleet__media">
+            <AdminImageField v-model="vehicle.image_url" label="Image" />
+          </div>
+
+          <div class="admin-fleet__fields-main">
+            <div class="admin-fleet__grid">
+              <div class="admin-fleet__field">
+                <label class="admin-fleet__label">Name (RO)</label>
+                <input v-model="vehicle.name_ro" type="text" class="admin-fleet__input" placeholder="Remorci" />
+              </div>
+              <div class="admin-fleet__field">
+                <label class="admin-fleet__label">Name (EN)</label>
+                <input v-model="vehicle.name_en" type="text" class="admin-fleet__input" placeholder="Trailers" />
+              </div>
+            </div>
+
+            <div class="admin-fleet__grid">
+              <div class="admin-fleet__field">
+                <label class="admin-fleet__label">Capacity (RO)</label>
+                <input v-model="vehicle.capacity_ro" type="text" class="admin-fleet__input" placeholder="Până la 24 tone" />
+              </div>
+              <div class="admin-fleet__field">
+                <label class="admin-fleet__label">Capacity (EN)</label>
+                <input v-model="vehicle.capacity_en" type="text" class="admin-fleet__input" placeholder="Up to 24 tons" />
+              </div>
+            </div>
+
+            <div class="admin-fleet__field">
+              <label class="admin-fleet__label">Description (RO)</label>
+              <textarea v-model="vehicle.description_ro" rows="3" class="admin-fleet__input" />
+            </div>
+
+            <div class="admin-fleet__field">
+              <label class="admin-fleet__label">Description (EN)</label>
+              <textarea v-model="vehicle.description_en" rows="3" class="admin-fleet__input" />
+            </div>
+
+            <div class="admin-fleet__field">
+              <label class="admin-fleet__label">Icon</label>
+              <select v-model="vehicle.icon" class="admin-fleet__input">
+                <option v-for="icon in iconOptions" :key="icon" :value="icon">{{ icon }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-fleet__actions">
+      <button class="admin-fleet__btn admin-fleet__btn--secondary" type="button" :disabled="saving" @click="loadFleet">
+        Reset
+      </button>
+      <button class="admin-fleet__btn admin-fleet__btn--primary" type="button" :disabled="saving || loading" @click="saveFleet">
+        <Save v-if="!saving" class="icon" />
+        <div v-else class="admin-fleet__spinner"></div>
+        {{ saving ? 'Saving…' : 'Save Fleet' }}
+      </button>
     </div>
   </div>
 </template>
@@ -131,7 +130,7 @@ import { Save, Plus, Trash2, ArrowUp, ArrowDown } from 'lucide-vue-next'
 
 definePageMeta({
   middleware: 'admin',
-  layout: false
+  layout: 'admin'
 })
 
 type EditableVehicle = {
@@ -150,7 +149,6 @@ type EditableVehicle = {
 
 const iconOptions = ['Package', 'Truck', 'Container', 'Warehouse', 'Bus', 'Car', 'Ship']
 
-const sidebarOpen = ref(false)
 const vehicles = ref<EditableVehicle[]>([])
 const loading = ref(true)
 const saving = ref(false)
@@ -277,30 +275,11 @@ useHead({
 @use '~/assets/scss/mixins' as *;
 
 .admin-fleet {
-  min-height: 100vh;
-  background: var(--color-muted);
-
-  &__body {
+  &__header-actions {
     display: flex;
-  }
-
-  &__main {
-    flex: 1;
-    padding: 1rem;
-
-    @include respond-to(sm) {
-      padding: 1.5rem;
-    }
-
-    @include respond-to(lg) {
-      padding: 2rem;
-    }
-  }
-
-  &__container {
-    max-width: $container-max;
-    margin-left: auto;
-    margin-right: auto;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
   }
 
   &__header {

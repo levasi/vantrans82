@@ -1,7 +1,10 @@
+import { requireAdmin } from '~/server/utils/admin-session'
 import { getDb } from '~/server/utils/db'
+import { publicServerError } from '~/server/utils/http'
 
 export default defineEventHandler(async (event) => {
     try {
+        await requireAdmin(event)
         const db = getDb()
 
         if (!db) {
@@ -63,11 +66,8 @@ export default defineEventHandler(async (event) => {
             success: true,
             settings: { ...defaultSettings, ...settings }
         }
-    } catch (error: any) {
-        throw createError({
-            statusCode: 500,
-            message: error.message || 'Failed to load settings'
-        })
+    } catch (error: unknown) {
+        publicServerError(error, 'Failed to load settings')
     }
 })
 

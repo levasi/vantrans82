@@ -1,43 +1,29 @@
+import { requireAdmin } from '~/server/utils/admin-session'
 import { getDb } from '~/server/utils/db'
+import { publicServerError } from '~/server/utils/http'
 
 export default defineEventHandler(async (event) => {
   try {
+    await requireAdmin(event)
     const db = getDb()
-    const dbConnected = db !== null
+    let dbConnected = false
 
-    // Test database connection
-    let dbTestResult = false
     if (db) {
       try {
         await db.query('SELECT 1')
-        dbTestResult = true
+        dbConnected = true
       } catch {
-        dbTestResult = false
+        dbConnected = false
       }
     }
 
-    // Get Node.js version
-    const nodeVersion = process.version
-
-    // Get environment
-    const environment = process.env.NODE_ENV || 'development'
-
-    // Calculate uptime (simplified - in production you'd track server start time)
-    const uptime = 'Running'
-
     return {
-      dbConnected: dbTestResult,
-      environment,
-      nodeVersion,
-      uptime
-    }
-  } catch (error: any) {
-    return {
-      dbConnected: false,
+      dbConnected,
       environment: process.env.NODE_ENV || 'development',
       nodeVersion: process.version,
-      uptime: 'Unknown'
+      uptime: 'Running'
     }
+  } catch (error: unknown) {
+    publicServerError(error, 'Failed to load system settings')
   }
 })
-

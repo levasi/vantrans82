@@ -28,8 +28,8 @@
             <ArrowRight class="icon" />
           </button>
           <a
-            v-if="settings.phoneNumber"
-            :href="`tel:${formatPhoneForTel(settings.phoneNumber)}`"
+            v-if="telHref(settings.phoneNumber)"
+            :href="telHref(settings.phoneNumber)"
             class="btn--ghost"
           >
             <Phone class="icon" />
@@ -51,7 +51,7 @@ import { ArrowRight, Phone } from 'lucide-vue-next'
 import { useI18n } from '#imports'
 
 const { t, locale } = useI18n()
-const { settings, loadSettings, formatPhoneForTel } = useSettings()
+const { settings, loadSettings, telHref } = useSettings()
 const { content, load, pick } = useHomepageSection('cta', {
   title_ro: '',
   title_en: '',

@@ -1,89 +1,81 @@
 <template>
   <div class="admin-users">
-    <AdminHeader @toggle-sidebar="sidebarOpen = !sidebarOpen" />
-    <div class="admin-users__body">
-      <AdminSidebar :is-open="sidebarOpen" @close="sidebarOpen = false" />
-      <main class="admin-users__main">
-        <div class="admin-users__container">
-          <div class="admin-users__header">
-            <h1 class="admin-users__title">{{ $t('admin.users') }}</h1>
-            <p class="admin-users__subtitle">{{ $t('admin.usersSubtitle') }}</p>
-          </div>
+    <div class="admin-users__header">
+      <h1 class="admin-users__title">{{ $t('admin.users') }}</h1>
+      <p class="admin-users__subtitle">{{ $t('admin.usersSubtitle') }}</p>
+    </div>
 
-          <p v-if="error" class="admin-users__alert admin-users__alert--error">{{ error }}</p>
-          <p v-else-if="message" class="admin-users__alert admin-users__alert--success">{{ message }}</p>
+    <p v-if="error" class="admin-users__alert admin-users__alert--error">{{ error }}</p>
+    <p v-else-if="message" class="admin-users__alert admin-users__alert--success">{{ message }}</p>
 
-          <p v-if="loading" class="admin-users__empty">{{ $t('admin.loadingSection') }}</p>
-          <p v-else-if="users.length === 0" class="admin-users__empty">{{ $t('admin.usersEmpty') }}</p>
+    <p v-if="loading" class="admin-users__empty">{{ $t('admin.loadingSection') }}</p>
+    <p v-else-if="users.length === 0" class="admin-users__empty">{{ $t('admin.usersEmpty') }}</p>
 
-          <div v-else class="admin-users__table-wrap">
-            <table class="admin-users__table">
-              <thead>
-                <tr>
-                  <th v-for="column in columns" :key="column.key">{{ column.label }}</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  v-for="account in users"
-                  :key="account.id"
-                  :class="{ 'admin-users__row--pending': account.roleRequest === 'pending' }"
-                >
-                  <td>
-                    <input
-                      :id="`name-${account.id}`"
-                      v-model="account.name"
-                      type="text"
-                      class="admin-users__input"
-                      :aria-label="$t('admin.name')"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      :id="`email-${account.id}`"
-                      v-model="account.email"
-                      type="email"
-                      required
-                      class="admin-users__input"
-                      :aria-label="$t('admin.emailAddress')"
-                    />
-                  </td>
-                  <td>
-                    <select
-                      v-if="account.role !== 'owner'"
-                      :id="`role-${account.id}`"
-                      v-model="account.role"
-                      class="admin-users__input"
-                      :aria-label="$t('admin.role')"
-                    >
-                      <option value="member">{{ $t('admin.roleMember') }}</option>
-                      <option value="admin">{{ $t('admin.roleAdmin') }}</option>
-                    </select>
-                    <span v-else class="admin-users__owner">{{ $t('admin.roleOwner') }}</span>
-                  </td>
-                  <td>
-                    <span class="admin-users__badge" :class="`admin-users__badge--${account.roleRequest}`">
-                      {{ requestLabel(account.roleRequest) }}
-                    </span>
-                  </td>
-                  <td class="admin-users__meta">{{ formatDate(account.createdAt) }}</td>
-                  <td>
-                    <button
-                      type="button"
-                      class="admin-users__btn"
-                      :disabled="savingId === account.id"
-                      @click="saveUser(account)"
-                    >
-                      {{ savingId === account.id ? $t('admin.saving') : $t('admin.saveUser') }}
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </main>
+    <div v-else class="admin-users__table-wrap">
+      <table class="admin-users__table">
+        <thead>
+          <tr>
+            <th v-for="column in columns" :key="column.key">{{ column.label }}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="account in users"
+            :key="account.id"
+            :class="{ 'admin-users__row--pending': account.roleRequest === 'pending' }"
+          >
+            <td>
+              <input
+                :id="`name-${account.id}`"
+                v-model="account.name"
+                type="text"
+                class="admin-users__input"
+                :aria-label="$t('admin.name')"
+              />
+            </td>
+            <td>
+              <input
+                :id="`email-${account.id}`"
+                v-model="account.email"
+                type="email"
+                required
+                class="admin-users__input"
+                :aria-label="$t('admin.emailAddress')"
+              />
+            </td>
+            <td>
+              <select
+                v-if="account.role !== 'owner'"
+                :id="`role-${account.id}`"
+                v-model="account.role"
+                class="admin-users__input"
+                :aria-label="$t('admin.role')"
+              >
+                <option value="member">{{ $t('admin.roleMember') }}</option>
+                <option value="admin">{{ $t('admin.roleAdmin') }}</option>
+              </select>
+              <span v-else class="admin-users__owner">{{ $t('admin.roleOwner') }}</span>
+            </td>
+            <td>
+              <span class="admin-users__badge" :class="`admin-users__badge--${account.roleRequest}`">
+                {{ requestLabel(account.roleRequest) }}
+              </span>
+            </td>
+            <td class="admin-users__meta">{{ formatDate(account.createdAt) }}</td>
+            <td>
+              <button
+                type="button"
+                class="admin-users__btn"
+                :disabled="savingId === account.id"
+                @click="saveUser(account)"
+              >
+                {{ savingId === account.id ? $t('admin.saving') : $t('admin.saveUser') }}
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>
@@ -93,7 +85,7 @@ import { computed, onMounted, ref } from 'vue'
 
 definePageMeta({
   middleware: 'admin',
-  layout: false
+  layout: 'admin'
 })
 
 type AccountRole = 'member' | 'admin' | 'owner'
@@ -117,14 +109,11 @@ const columns = computed(() => [
   { key: 'request', label: t('admin.requestStatus') },
   { key: 'joined', label: t('admin.joined') }
 ])
-const sidebarOpen = ref(false)
 const loading = ref(true)
 const savingId = ref<number | null>(null)
 const error = ref('')
 const message = ref('')
 const users = ref<AccountRow[]>([])
-
-const authToken = () => (process.client ? sessionStorage.getItem('admin_token') : '')
 
 const requestLabel = (status: RequestStatus) => {
   if (status === 'pending') return t('admin.requestPending')
@@ -144,11 +133,7 @@ const loadUsers = async () => {
   loading.value = true
   error.value = ''
   try {
-    const token = authToken()
-    if (!token) throw new Error('No authentication token found')
-    const response = await $fetch<{ users: AccountRow[] }>('/api/admin/users', {
-      query: { token }
-    })
+    const response = await $fetch<{ users: AccountRow[] }>('/api/admin/users')
     users.value = response.users.map((account) => ({
       ...account,
       name: account.name || ''
@@ -165,11 +150,8 @@ const saveUser = async (account: AccountRow) => {
   error.value = ''
   message.value = ''
   try {
-    const token = authToken()
-    if (!token) throw new Error('No authentication token found')
     const response = await $fetch<{ user: AccountRow }>(`/api/admin/users/${account.id}`, {
       method: 'PUT',
-      query: { token },
       body: {
         name: account.name,
         email: account.email,
@@ -203,32 +185,6 @@ useHead({
 @use '~/assets/scss/mixins' as *;
 
 .admin-users {
-  min-height: 100vh;
-  background: var(--color-muted);
-
-  &__body {
-    display: flex;
-  }
-
-  &__main {
-    flex: 1;
-    padding: 1rem;
-
-    @include respond-to(sm) {
-      padding: 1.5rem;
-    }
-
-    @include respond-to(lg) {
-      padding: 2rem;
-    }
-  }
-
-  &__container {
-    max-width: $container-max;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
   &__header {
     margin-bottom: 1.5rem;
   }

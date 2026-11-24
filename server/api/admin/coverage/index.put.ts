@@ -1,7 +1,10 @@
+import { requireAdmin } from '~/server/utils/admin-session'
 import { saveCoverage, type CoveragePayload } from '~/server/utils/coverage-db'
+import { publicServerError } from '~/server/utils/http'
 
 export default defineEventHandler(async (event) => {
   try {
+    await requireAdmin(event)
     const body = await readBody(event)
     const content = body?.content
     const regions = body?.regions
@@ -43,13 +46,7 @@ export default defineEventHandler(async (event) => {
       message: 'Coverage saved successfully',
       ...saved
     }
-  } catch (error: any) {
-    if (error.statusCode) {
-      throw error
-    }
-    throw createError({
-      statusCode: 500,
-      message: error.message || 'Failed to save coverage'
-    })
+  } catch (error: unknown) {
+    publicServerError(error, 'Failed to save coverage')
   }
 })

@@ -1,4 +1,5 @@
 import { requireOwner } from '~/server/utils/admin-session'
+import { publicServerError } from '~/server/utils/http'
 
 export default defineEventHandler(async (event) => {
   try {
@@ -21,11 +22,7 @@ export default defineEventHandler(async (event) => {
         createdAt: row.created_at
       }))
     }
-  } catch (error: any) {
-    if (error.statusCode) throw error
-    throw createError({
-      statusCode: 500,
-      message: error.message || 'Failed to load users'
-    })
+  } catch (error: unknown) {
+    publicServerError(error, 'Failed to load users')
   }
 })

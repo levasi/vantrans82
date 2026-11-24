@@ -106,7 +106,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 import { LayoutDashboard, Settings, Home, ChevronDown, X, Eye, EyeOff, User, Users } from 'lucide-vue-next'
-import { HOMEPAGE_SECTION_META } from '~/utils/homepage-section-forms'
+import { HOMEPAGE_ADMIN_ENTRIES } from '~/utils/homepage-section-forms'
 import type { HomepageVisibilityKey } from '~/utils/homepage-visibility'
 
 defineProps<{
@@ -129,20 +129,13 @@ const {
   togglingKey
 } = useHomepageVisibility()
 
-const homepageLinks = computed(() => [
-  ...HOMEPAGE_SECTION_META.slice(0, 3).map((section) => ({
+const homepageLinks = computed(() =>
+  HOMEPAGE_ADMIN_ENTRIES.map((section) => ({
     key: section.key as HomepageVisibilityKey,
-    label: t(`admin.sections.${section.key}`),
-    to: `/admin/homepage/${section.key}`
-  })),
-  { key: 'fleet' as HomepageVisibilityKey, label: t('admin.fleet'), to: '/admin/homepage/fleet' },
-  { key: 'coverage' as HomepageVisibilityKey, label: t('admin.coverage'), to: '/admin/homepage/coverage' },
-  ...HOMEPAGE_SECTION_META.slice(3).map((section) => ({
-    key: section.key as HomepageVisibilityKey,
-    label: t(`admin.sections.${section.key}`),
+    label: t(section.labelKey),
     to: `/admin/homepage/${section.key}`
   }))
-])
+)
 
 const isActive = (path: string) => {
     return route.path === path

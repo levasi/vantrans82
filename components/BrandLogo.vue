@@ -1,0 +1,10 @@
+<template>
+  <img
+    src="/vtlogo.png"
+    alt="VanTrans82"
+    class="brand-logo"
+    width="153"
+    height="64"
+    decoding="async"
+  />
+</template>

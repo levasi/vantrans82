@@ -22,7 +22,7 @@
       <div class="admin-login__card">
         <!-- Logo -->
         <div class="admin-login__logo">
-          <NuxtImg src="/vtlogo.png" alt="VanTrans82" class="admin-login__logo-img" />
+          <BrandLogo class="admin-login__logo-img" />
         </div>
 
         <!-- Title -->

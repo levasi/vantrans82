@@ -1,42 +1,56 @@
 import { randomUUID } from 'node:crypto'
 import { mkdir, writeFile } from 'node:fs/promises'
-import { join, extname } from 'node:path'
+import { join } from 'node:path'
 import { put } from '@vercel/blob'
-
-const ALLOWED_TYPES = new Set([
-  'image/jpeg',
-  'image/jpg',
-  'image/png',
-  'image/webp',
-  'image/gif',
-  'image/svg+xml'
-])
+import { requireAdmin } from '~/server/utils/admin-session'
+import { publicServerError } from '~/server/utils/http'
 
 const MAX_SIZE_BYTES = 8 * 1024 * 1024
 
-function extensionFor(file: File) {
-  const fromName = extname(file.name || '').toLowerCase()
-  if (fromName) return fromName
+type DetectedImage = {
+  extension: string
+  contentType: string
+}
 
-  switch (file.type) {
-    case 'image/jpeg':
-    case 'image/jpg':
-      return '.jpg'
-    case 'image/png':
-      return '.png'
-    case 'image/webp':
-      return '.webp'
-    case 'image/gif':
-      return '.gif'
-    case 'image/svg+xml':
-      return '.svg'
-    default:
-      return '.bin'
+function detectImage(data: Buffer): DetectedImage | null {
+  if (data.length >= 3 && data[0] === 0xff && data[1] === 0xd8 && data[2] === 0xff) {
+    return { extension: '.jpg', contentType: 'image/jpeg' }
   }
+
+  if (
+    data.length >= 8 &&
+    data[0] === 0x89 &&
+    data[1] === 0x50 &&
+    data[2] === 0x4e &&
+    data[3] === 0x47 &&
+    data[4] === 0x0d &&
+    data[5] === 0x0a &&
+    data[6] === 0x1a &&
+    data[7] === 0x0a
+  ) {
+    return { extension: '.png', contentType: 'image/png' }
+  }
+
+  const gifHeader = data.subarray(0, 6).toString('ascii')
+  if (data.length >= 6 && (gifHeader === 'GIF87a' || gifHeader === 'GIF89a')) {
+    return { extension: '.gif', contentType: 'image/gif' }
+  }
+
+  if (
+    data.length >= 12 &&
+    data.subarray(0, 4).toString('ascii') === 'RIFF' &&
+    data.subarray(8, 12).toString('ascii') === 'WEBP'
+  ) {
+    return { extension: '.webp', contentType: 'image/webp' }
+  }
+
+  return null
 }
 
 export default defineEventHandler(async (event) => {
   try {
+    await requireAdmin(event)
+
     const form = await readMultipartFormData(event)
     const filePart = form?.find((part) => part.name === 'file' && part.data)
 
@@ -47,14 +61,6 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    const type = filePart.type || 'application/octet-stream'
-    if (!ALLOWED_TYPES.has(type)) {
-      throw createError({
-        statusCode: 400,
-        message: 'Only JPEG, PNG, WebP, GIF, and SVG images are allowed'
-      })
-    }
-
     if (filePart.data.byteLength > MAX_SIZE_BYTES) {
       throw createError({
         statusCode: 400,
@@ -62,15 +68,20 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    const filename = `vantrans82-${randomUUID()}${extensionFor({
-      name: filePart.filename || '',
-      type
-    } as File)}`
+    const detected = detectImage(filePart.data)
+    if (!detected) {
+      throw createError({
+        statusCode: 400,
+        message: 'Only JPEG, PNG, WebP, and GIF images are allowed'
+      })
+    }
+
+    const filename = `vantrans82-${randomUUID()}${detected.extension}`
 
     if (process.env.BLOB_READ_WRITE_TOKEN) {
       const blob = await put(`uploads/${filename}`, filePart.data, {
         access: 'public',
-        contentType: type,
+        contentType: detected.contentType,
         token: process.env.BLOB_READ_WRITE_TOKEN
       })
 
@@ -80,6 +91,13 @@ export default defineEventHandler(async (event) => {
         pathname: blob.pathname,
         storage: 'blob'
       }
+    }
+
+    if (process.env.VERCEL) {
+      throw createError({
+        statusCode: 503,
+        message: 'Image storage is not configured'
+      })
     }
 
     const uploadsDir = join(process.cwd(), 'public', 'uploads')
@@ -92,15 +110,7 @@ export default defineEventHandler(async (event) => {
       pathname: `uploads/${filename}`,
       storage: 'local'
     }
-  } catch (error: any) {
-    if (error.statusCode) {
-      throw error
-    }
-
-    console.error('Image upload failed:', error)
-    throw createError({
-      statusCode: 500,
-      message: error.message || 'Failed to upload image'
-    })
+  } catch (error: unknown) {
+    publicServerError(error, 'Failed to upload image')
   }
 })

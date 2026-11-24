@@ -1,9 +1,10 @@
 import bcrypt from 'bcryptjs'
-import { getAdminUserFromEvent } from '~/server/utils/admin-session'
+import { requireUser } from '~/server/utils/admin-session'
+import { publicServerError } from '~/server/utils/http'
 
 export default defineEventHandler(async (event) => {
   try {
-    const { db, user } = await getAdminUserFromEvent(event)
+    const { db, user, session } = await requireUser(event)
     const body = await readBody(event)
     const currentPassword = String(body?.currentPassword || '')
     const newPassword = String(body?.newPassword || '')
@@ -30,21 +31,25 @@ export default defineEventHandler(async (event) => {
       })
     }
 
+    const nextVersion = Number(user.session_version) + 1
     const passwordHash = await bcrypt.hash(newPassword, 10)
     await db.query(
-      'UPDATE admin_users SET password_hash = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
-      [passwordHash, user.id]
+      `UPDATE admin_users
+       SET password_hash = $1, session_version = $2, updated_at = CURRENT_TIMESTAMP
+       WHERE id = $3`,
+      [passwordHash, nextVersion, user.id]
     )
+
+    await session.update({
+      userId: user.id,
+      sessionVersion: nextVersion
+    })
 
     return {
       success: true,
       message: 'Password updated'
     }
-  } catch (error: any) {
-    if (error.statusCode) throw error
-    throw createError({
-      statusCode: 500,
-      message: error.message || 'Failed to update password'
-    })
+  } catch (error: unknown) {
+    publicServerError(error, 'Failed to update password')
   }
 })

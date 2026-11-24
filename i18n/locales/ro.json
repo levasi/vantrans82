@@ -53,18 +53,6 @@
     "customLogistics": "Manipulare și depozitare",
     "customLogisticsDesc": "Servicii de manipulare, depozitare și gestiune a mărfii, adaptate nevoilor afacerii tale."
   },
-  "process": {
-    "title": "Cum Funcționează",
-    "subtitle": "Procesul nostru simplificat asigură că marfa ta ajunge de la punctul A la punctul B eficient și sigur.",
-    "requestQuote": "Solicită Ofertă",
-    "requestQuoteDesc": "Distribuie detaliile și cerințele de expediere",
-    "planRoute": "Planifică Ruta",
-    "planRouteDesc": "Optimizăm cea mai bună rută de livrare pentru marfa ta",
-    "safeTransport": "Transport Sigur",
-    "safeTransportDesc": "Expedierea ta este tratată cu cea mai mare grijă",
-    "delivery": "Livrare",
-    "deliveryDesc": "Livrare la timp la destinația ta"
-  },
   "fleet": {
     "title": "Flota Noastră",
     "subtitle": "Vehicule moderne, bine întreținute, echipate cu cea mai recentă tehnologie pentru a asigura livrare sigură și eficientă.",

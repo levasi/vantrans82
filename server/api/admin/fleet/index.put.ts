@@ -1,7 +1,10 @@
+import { requireAdmin } from '~/server/utils/admin-session'
 import { replaceFleetVehicles, type FleetVehicleInput } from '~/server/utils/fleet-db'
+import { publicServerError } from '~/server/utils/http'
 
 export default defineEventHandler(async (event) => {
   try {
+    await requireAdmin(event)
     const body = await readBody(event)
     const vehicles = body?.vehicles as FleetVehicleInput[] | undefined
 
@@ -34,13 +37,7 @@ export default defineEventHandler(async (event) => {
       message: 'Fleet saved successfully',
       vehicles: saved
     }
-  } catch (error: any) {
-    if (error.statusCode) {
-      throw error
-    }
-    throw createError({
-      statusCode: 500,
-      message: error.message || 'Failed to save fleet'
-    })
+  } catch (error: unknown) {
+    publicServerError(error, 'Failed to save fleet')
   }
 })

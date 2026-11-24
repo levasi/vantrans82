@@ -60,7 +60,7 @@ export const getDb = () => {
     try {
       pool = new Pool({
         connectionString,
-        ssl: needsSsl(connectionString) ? { rejectUnauthorized: false } : false,
+        ssl: needsSsl(connectionString) ? { rejectUnauthorized: true } : false,
         max: process.env.VERCEL ? 1 : 10
       })
 
@@ -114,9 +114,22 @@ export const initDb = async () => {
     `)
 
     await db.query(`
-      UPDATE admin_users
-      SET role = 'owner'
-      WHERE lower(email) = 'vasileeduardbogdan@gmail.com' AND role <> 'owner'
+      ALTER TABLE admin_users
+      ADD COLUMN IF NOT EXISTS session_version INTEGER NOT NULL DEFAULT 0
+    `)
+
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS login_attempts (
+        id SERIAL PRIMARY KEY,
+        email VARCHAR(255) NOT NULL,
+        ip VARCHAR(64) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `)
+
+    await db.query(`
+      CREATE INDEX IF NOT EXISTS idx_login_attempts_created_at
+      ON login_attempts (created_at)
     `)
 
     console.log('Database tables initialized successfully')

@@ -6,7 +6,7 @@
                 <div class="footer__brand">
                     <div class="footer__logo">
                         <span class="footer__logo-wrap">
-                            <NuxtImg src="/vtlogo.png" alt="VanTrans82" class="footer__logo-img" />
+                            <BrandLogo class="footer__logo-img" />
                         </span>
                     </div>
                     <p class="footer__desc">
@@ -70,17 +70,24 @@
                 <div class="footer__col">
                     <h3 class="footer__heading">{{ $t('footer.contact') }}</h3>
                     <ul class="footer__list">
-                        <li v-if="settings.phoneNumber" class="footer__item">
-                            <a :href="`tel:${formatPhoneForTel(settings.phoneNumber)}`" class="footer__link">
+                        <li v-if="telHref(settings.phoneNumber)" class="footer__item">
+                            <a :href="telHref(settings.phoneNumber)" class="footer__link">
                                 {{ settings.phoneNumber }}
                             </a>
                         </li>
-                        <li v-if="settings.contactEmail" class="footer__item">
-                            <a :href="`mailto:${settings.contactEmail}`" class="footer__link">
+                        <li v-else-if="settings.phoneNumber" class="footer__item">
+                            {{ settings.phoneNumber }}
+                        </li>
+                        <li v-if="mailHref(settings.contactEmail)" class="footer__item">
+                            <a :href="mailHref(settings.contactEmail)" class="footer__link">
                                 {{ settings.contactEmail }}
                             </a>
                         </li>
-                        <li v-if="settings.address" class="footer__item" v-html="settings.address.replace(/\n/g, '<br />')">
+                        <li v-else-if="settings.contactEmail" class="footer__item">
+                            {{ settings.contactEmail }}
+                        </li>
+                        <li v-if="settings.address" class="footer__item footer__item--address">
+                            {{ settings.address }}
                         </li>
                     </ul>
                 </div>
@@ -107,10 +114,9 @@
 </template>
 
 <script setup>
-// import { Facebook, Linkedin, Twitter, Mail } from 'lucide-vue-next'
 import { onMounted } from 'vue'
 
-const { settings, loadSettings, formatPhoneForTel } = useSettings()
+const { settings, loadSettings, telHref, mailHref } = useSettings()
 
 onMounted(() => {
     loadSettings()
@@ -232,6 +238,10 @@ const scrollToSection = (id) => {
 
   &__item {
     font-size: 0.875rem;
+
+    &--address {
+      white-space: pre-line;
+    }
   }
 
   &__link {

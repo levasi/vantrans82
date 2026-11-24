@@ -1,88 +1,92 @@
 <template>
   <div class="admin-account">
-    <AdminHeader @toggle-sidebar="sidebarOpen = !sidebarOpen" />
-    <div class="admin-account__body">
-      <AdminSidebar :is-open="sidebarOpen" @close="sidebarOpen = false" />
-      <main class="admin-account__main">
-        <div class="admin-account__container">
-          <div class="admin-account__header">
-            <h1 class="admin-account__title">{{ $t('admin.account') }}</h1>
-            <p class="admin-account__subtitle">{{ $t('admin.accountSubtitle') }}</p>
-          </div>
+    <div class="admin-account__header">
+      <h1 class="admin-account__title">{{ $t('admin.account') }}</h1>
+      <p class="admin-account__subtitle">{{ $t('admin.accountSubtitle') }}</p>
+    </div>
 
-          <div
-            v-if="message"
-            class="admin-account__alert"
-            :class="messageType === 'success' ? 'admin-account__alert--success' : 'admin-account__alert--error'"
-          >
-            {{ message }}
-          </div>
+    <div
+      v-if="message"
+      class="admin-account__alert"
+      :class="messageType === 'success' ? 'admin-account__alert--success' : 'admin-account__alert--error'"
+    >
+      {{ message }}
+    </div>
 
-          <div class="admin-account__card">
-            <h2 class="admin-account__card-title">
-              <User class="icon" />
-              {{ $t('admin.profile') }}
-            </h2>
-            <form class="admin-account__fields" @submit.prevent="saveProfile">
-              <div class="admin-account__field">
-                <label class="admin-account__label" for="account-name">{{ $t('admin.name') }}</label>
-                <input id="account-name" v-model="profile.name" type="text" class="admin-account__input" />
-              </div>
-              <div class="admin-account__field">
-                <label class="admin-account__label" for="account-email">{{ $t('admin.emailAddress') }}</label>
-                <input id="account-email" v-model="profile.email" type="email" required class="admin-account__input" />
-              </div>
-              <div class="admin-account__actions">
-                <button type="submit" class="admin-account__btn admin-account__btn--primary" :disabled="savingProfile">
-                  {{ savingProfile ? $t('admin.saving') : $t('admin.saveProfile') }}
-                </button>
-              </div>
-            </form>
-          </div>
-
-          <div class="admin-account__card">
-            <h2 class="admin-account__card-title">
-              <Lock class="icon" />
-              {{ $t('admin.password') }}
-            </h2>
-            <form class="admin-account__fields" @submit.prevent="savePassword">
-              <div class="admin-account__field">
-                <label class="admin-account__label" for="current-password">{{ $t('admin.currentPassword') }}</label>
-                <input id="current-password" v-model="password.current" type="password" required class="admin-account__input" />
-              </div>
-              <div class="admin-account__field">
-                <label class="admin-account__label" for="new-password">{{ $t('admin.newPassword') }}</label>
-                <input id="new-password" v-model="password.next" type="password" required minlength="8" class="admin-account__input" />
-              </div>
-              <div class="admin-account__field">
-                <label class="admin-account__label" for="confirm-password">{{ $t('admin.confirmPassword') }}</label>
-                <input id="confirm-password" v-model="password.confirm" type="password" required minlength="8" class="admin-account__input" />
-              </div>
-              <div class="admin-account__actions">
-                <button type="submit" class="admin-account__btn admin-account__btn--primary" :disabled="savingPassword">
-                  {{ savingPassword ? $t('admin.saving') : $t('admin.updatePassword') }}
-                </button>
-              </div>
-            </form>
-          </div>
-
-          <div class="admin-account__card admin-account__card--danger">
-            <h2 class="admin-account__card-title">
-              <Trash2 class="icon admin-account__danger-icon" />
-              <span class="admin-account__danger-text">{{ $t('admin.dangerZone') }}</span>
-            </h2>
-            <p class="admin-account__danger-desc">{{ $t('admin.deleteAccountDesc') }}</p>
-            <button
-              type="button"
-              class="admin-account__btn admin-account__btn--danger"
-              :disabled="deleting"
-              @click="handleDeleteAccount"
-            >
-              {{ deleting ? $t('admin.deleting') : $t('admin.deleteAccount') }}
-            </button>
-          </div>
+    <div class="admin-account__card">
+      <h2 class="admin-account__card-title">
+        <User class="icon" />
+        {{ $t('admin.profile') }}
+      </h2>
+      <form class="admin-account__fields" @submit.prevent="saveProfile">
+        <div class="admin-account__field">
+          <label class="admin-account__label" for="account-name">{{ $t('admin.name') }}</label>
+          <input id="account-name" v-model="profile.name" type="text" class="admin-account__input" />
         </div>
-      </main>
+        <div class="admin-account__field">
+          <label class="admin-account__label" for="account-email">{{ $t('admin.emailAddress') }}</label>
+          <input id="account-email" v-model="profile.email" type="email" required class="admin-account__input" />
+        </div>
+        <div class="admin-account__actions">
+          <button type="submit" class="admin-account__btn admin-account__btn--primary" :disabled="savingProfile">
+            {{ savingProfile ? $t('admin.saving') : $t('admin.saveProfile') }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="admin-account__card">
+      <h2 class="admin-account__card-title">
+        <Lock class="icon" />
+        {{ $t('admin.password') }}
+      </h2>
+      <form class="admin-account__fields" @submit.prevent="savePassword">
+        <div class="admin-account__field">
+          <label class="admin-account__label" for="current-password">{{ $t('admin.currentPassword') }}</label>
+          <input id="current-password" v-model="password.current" type="password" required class="admin-account__input" />
+        </div>
+        <div class="admin-account__field">
+          <label class="admin-account__label" for="new-password">{{ $t('admin.newPassword') }}</label>
+          <input id="new-password" v-model="password.next" type="password" required minlength="8" class="admin-account__input" />
+        </div>
+        <div class="admin-account__field">
+          <label class="admin-account__label" for="confirm-password">{{ $t('admin.confirmPassword') }}</label>
+          <input id="confirm-password" v-model="password.confirm" type="password" required minlength="8" class="admin-account__input" />
+        </div>
+        <div class="admin-account__actions">
+          <button type="submit" class="admin-account__btn admin-account__btn--primary" :disabled="savingPassword">
+            {{ savingPassword ? $t('admin.saving') : $t('admin.updatePassword') }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="admin-account__card admin-account__card--danger">
+      <h2 class="admin-account__card-title">
+        <Trash2 class="icon admin-account__danger-icon" />
+        <span class="admin-account__danger-text">{{ $t('admin.dangerZone') }}</span>
+      </h2>
+      <p class="admin-account__danger-desc">{{ $t('admin.deleteAccountDesc') }}</p>
+      <form class="admin-account__fields" @submit.prevent="handleDeleteAccount">
+        <div class="admin-account__field">
+          <label class="admin-account__label" for="delete-password">{{ $t('admin.currentPassword') }}</label>
+          <input
+            id="delete-password"
+            v-model="deletePassword"
+            type="password"
+            required
+            autocomplete="current-password"
+            class="admin-account__input"
+          />
+        </div>
+        <button
+          type="submit"
+          class="admin-account__btn admin-account__btn--danger"
+          :disabled="deleting"
+        >
+          {{ deleting ? $t('admin.deleting') : $t('admin.deleteAccount') }}
+        </button>
+      </form>
     </div>
   </div>
 </template>
@@ -93,13 +97,12 @@ import { Lock, Trash2, User } from 'lucide-vue-next'
 
 definePageMeta({
   middleware: 'admin',
-  layout: false
+  layout: 'admin'
 })
 
 const { t } = useI18n()
 const { user, logout, updateUser } = useAuth()
 const router = useRouter()
-const sidebarOpen = ref(false)
 const savingProfile = ref(false)
 const savingPassword = ref(false)
 const deleting = ref(false)
@@ -116,24 +119,19 @@ const password = ref({
   next: '',
   confirm: ''
 })
+const deletePassword = ref('')
 
 const showMessage = (text: string, type: 'success' | 'error') => {
   message.value = text
   messageType.value = type
 }
 
-const authToken = () => (process.client ? sessionStorage.getItem('admin_token') : '')
-
 const saveProfile = async () => {
   savingProfile.value = true
   message.value = ''
   try {
-    const token = authToken()
-    if (!token) throw new Error('No authentication token found')
-
     const response = await $fetch<{ user: { id: number; email: string; name?: string } }>('/api/admin/account', {
       method: 'PUT',
-      query: { token },
       body: {
         name: profile.value.name,
         email: profile.value.email
@@ -158,12 +156,8 @@ const savePassword = async () => {
   savingPassword.value = true
   message.value = ''
   try {
-    const token = authToken()
-    if (!token) throw new Error('No authentication token found')
-
     await $fetch('/api/admin/account/password', {
       method: 'PUT',
-      query: { token },
       body: {
         currentPassword: password.value.current,
         newPassword: password.value.next
@@ -185,15 +179,14 @@ const handleDeleteAccount = async () => {
   deleting.value = true
   message.value = ''
   try {
-    const token = authToken()
-    if (!token) throw new Error('No authentication token found')
-
     await $fetch('/api/admin/delete-account', {
       method: 'POST',
-      query: { token }
+      body: {
+        currentPassword: deletePassword.value
+      }
     })
 
-    logout()
+    await logout()
     await router.push('/admin/login')
   } catch (error: any) {
     showMessage(error.data?.message || t('admin.deleteAccountFailed'), 'error')
@@ -218,32 +211,6 @@ useHead({
 @use '~/assets/scss/mixins' as *;
 
 .admin-account {
-  min-height: 100vh;
-  background: var(--color-muted);
-
-  &__body {
-    display: flex;
-  }
-
-  &__main {
-    flex: 1;
-    padding: 1rem;
-
-    @include respond-to(sm) {
-      padding: 1.5rem;
-    }
-
-    @include respond-to(lg) {
-      padding: 2rem;
-    }
-  }
-
-  &__container {
-    max-width: $container-max;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
   &__header {
     margin-bottom: 1.5rem;
 

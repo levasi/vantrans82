@@ -1,3 +1,5 @@
+import { requireAdmin } from '~/server/utils/admin-session'
+import { publicServerError } from '~/server/utils/http'
 import { toggleHomepageSectionVisibility } from '~/server/utils/homepage-visibility-db'
 import {
   HOMEPAGE_VISIBILITY_KEYS,
@@ -6,6 +8,7 @@ import {
 
 export default defineEventHandler(async (event) => {
   try {
+    await requireAdmin(event)
     const body = await readBody(event)
     const key = body?.key as HomepageVisibilityKey | undefined
 
@@ -22,11 +25,7 @@ export default defineEventHandler(async (event) => {
       success: true,
       visibility
     }
-  } catch (error: any) {
-    if (error.statusCode) throw error
-    throw createError({
-      statusCode: 500,
-      message: error.message || 'Failed to update section visibility'
-    })
+  } catch (error: unknown) {
+    publicServerError(error, 'Failed to update section visibility')
   }
 })

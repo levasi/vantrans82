@@ -4,7 +4,7 @@
       <div class="admin-register__card">
         <!-- Logo -->
         <div class="admin-register__logo">
-          <NuxtImg src="/vtlogo.png" alt="VanTrans82" class="admin-register__logo-img" />
+          <BrandLogo class="admin-register__logo-img" />
         </div>
 
         <!-- Title -->
@@ -59,9 +59,9 @@
               v-model="formData.password"
               type="password"
               required
-              minlength="6"
+              minlength="8"
               class="admin-register__input"
-              placeholder="Enter your password (min. 6 characters)"
+              placeholder="Enter your password (min. 8 characters)"
             />
           </div>
 
@@ -142,8 +142,8 @@ const handleRegister = async () => {
   loading.value = true
 
   // Validation
-  if (formData.value.password.length < 6) {
-    error.value = 'Password must be at least 6 characters long'
+  if (formData.value.password.length < 8) {
+    error.value = 'Password must be at least 8 characters long'
     loading.value = false
     return
   }

@@ -1,64 +1,36 @@
-import { getDb } from '~/server/utils/db'
+import bcrypt from 'bcryptjs'
+import { requireUser } from '~/server/utils/admin-session'
+import { publicServerError } from '~/server/utils/http'
 
 export default defineEventHandler(async (event) => {
   try {
-    const query = getQuery(event)
-    const token = query.token as string
+    const { db, user, session } = await requireUser(event)
+    const body = await readBody(event)
+    const currentPassword = String(body?.currentPassword || '')
 
-    if (!token) {
+    if (!currentPassword) {
+      throw createError({
+        statusCode: 400,
+        message: 'Current password is required'
+      })
+    }
+
+    const matches = await bcrypt.compare(currentPassword, user.password_hash)
+    if (!matches) {
       throw createError({
         statusCode: 401,
-        message: 'No token provided'
+        message: 'Current password is incorrect'
       })
     }
 
-    // Decode token to get user ID
-    const decoded = Buffer.from(token, 'base64').toString('utf-8')
-    const [userId] = decoded.split(':')
-
-    if (!userId) {
-      throw createError({
-        statusCode: 401,
-        message: 'Invalid token'
-      })
-    }
-
-    const db = getDb()
-    
-    if (!db) {
-      throw createError({
-        statusCode: 503,
-        message: 'Database not available'
-      })
-    }
-
-    // Verify user exists
-    const userResult = await db.query(
-      'SELECT id, email FROM admin_users WHERE id = $1',
-      [userId]
-    )
-
-    if (userResult.rows.length === 0) {
-      throw createError({
-        statusCode: 404,
-        message: 'User not found'
-      })
-    }
-
-    // Delete the user
-    await db.query('DELETE FROM admin_users WHERE id = $1', [userId])
+    await db.query('DELETE FROM admin_users WHERE id = $1', [user.id])
+    await session.clear()
 
     return {
       success: true,
       message: 'Account deleted successfully'
     }
-  } catch (error: any) {
-    if (error.statusCode) {
-      throw error
-    }
-    throw createError({
-      statusCode: 500,
-      message: error.message || 'An error occurred while deleting the account'
-    })
+  } catch (error: unknown) {
+    publicServerError(error, 'An error occurred while deleting the account')
   }
 })

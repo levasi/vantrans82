@@ -1,5 +1,16 @@
+import { useState } from '#app/composables/state'
+import { readonly } from 'vue'
+
+type PublicSettings = {
+  showLanguageSwitch: boolean
+  companyName: string
+  phoneNumber: string
+  contactEmail: string
+  address: string
+}
+
 export const useSettings = () => {
-  const settings = useState('publicSettings', () => ({
+  const settings = useState<PublicSettings>('publicSettings', () => ({
     showLanguageSwitch: true,
     companyName: 'VanTrans82',
     phoneNumber: '0743981279',
@@ -24,7 +35,7 @@ export const useSettings = () => {
     isLoading.value = true
 
     try {
-      const response = await $fetch('/api/settings/public')
+      const response = await $fetch<PublicSettings>('/api/settings/public')
       if (response) {
         settings.value = {
           showLanguageSwitch: response.showLanguageSwitch ?? settings.value.showLanguageSwitch,
@@ -53,11 +64,31 @@ export const useSettings = () => {
     return phone.replace(/\s+/g, '').replace(/[^\d]/g, '')
   }
 
+  const telHref = (phone: string) => {
+    const formatted = formatPhoneForTel(phone)
+    return /^\+?[0-9]{6,15}$/.test(formatted) ? `tel:${formatted}` : ''
+  }
+
+  const mailHref = (email: string) => {
+    const value = email.trim()
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? `mailto:${value}` : ''
+  }
+
+  const whatsAppHref = (phone: string, text?: string) => {
+    const digits = formatPhoneForWhatsApp(phone)
+    if (!/^[0-9]{6,15}$/.test(digits)) return ''
+    const base = `https://wa.me/${digits}`
+    return text ? `${base}?text=${encodeURIComponent(text)}` : base
+  }
+
   return {
     settings: readonly(settings),
     isLoading: readonly(isLoading),
     loadSettings,
     formatPhoneForTel,
-    formatPhoneForWhatsApp
+    formatPhoneForWhatsApp,
+    telHref,
+    mailHref,
+    whatsAppHref
   }
 }

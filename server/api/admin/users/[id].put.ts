@@ -1,4 +1,5 @@
 import { requireOwner, toPublicAdminUser, type AdminRole, type RoleRequestStatus } from '~/server/utils/admin-session'
+import { publicServerError } from '~/server/utils/http'
 
 export default defineEventHandler(async (event) => {
   try {
@@ -89,11 +90,7 @@ export default defineEventHandler(async (event) => {
         createdAt: saved.created_at
       }
     }
-  } catch (error: any) {
-    if (error.statusCode) throw error
-    throw createError({
-      statusCode: 500,
-      message: error.message || 'Failed to update user'
-    })
+  } catch (error: unknown) {
+    publicServerError(error, 'Failed to update user')
   }
 })

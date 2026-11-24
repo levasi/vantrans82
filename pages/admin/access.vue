@@ -21,7 +21,7 @@
     <div class="admin-access__wrap">
       <div class="admin-access__card">
         <div class="admin-access__logo">
-          <NuxtImg src="/vtlogo.png" alt="VanTrans82" class="admin-access__logo-img" />
+          <BrandLogo class="admin-access__logo-img" />
         </div>
         <h1 class="admin-access__title">{{ $t('admin.accessTitle') }}</h1>
         <p class="admin-access__subtitle">{{ statusText }}</p>
@@ -70,12 +70,8 @@ const requestRole = async () => {
   error.value = ''
   loading.value = true
   try {
-    const token = sessionStorage.getItem('admin_token')
-    if (!token) throw new Error('No authentication token found')
-
     const response = await $fetch<{ user: { id: number; email: string; name?: string | null; role: 'member'; roleRequest: 'pending' } }>('/api/admin/role-request', {
-      method: 'POST',
-      query: { token }
+      method: 'POST'
     })
 
     updateUser(response.user)

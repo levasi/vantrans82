@@ -1,182 +1,185 @@
 <template>
   <div class="admin-section">
-    <AdminHeader @toggle-sidebar="sidebarOpen = !sidebarOpen" />
-    <div class="admin-section__body">
-      <AdminSidebar :is-open="sidebarOpen" @close="sidebarOpen = false" />
-      <main class="admin-section__main">
-        <div class="admin-section__container">
-          <div class="admin-section__header">
-            <div>
-              <button class="admin-section__back" type="button" @click="navigateTo('/admin/homepage')">
-                ← Homepage
+    <div class="admin-section__header">
+      <div>
+        <button class="admin-section__back" type="button" @click="navigateTo('/admin/homepage')">
+          ← Homepage
+        </button>
+        <h1 class="admin-section__title">{{ meta?.title || sectionKey }}</h1>
+        <p class="admin-section__subtitle">{{ meta?.description }}</p>
+      </div>
+      <div class="admin-section__header-actions">
+        <button
+          class="admin-section__btn admin-section__btn--primary"
+          type="button"
+          :disabled="saving || loading || !isValidSection"
+          @click="saveSection"
+        >
+          <span v-if="saving" class="admin-section__spinner" />
+          {{ $t('admin.saveChanges') }}
+        </button>
+        <button
+          v-if="schema?.items"
+          class="admin-section__btn admin-section__btn--secondary"
+          type="button"
+          @click="addItem"
+        >
+          <Plus class="icon" />
+          {{ schema.items.addLabel }}
+        </button>
+      </div>
+    </div>
+
+    <div
+      v-if="message"
+      class="admin-section__alert"
+      :class="messageType === 'success' ? 'admin-section__alert--success' : 'admin-section__alert--error'"
+    >
+      {{ message }}
+    </div>
+
+    <div v-if="!isValidSection" class="admin-section__loading">
+      Unknown section.
+    </div>
+    <div v-else-if="loading" class="admin-section__loading">Loading section…</div>
+
+    <template v-else>
+      <div v-if="schema?.fields?.length" class="admin-section__card">
+        <h2 class="admin-section__card-title">Section content</h2>
+        <div class="admin-section__fields">
+          <div
+            v-for="field in schema.fields"
+            :key="field.key"
+            class="admin-section__field"
+          >
+            <AdminImageField
+              v-if="field.type === 'image'"
+              v-model="content[field.key]"
+              :label="field.label"
+            />
+            <template v-else>
+              <label class="admin-section__label">{{ field.label }}</label>
+              <textarea
+                v-if="field.type === 'textarea'"
+                v-model="content[field.key]"
+                rows="3"
+                class="admin-section__input"
+              />
+              <input
+                v-else
+                v-model="content[field.key]"
+                :type="field.type === 'url' ? 'url' : 'text'"
+                class="admin-section__input"
+              />
+            </template>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="schema?.items" class="admin-section__list">
+        <h2 class="admin-section__card-title">{{ schema.items.label }}</h2>
+
+        <div
+          v-for="(item, index) in items"
+          :key="item._key"
+          class="admin-section__card"
+        >
+          <div class="admin-section__card-top">
+            <h3 class="admin-section__item-title">Item {{ index + 1 }}</h3>
+            <div class="admin-section__card-actions">
+              <button
+                class="admin-section__icon-btn"
+                type="button"
+                :disabled="index === 0"
+                title="Move up"
+                @click="moveItem(index, -1)"
+              >
+                <ArrowUp class="icon" />
               </button>
-              <h1 class="admin-section__title">{{ meta?.title || sectionKey }}</h1>
-              <p class="admin-section__subtitle">{{ meta?.description }}</p>
+              <button
+                class="admin-section__icon-btn"
+                type="button"
+                :disabled="index === items.length - 1"
+                title="Move down"
+                @click="moveItem(index, 1)"
+              >
+                <ArrowDown class="icon" />
+              </button>
+              <button
+                class="admin-section__icon-btn admin-section__icon-btn--danger"
+                type="button"
+                title="Remove"
+                @click="removeItem(index)"
+              >
+                <Trash2 class="icon" />
+              </button>
             </div>
-            <button
-              v-if="schema?.items"
-              class="admin-section__btn admin-section__btn--secondary"
-              type="button"
-              @click="addItem"
-            >
-              <Plus class="icon" />
-              {{ schema.items.addLabel }}
-            </button>
           </div>
 
           <div
-            v-if="message"
-            class="admin-section__alert"
-            :class="messageType === 'success' ? 'admin-section__alert--success' : 'admin-section__alert--error'"
+            class="admin-section__fields"
+            :class="{ 'admin-section__fields--media-left': schema.items.layout === 'media-left' }"
           >
-            {{ message }}
-          </div>
-
-          <div v-if="!isValidSection" class="admin-section__loading">
-            Unknown section.
-          </div>
-          <div v-else-if="loading" class="admin-section__loading">Loading section…</div>
-
-          <template v-else>
-            <div v-if="schema?.fields?.length" class="admin-section__card">
-              <h2 class="admin-section__card-title">Section content</h2>
-              <div class="admin-section__fields">
-                <div
-                  v-for="field in schema.fields"
-                  :key="field.key"
-                  class="admin-section__field"
-                >
-                  <AdminImageField
-                    v-if="field.type === 'image'"
-                    v-model="content[field.key]"
-                    :label="field.label"
-                  />
-                  <template v-else>
-                    <label class="admin-section__label">{{ field.label }}</label>
-                    <textarea
-                      v-if="field.type === 'textarea'"
-                      v-model="content[field.key]"
-                      rows="3"
-                      class="admin-section__input"
-                    />
-                    <input
-                      v-else
-                      v-model="content[field.key]"
-                      :type="field.type === 'url' ? 'url' : 'text'"
-                      class="admin-section__input"
-                    />
-                  </template>
-                </div>
-              </div>
-            </div>
-
-            <div v-if="schema?.items" class="admin-section__list">
-              <h2 class="admin-section__card-title">{{ schema.items.label }}</h2>
-
+            <div
+              v-if="schema.items.layout === 'media-left'"
+              class="admin-section__media"
+            >
               <div
-                v-for="(item, index) in items"
-                :key="item._key"
-                class="admin-section__card"
+                v-for="field in schema.items.fields.filter((f) => f.type === 'image')"
+                :key="`media-${field.key}`"
+                class="admin-section__field"
               >
-                <div class="admin-section__card-top">
-                  <h3 class="admin-section__item-title">Item {{ index + 1 }}</h3>
-                  <div class="admin-section__card-actions">
-                    <button
-                      class="admin-section__icon-btn"
-                      type="button"
-                      :disabled="index === 0"
-                      title="Move up"
-                      @click="moveItem(index, -1)"
-                    >
-                      <ArrowUp class="icon" />
-                    </button>
-                    <button
-                      class="admin-section__icon-btn"
-                      type="button"
-                      :disabled="index === items.length - 1"
-                      title="Move down"
-                      @click="moveItem(index, 1)"
-                    >
-                      <ArrowDown class="icon" />
-                    </button>
-                    <button
-                      class="admin-section__icon-btn admin-section__icon-btn--danger"
-                      type="button"
-                      title="Remove"
-                      @click="removeItem(index)"
-                    >
-                      <Trash2 class="icon" />
-                    </button>
-                  </div>
-                </div>
-
-                <div
-                  class="admin-section__fields"
-                  :class="{ 'admin-section__fields--media-left': schema.items.layout === 'media-left' }"
-                >
-                  <div
-                    v-if="schema.items.layout === 'media-left'"
-                    class="admin-section__media"
-                  >
-                    <div
-                      v-for="field in schema.items.fields.filter((f) => f.type === 'image')"
-                      :key="`media-${field.key}`"
-                      class="admin-section__field"
-                    >
-                      <AdminImageField
-                        v-model="item[field.key]"
-                        :label="field.label"
-                      />
-                    </div>
-                  </div>
-
-                  <div class="admin-section__fields-main">
-                    <div
-                      v-for="field in itemFields(schema.items)"
-                      :key="field.key"
-                      class="admin-section__field"
-                    >
-                      <AdminImageField
-                        v-if="field.type === 'image'"
-                        v-model="item[field.key]"
-                        :label="field.label"
-                      />
-                      <template v-else>
-                        <label class="admin-section__label">{{ field.label }}</label>
-                        <textarea
-                          v-if="field.type === 'textarea'"
-                          v-model="item[field.key]"
-                          rows="3"
-                          class="admin-section__input"
-                        />
-                        <input
-                          v-else
-                          v-model="item[field.key]"
-                          :type="field.type === 'url' ? 'url' : 'text'"
-                          class="admin-section__input"
-                        />
-                      </template>
-                    </div>
-                  </div>
-                </div>
+                <AdminImageField
+                  v-model="item[field.key]"
+                  :label="field.label"
+                />
               </div>
             </div>
 
-            <div class="admin-section__actions">
-              <button
-                class="admin-section__btn admin-section__btn--primary"
-                type="button"
-                :disabled="saving"
-                @click="saveSection"
+            <div class="admin-section__fields-main">
+              <div
+                v-for="field in itemFields(schema.items)"
+                :key="field.key"
+                class="admin-section__field"
               >
-                <span v-if="saving" class="admin-section__spinner" />
-                Save changes
-              </button>
+                <AdminImageField
+                  v-if="field.type === 'image'"
+                  v-model="item[field.key]"
+                  :label="field.label"
+                />
+                <template v-else>
+                  <label class="admin-section__label">{{ field.label }}</label>
+                  <textarea
+                    v-if="field.type === 'textarea'"
+                    v-model="item[field.key]"
+                    rows="3"
+                    class="admin-section__input"
+                  />
+                  <input
+                    v-else
+                    v-model="item[field.key]"
+                    :type="field.type === 'url' ? 'url' : 'text'"
+                    class="admin-section__input"
+                  />
+                </template>
+              </div>
             </div>
-          </template>
+          </div>
         </div>
-      </main>
-    </div>
+      </div>
+
+      <div class="admin-section__actions">
+        <button
+          class="admin-section__btn admin-section__btn--primary"
+          type="button"
+          :disabled="saving"
+          @click="saveSection"
+        >
+          <span v-if="saving" class="admin-section__spinner" />
+          {{ $t('admin.saveChanges') }}
+        </button>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -194,7 +197,6 @@ const props = defineProps<{
   section: HomepageSectionKey
 }>()
 
-const sidebarOpen = ref(false)
 const loading = ref(true)
 const saving = ref(false)
 const message = ref('')
@@ -330,30 +332,11 @@ useHead({
 @use '~/assets/scss/mixins' as *;
 
 .admin-section {
-  min-height: 100vh;
-  background: var(--color-muted);
-
-  &__body {
+  &__header-actions {
     display: flex;
-  }
-
-  &__main {
-    flex: 1;
-    padding: 1rem;
-
-    @include respond-to(sm) {
-      padding: 1.5rem;
-    }
-
-    @include respond-to(lg) {
-      padding: 2rem;
-    }
-  }
-
-  &__container {
-    max-width: $container-max;
-    margin-left: auto;
-    margin-right: auto;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
   }
 
   &__header {

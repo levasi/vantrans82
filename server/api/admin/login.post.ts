@@ -1,11 +1,19 @@
 import bcrypt from 'bcryptjs'
-import { toPublicAdminUser } from '~/server/utils/admin-session'
+import { getRequestIP } from 'h3'
+import { getAdminSession, toPublicAdminUser } from '~/server/utils/admin-session'
 import { getDb } from '~/server/utils/db'
+import { publicServerError } from '~/server/utils/http'
+import {
+  assertLoginAllowed,
+  clearLoginFailures,
+  recordLoginFailure
+} from '~/server/utils/login-attempts'
 
 export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event)
-    const { email, password } = body
+    const email = String(body?.email || '').trim().toLowerCase()
+    const password = String(body?.password || '')
 
     if (!email || !password) {
       throw createError({
@@ -15,56 +23,50 @@ export default defineEventHandler(async (event) => {
     }
 
     const db = getDb()
-    
+
     if (!db) {
       throw createError({
         statusCode: 503,
         message: 'Database not available'
       })
     }
-    
-    // Find user by email
+
+    const ip = (getRequestIP(event, { xForwardedFor: true }) || 'unknown').slice(0, 64)
+    await assertLoginAllowed(db, email, ip)
+
     const result = await db.query(
-      'SELECT id, email, password_hash, name, role, role_request FROM admin_users WHERE email = $1',
-      [email.toLowerCase()]
+      `SELECT id, email, password_hash, name, role, role_request, session_version
+       FROM admin_users
+       WHERE email = $1`,
+      [email]
     )
 
-    if (result.rows.length === 0) {
-      throw createError({
-        statusCode: 401,
-        message: 'Invalid email or password'
-      })
-    }
-
     const user = result.rows[0]
+    const isValidPassword = user
+      ? await bcrypt.compare(password, user.password_hash)
+      : false
 
-    // Verify password
-    const isValidPassword = await bcrypt.compare(password, user.password_hash)
-
-    if (!isValidPassword) {
+    if (!user || !isValidPassword) {
+      await recordLoginFailure(db, email, ip)
       throw createError({
         statusCode: 401,
         message: 'Invalid email or password'
       })
     }
 
-    // Create session token (in production, use JWT or proper session management)
-    const sessionToken = Buffer.from(`${user.id}:${Date.now()}`).toString('base64')
+    await clearLoginFailures(db, email)
 
-    // Return user data (without password)
+    const session = await getAdminSession(event)
+    await session.update({
+      userId: user.id,
+      sessionVersion: Number(user.session_version)
+    })
+
     return {
       success: true,
-      user: toPublicAdminUser(user),
-      token: sessionToken
+      user: toPublicAdminUser(user)
     }
-  } catch (error: any) {
-    if (error.statusCode) {
-      throw error
-    }
-    throw createError({
-      statusCode: 500,
-      message: error.message || 'An error occurred during login'
-    })
+  } catch (error: unknown) {
+    publicServerError(error, 'An error occurred during login')
   }
 })
-

@@ -32,6 +32,14 @@ img {
   height: auto;
 }
 
+// Logo file is 1503px wide. Page CSS loads after this sheet on first visit,
+// so cap the size here before those styles arrive.
+.brand-logo {
+  height: 3rem;
+  width: auto;
+  max-width: 12rem;
+}
+
 button,
 input,
 textarea,

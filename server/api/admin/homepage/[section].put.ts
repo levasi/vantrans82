@@ -1,9 +1,12 @@
+import { requireAdmin } from '~/server/utils/admin-session'
+import { publicServerError } from '~/server/utils/http'
 import {
   isHomepageSectionKey,
   saveHomepageSection
 } from '~/server/utils/homepage-sections-db'
 
 export default defineEventHandler(async (event) => {
+  await requireAdmin(event)
   const section = getRouterParam(event, 'section') || ''
 
   if (!isHomepageSectionKey(section)) {
@@ -32,13 +35,7 @@ export default defineEventHandler(async (event) => {
       section,
       content: saved
     }
-  } catch (error: any) {
-    if (error.statusCode) {
-      throw error
-    }
-    throw createError({
-      statusCode: 500,
-      message: error.message || 'Failed to save homepage section'
-    })
+  } catch (error: unknown) {
+    publicServerError(error, 'Failed to save homepage section')
   }
 })

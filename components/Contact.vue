@@ -82,9 +82,10 @@
                 </div>
                 <div>
                   <div class="contact__info-label">{{ copy.phoneLabel }}</div>
-                  <a :href="`tel:${formatPhoneForTel(settings.phoneNumber)}`" class="contact__info-link">
+                  <a v-if="telHref(settings.phoneNumber)" :href="telHref(settings.phoneNumber)" class="contact__info-link">
                     {{ settings.phoneNumber }}
                   </a>
+                  <p v-else class="contact__info-text">{{ settings.phoneNumber }}</p>
                 </div>
               </div>
 
@@ -94,9 +95,10 @@
                 </div>
                 <div>
                   <div class="contact__info-label">{{ copy.emailLabel }}</div>
-                  <a :href="`mailto:${settings.contactEmail}`" class="contact__info-link">
+                  <a v-if="mailHref(settings.contactEmail)" :href="mailHref(settings.contactEmail)" class="contact__info-link">
                     {{ settings.contactEmail }}
                   </a>
+                  <p v-else class="contact__info-text">{{ settings.contactEmail }}</p>
                 </div>
               </div>
 
@@ -107,13 +109,15 @@
                 <div>
                   <div class="contact__info-label">{{ copy.whatsappLabel }}</div>
                   <a
-                    :href="`https://wa.me/${formatPhoneForWhatsApp(settings.phoneNumber)}`"
+                    v-if="whatsAppHref(settings.phoneNumber)"
+                    :href="whatsAppHref(settings.phoneNumber)"
                     target="_blank"
                     rel="noopener noreferrer"
                     class="contact__info-link contact__info-link--whatsapp"
                   >
                     {{ settings.phoneNumber }}
                   </a>
+                  <p v-else class="contact__info-text">{{ settings.phoneNumber }}</p>
                   <p class="contact__info-hint">{{ copy.chatInstantly }}</p>
                 </div>
               </div>
@@ -124,8 +128,7 @@
                 </div>
                 <div>
                   <div class="contact__info-label">{{ copy.addressLabel }}</div>
-                  <p class="contact__info-text" v-html="settings.address.replace(/\n/g, '<br />')">
-                  </p>
+                  <p class="contact__info-text">{{ settings.address }}</p>
                 </div>
               </div>
             </div>
@@ -133,8 +136,8 @@
 
           <!-- WhatsApp Quick Action -->
           <a
-            v-if="settings.phoneNumber"
-            :href="`https://wa.me/${formatPhoneForWhatsApp(settings.phoneNumber)}?text=Hello! I'm interested in your transport services.`"
+            v-if="whatsAppHref(settings.phoneNumber, 'Hello! I\'m interested in your transport services.')"
+            :href="whatsAppHref(settings.phoneNumber, 'Hello! I\'m interested in your transport services.')"
             target="_blank"
             rel="noopener noreferrer"
             class="contact__whatsapp-btn"
@@ -164,7 +167,7 @@ import { Mail, Phone, MapPin, Send, MessageCircle } from 'lucide-vue-next'
 import { useI18n } from '#imports'
 
 const { t, locale } = useI18n()
-const { settings, loadSettings, formatPhoneForTel, formatPhoneForWhatsApp } = useSettings()
+const { settings, loadSettings, telHref, mailHref, whatsAppHref } = useSettings()
 const { load, pick } = useHomepageSection('contact', {
   title_ro: '',
   title_en: '',
@@ -373,6 +376,7 @@ const handleSubmit = () => {
 .contact__info-text {
   color: $color-text-muted;
   margin: 0;
+  white-space: pre-line;
 }
 
 .contact__whatsapp-btn {

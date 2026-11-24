@@ -1,151 +1,153 @@
 <template>
   <div class="admin-coverage">
-    <AdminHeader @toggle-sidebar="sidebarOpen = !sidebarOpen" />
-    <div class="admin-coverage__body">
-      <AdminSidebar :is-open="sidebarOpen" @close="sidebarOpen = false" />
-      <main class="admin-coverage__main">
-        <div class="admin-coverage__container">
-          <div class="admin-coverage__header">
-            <div>
-              <h1 class="admin-coverage__title">Coverage</h1>
-              <p class="admin-coverage__subtitle">Manage the Acoperire section on the landing page</p>
+    <div class="admin-coverage__header">
+      <div>
+        <h1 class="admin-coverage__title">Coverage</h1>
+        <p class="admin-coverage__subtitle">Manage the Acoperire section on the landing page</p>
+      </div>
+      <button
+        class="admin-coverage__btn admin-coverage__btn--primary"
+        type="button"
+        :disabled="saving || loading"
+        @click="saveCoverage"
+      >
+        <Save v-if="!saving" class="icon" />
+        <div v-else class="admin-coverage__spinner"></div>
+        {{ saving ? 'Saving…' : 'Save Coverage' }}
+      </button>
+    </div>
+
+    <div
+      v-if="message"
+      class="admin-coverage__alert"
+      :class="messageType === 'success' ? 'admin-coverage__alert--success' : 'admin-coverage__alert--error'"
+    >
+      {{ message }}
+    </div>
+
+    <div v-if="loading" class="admin-coverage__loading">Loading coverage…</div>
+
+    <template v-else>
+      <div class="admin-coverage__card">
+        <h2 class="admin-coverage__card-title">Section content</h2>
+        <div class="admin-coverage__fields">
+          <div class="admin-coverage__grid">
+            <div class="admin-coverage__field">
+              <label class="admin-coverage__label">Title (RO)</label>
+              <input v-model="content.title_ro" type="text" class="admin-coverage__input" />
+            </div>
+            <div class="admin-coverage__field">
+              <label class="admin-coverage__label">Title (EN)</label>
+              <input v-model="content.title_en" type="text" class="admin-coverage__input" />
             </div>
           </div>
 
-          <div
-            v-if="message"
-            class="admin-coverage__alert"
-            :class="messageType === 'success' ? 'admin-coverage__alert--success' : 'admin-coverage__alert--error'"
-          >
-            {{ message }}
+          <div class="admin-coverage__field">
+            <label class="admin-coverage__label">Subtitle (RO)</label>
+            <textarea v-model="content.subtitle_ro" rows="3" class="admin-coverage__input" />
+          </div>
+          <div class="admin-coverage__field">
+            <label class="admin-coverage__label">Subtitle (EN)</label>
+            <textarea v-model="content.subtitle_en" rows="3" class="admin-coverage__input" />
           </div>
 
-          <div v-if="loading" class="admin-coverage__loading">Loading coverage…</div>
-
-          <template v-else>
-            <div class="admin-coverage__card">
-              <h2 class="admin-coverage__card-title">Section content</h2>
-              <div class="admin-coverage__fields">
-                <div class="admin-coverage__grid">
-                  <div class="admin-coverage__field">
-                    <label class="admin-coverage__label">Title (RO)</label>
-                    <input v-model="content.title_ro" type="text" class="admin-coverage__input" />
-                  </div>
-                  <div class="admin-coverage__field">
-                    <label class="admin-coverage__label">Title (EN)</label>
-                    <input v-model="content.title_en" type="text" class="admin-coverage__input" />
-                  </div>
-                </div>
-
-                <div class="admin-coverage__field">
-                  <label class="admin-coverage__label">Subtitle (RO)</label>
-                  <textarea v-model="content.subtitle_ro" rows="3" class="admin-coverage__input" />
-                </div>
-                <div class="admin-coverage__field">
-                  <label class="admin-coverage__label">Subtitle (EN)</label>
-                  <textarea v-model="content.subtitle_en" rows="3" class="admin-coverage__input" />
-                </div>
-
-                <div class="admin-coverage__grid">
-                  <div class="admin-coverage__field">
-                    <label class="admin-coverage__label">Callout title (RO)</label>
-                    <input v-model="content.callout_title_ro" type="text" class="admin-coverage__input" />
-                  </div>
-                  <div class="admin-coverage__field">
-                    <label class="admin-coverage__label">Callout title (EN)</label>
-                    <input v-model="content.callout_title_en" type="text" class="admin-coverage__input" />
-                  </div>
-                </div>
-
-                <div class="admin-coverage__field">
-                  <label class="admin-coverage__label">Callout description (RO)</label>
-                  <textarea v-model="content.callout_desc_ro" rows="3" class="admin-coverage__input" />
-                </div>
-                <div class="admin-coverage__field">
-                  <label class="admin-coverage__label">Callout description (EN)</label>
-                  <textarea v-model="content.callout_desc_en" rows="3" class="admin-coverage__input" />
-                </div>
-
-                <AdminImageField v-model="content.map_image_url" label="Map image" />
-              </div>
+          <div class="admin-coverage__grid">
+            <div class="admin-coverage__field">
+              <label class="admin-coverage__label">Callout title (RO)</label>
+              <input v-model="content.callout_title_ro" type="text" class="admin-coverage__input" />
             </div>
+            <div class="admin-coverage__field">
+              <label class="admin-coverage__label">Callout title (EN)</label>
+              <input v-model="content.callout_title_en" type="text" class="admin-coverage__input" />
+            </div>
+          </div>
 
-            <div class="admin-coverage__card">
-              <div class="admin-coverage__card-top">
-                <h2 class="admin-coverage__card-title">Regions</h2>
-                <button class="admin-coverage__btn admin-coverage__btn--secondary" type="button" @click="addRegion">
-                  <Plus class="icon" />
-                  Add region
+          <div class="admin-coverage__field">
+            <label class="admin-coverage__label">Callout description (RO)</label>
+            <textarea v-model="content.callout_desc_ro" rows="3" class="admin-coverage__input" />
+          </div>
+          <div class="admin-coverage__field">
+            <label class="admin-coverage__label">Callout description (EN)</label>
+            <textarea v-model="content.callout_desc_en" rows="3" class="admin-coverage__input" />
+          </div>
+
+          <AdminImageField v-model="content.map_image_url" label="Map image" />
+        </div>
+      </div>
+
+      <div class="admin-coverage__card">
+        <div class="admin-coverage__card-top">
+          <h2 class="admin-coverage__card-title">Regions</h2>
+          <button class="admin-coverage__btn admin-coverage__btn--secondary" type="button" @click="addRegion">
+            <Plus class="icon" />
+            Add region
+          </button>
+        </div>
+
+        <div class="admin-coverage__regions">
+          <div v-for="(region, index) in regions" :key="region._key" class="admin-coverage__region">
+            <div class="admin-coverage__region-top">
+              <span class="admin-coverage__region-label">Region {{ index + 1 }}</span>
+              <div class="admin-coverage__card-actions">
+                <button
+                  class="admin-coverage__icon-btn"
+                  type="button"
+                  :disabled="index === 0"
+                  title="Move up"
+                  @click="moveRegion(index, -1)"
+                >
+                  <ArrowUp class="icon" />
+                </button>
+                <button
+                  class="admin-coverage__icon-btn"
+                  type="button"
+                  :disabled="index === regions.length - 1"
+                  title="Move down"
+                  @click="moveRegion(index, 1)"
+                >
+                  <ArrowDown class="icon" />
+                </button>
+                <button
+                  class="admin-coverage__icon-btn admin-coverage__icon-btn--danger"
+                  type="button"
+                  title="Remove"
+                  @click="removeRegion(index)"
+                >
+                  <Trash2 class="icon" />
                 </button>
               </div>
+            </div>
 
-              <div class="admin-coverage__regions">
-                <div v-for="(region, index) in regions" :key="region._key" class="admin-coverage__region">
-                  <div class="admin-coverage__region-top">
-                    <span class="admin-coverage__region-label">Region {{ index + 1 }}</span>
-                    <div class="admin-coverage__card-actions">
-                      <button
-                        class="admin-coverage__icon-btn"
-                        type="button"
-                        :disabled="index === 0"
-                        title="Move up"
-                        @click="moveRegion(index, -1)"
-                      >
-                        <ArrowUp class="icon" />
-                      </button>
-                      <button
-                        class="admin-coverage__icon-btn"
-                        type="button"
-                        :disabled="index === regions.length - 1"
-                        title="Move down"
-                        @click="moveRegion(index, 1)"
-                      >
-                        <ArrowDown class="icon" />
-                      </button>
-                      <button
-                        class="admin-coverage__icon-btn admin-coverage__icon-btn--danger"
-                        type="button"
-                        title="Remove"
-                        @click="removeRegion(index)"
-                      >
-                        <Trash2 class="icon" />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div class="admin-coverage__grid">
-                    <div class="admin-coverage__field">
-                      <label class="admin-coverage__label">Name (RO)</label>
-                      <input v-model="region.name_ro" type="text" class="admin-coverage__input" />
-                    </div>
-                    <div class="admin-coverage__field">
-                      <label class="admin-coverage__label">Name (EN)</label>
-                      <input v-model="region.name_en" type="text" class="admin-coverage__input" />
-                    </div>
-                  </div>
-                </div>
+            <div class="admin-coverage__grid">
+              <div class="admin-coverage__field">
+                <label class="admin-coverage__label">Name (RO)</label>
+                <input v-model="region.name_ro" type="text" class="admin-coverage__input" />
+              </div>
+              <div class="admin-coverage__field">
+                <label class="admin-coverage__label">Name (EN)</label>
+                <input v-model="region.name_en" type="text" class="admin-coverage__input" />
               </div>
             </div>
-
-            <div class="admin-coverage__actions">
-              <button class="admin-coverage__btn admin-coverage__btn--secondary" type="button" :disabled="saving" @click="loadCoverage">
-                Reset
-              </button>
-              <button
-                class="admin-coverage__btn admin-coverage__btn--primary"
-                type="button"
-                :disabled="saving || loading"
-                @click="saveCoverage"
-              >
-                <Save v-if="!saving" class="icon" />
-                <div v-else class="admin-coverage__spinner"></div>
-                {{ saving ? 'Saving…' : 'Save Coverage' }}
-              </button>
-            </div>
-          </template>
+          </div>
         </div>
-      </main>
-    </div>
+      </div>
+
+      <div class="admin-coverage__actions">
+        <button class="admin-coverage__btn admin-coverage__btn--secondary" type="button" :disabled="saving" @click="loadCoverage">
+          Reset
+        </button>
+        <button
+          class="admin-coverage__btn admin-coverage__btn--primary"
+          type="button"
+          :disabled="saving || loading"
+          @click="saveCoverage"
+        >
+          <Save v-if="!saving" class="icon" />
+          <div v-else class="admin-coverage__spinner"></div>
+          {{ saving ? 'Saving…' : 'Save Coverage' }}
+        </button>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -155,7 +157,7 @@ import { Save, Plus, Trash2, ArrowUp, ArrowDown } from 'lucide-vue-next'
 
 definePageMeta({
   middleware: 'admin',
-  layout: false
+  layout: 'admin'
 })
 
 type EditableRegion = {
@@ -177,7 +179,6 @@ type CoverageContent = {
   map_image_url: string
 }
 
-const sidebarOpen = ref(false)
 const loading = ref(true)
 const saving = ref(false)
 const message = ref('')
@@ -293,37 +294,16 @@ useHead({
 @use '~/assets/scss/mixins' as *;
 
 .admin-coverage {
-  min-height: 100vh;
-  background: var(--color-muted);
-
-  &__body {
-    display: flex;
-  }
-
-  &__main {
-    flex: 1;
-    padding: 1rem;
-
-    @include respond-to(sm) {
-      padding: 1.5rem;
-    }
-
-    @include respond-to(lg) {
-      padding: 2rem;
-    }
-  }
-
-  &__container {
-    max-width: $container-max;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
   &__header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
     margin-bottom: 1.5rem;
 
     @include respond-to(sm) {
-      margin-bottom: 2rem;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
     }
   }
 

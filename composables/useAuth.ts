@@ -9,13 +9,12 @@ export type AuthUser = {
 export const adminHomePath = (role?: AuthUser['role']) =>
   role === 'member' ? '/admin/access' : '/admin'
 
+let authCheck: Promise<void> | null = null
+
 export const useAuth = () => {
   const isAuthenticated = useState('auth.isAuthenticated', () => false)
   const user = useState('auth.user', () => null as AuthUser | null)
   const isCheckingAuth = useState('auth.isChecking', () => false)
-
-  // Note: Auth state restoration is now handled by plugins/auth.client.ts
-  // This ensures state is restored before middleware runs
 
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     try {
@@ -25,26 +24,19 @@ export const useAuth = () => {
           email,
           password
         }
-      }) as { success: boolean; user: any; token: string }
+      }) as { success: boolean; user: AuthUser }
 
       if (response.success && response.user) {
         isAuthenticated.value = true
         user.value = response.user
-        
-        // Store token and user info in sessionStorage
-        if (process.client) {
-          sessionStorage.setItem('admin_token', response.token)
-          sessionStorage.setItem('admin_user', JSON.stringify(response.user))
-        }
-        
         return { success: true }
       }
-      
+
       return { success: false, error: 'Login failed' }
     } catch (error: any) {
-      return { 
-        success: false, 
-        error: error.data?.message || error.message || 'An error occurred during login' 
+      return {
+        success: false,
+        error: error.data?.message || 'An error occurred during login'
       }
     }
   }
@@ -56,67 +48,50 @@ export const useAuth = () => {
       role: nextUser.role ?? user.value?.role,
       roleRequest: nextUser.roleRequest ?? user.value?.roleRequest
     }
-    if (process.client) {
-      sessionStorage.setItem('admin_user', JSON.stringify(user.value))
-    }
   }
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await $fetch('/api/admin/logout', { method: 'POST' })
+    } catch {
+      // Clear local state even if the cookie was already gone.
+    }
+
     isAuthenticated.value = false
     user.value = null
-    if (process.client) {
-      sessionStorage.removeItem('admin_token')
-      sessionStorage.removeItem('admin_user')
-    }
   }
 
-  const checkAuth = async () => {
-    if (process.client) {
-      // If already checking, don't check again
-      if (isCheckingAuth.value) {
+  const checkAuth = () => {
+    if (!process.client) {
+      return Promise.resolve()
+    }
+
+    if (!authCheck) {
+      isCheckingAuth.value = true
+      authCheck = verifySession().finally(() => {
+        isCheckingAuth.value = false
+        authCheck = null
+      })
+    }
+
+    return authCheck
+  }
+
+  const verifySession = async () => {
+    try {
+      const response = await $fetch('/api/admin/verify') as { success: boolean; user: AuthUser }
+
+      if (response.success && response.user) {
+        isAuthenticated.value = true
+        user.value = response.user
         return
       }
-
-      isCheckingAuth.value = true
-
-      const token = sessionStorage.getItem('admin_token')
-      const storedUser = sessionStorage.getItem('admin_user')
-      
-      if (token && storedUser) {
-        try {
-          // Verify token with server
-          const response = await $fetch('/api/admin/verify', {
-            method: 'GET',
-            query: { token }
-          }) as { success: boolean; user: any }
-
-          if (response.success && response.user) {
-            isAuthenticated.value = true
-            user.value = response.user
-            // Update stored user in case it changed
-            sessionStorage.setItem('admin_user', JSON.stringify(response.user))
-          } else {
-            // Verification failed, clear storage
-            isAuthenticated.value = false
-            user.value = null
-            sessionStorage.removeItem('admin_token')
-            sessionStorage.removeItem('admin_user')
-          }
-        } catch (error) {
-          // Token invalid, clear storage
-          isAuthenticated.value = false
-          user.value = null
-          sessionStorage.removeItem('admin_token')
-          sessionStorage.removeItem('admin_user')
-        }
-      } else {
-        // No token or user, ensure state is cleared
-        isAuthenticated.value = false
-        user.value = null
-      }
-
-      isCheckingAuth.value = false
+    } catch {
+      // A missing or expired cookie is a logged-out session.
     }
+
+    isAuthenticated.value = false
+    user.value = null
   }
 
   return {
@@ -129,4 +104,3 @@ export const useAuth = () => {
     checkAuth
   }
 }
-

@@ -53,18 +53,6 @@
     "customLogistics": "Handling and warehousing",
     "customLogisticsDesc": "Cargo handling, warehousing, and inventory management services tailored to your business needs."
   },
-  "process": {
-    "title": "How It Works",
-    "subtitle": "Our streamlined process ensures your cargo gets from point A to point B efficiently and safely.",
-    "requestQuote": "Request Quote",
-    "requestQuoteDesc": "Share your shipping details and requirements",
-    "planRoute": "Plan Route",
-    "planRouteDesc": "We optimize the best delivery route for your cargo",
-    "safeTransport": "Safe Transport",
-    "safeTransportDesc": "Your shipment is handled with utmost care",
-    "delivery": "Delivery",
-    "deliveryDesc": "On-time delivery to your destination"
-  },
   "fleet": {
     "title": "Our Fleet",
     "subtitle": "Modern, well-maintained vehicles equipped with the latest technology to ensure safe and efficient delivery.",

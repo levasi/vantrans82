@@ -1,8 +1,9 @@
-import { getAdminUserFromEvent, toPublicAdminUser } from '~/server/utils/admin-session'
+import { requireUser, toPublicAdminUser } from '~/server/utils/admin-session'
+import { publicServerError } from '~/server/utils/http'
 
 export default defineEventHandler(async (event) => {
   try {
-    const { db, user } = await getAdminUserFromEvent(event)
+    const { db, user } = await requireUser(event)
 
     if (user.role !== 'member') {
       throw createError({
@@ -30,11 +31,7 @@ export default defineEventHandler(async (event) => {
       success: true,
       user: toPublicAdminUser(result.rows[0])
     }
-  } catch (error: any) {
-    if (error.statusCode) throw error
-    throw createError({
-      statusCode: 500,
-      message: error.message || 'Failed to send request'
-    })
+  } catch (error: unknown) {
+    publicServerError(error, 'Failed to send request')
   }
 })

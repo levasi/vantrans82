@@ -1,70 +1,39 @@
 <template>
   <div class="admin-homepage">
-    <AdminHeader @toggle-sidebar="sidebarOpen = !sidebarOpen" />
-    <div class="admin-homepage__body">
-      <AdminSidebar :is-open="sidebarOpen" @close="sidebarOpen = false" />
-      <main class="admin-homepage__main">
-        <div class="admin-homepage__container">
-          <div class="admin-homepage__welcome">
-            <h1 class="admin-homepage__title">Homepage</h1>
-            <p class="admin-homepage__subtitle">
-              Customize landing page sections shown on the public website
-            </p>
-          </div>
+    <div class="admin-homepage__welcome">
+      <h1 class="admin-homepage__title">Homepage</h1>
+      <p class="admin-homepage__subtitle">
+        Customize landing page sections shown on the public website
+      </p>
+    </div>
 
-          <div class="admin-homepage__grid">
-            <AdminActionCard
-              v-for="section in sections"
-              :key="section.to"
-              :title="section.title"
-              :description="section.description"
-              :icon="section.icon"
-              @click="navigateTo(section.to)"
-            />
-          </div>
-        </div>
-      </main>
+    <div class="admin-homepage__grid">
+      <AdminActionCard
+        v-for="section in sections"
+        :key="section.to"
+        :title="section.title"
+        :description="section.description"
+        :icon="section.icon"
+        @click="navigateTo(section.to)"
+      />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { HOMEPAGE_SECTION_META } from '~/utils/homepage-section-forms'
+import { HOMEPAGE_ADMIN_ENTRIES } from '~/utils/homepage-section-forms'
 
 definePageMeta({
   middleware: 'admin',
-  layout: false
+  layout: 'admin'
 })
 
-const sidebarOpen = ref(false)
-
-const sections = [
-  ...HOMEPAGE_SECTION_META.slice(0, 3).map((section) => ({
-    title: section.title,
-    description: section.description,
-    icon: section.icon,
-    to: `/admin/homepage/${section.key}`
-  })),
-  {
-    title: 'Fleet',
-    description: 'Manage fleet vehicles, descriptions, and images',
-    icon: 'Truck',
-    to: '/admin/homepage/fleet'
-  },
-  {
-    title: 'Coverage',
-    description: 'Manage coverage regions, copy, and map content',
-    icon: 'MapPin',
-    to: '/admin/homepage/coverage'
-  },
-  ...HOMEPAGE_SECTION_META.slice(3).map((section) => ({
-    title: section.title,
-    description: section.description,
-    icon: section.icon,
-    to: `/admin/homepage/${section.key}`
-  }))
-]
+const sections = HOMEPAGE_ADMIN_ENTRIES.map((section) => ({
+  title: section.title,
+  description: section.description,
+  icon: section.icon,
+  to: `/admin/homepage/${section.key}`
+}))
 
 useHead({
   title: 'Homepage - Admin - VanTrans82'
@@ -72,36 +41,9 @@ useHead({
 </script>
 
 <style lang="scss" scoped>
-@use '~/assets/scss/variables' as *;
 @use '~/assets/scss/mixins' as *;
 
 .admin-homepage {
-  min-height: 100vh;
-  background: var(--color-muted);
-
-  &__body {
-    display: flex;
-  }
-
-  &__main {
-    flex: 1;
-    padding: 1rem;
-
-    @include respond-to(sm) {
-      padding: 1.5rem;
-    }
-
-    @include respond-to(lg) {
-      padding: 2rem;
-    }
-  }
-
-  &__container {
-    max-width: $container-max;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
   &__welcome {
     margin-bottom: 1.5rem;
 

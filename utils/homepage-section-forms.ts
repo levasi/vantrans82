@@ -1,3 +1,5 @@
+import type { HomepageVisibilityKey } from './homepage-visibility'
+
 export type HomepageSectionKey =
   | 'hero'
   | 'features'
@@ -24,6 +26,41 @@ export const HOMEPAGE_SECTION_META: HomepageSectionMeta[] = [
   { key: 'about', title: 'About', description: 'Company story, values, and image', icon: 'Info' },
   { key: 'faq', title: 'FAQ', description: 'Questions, answers, and help text', icon: 'CircleHelp' },
   { key: 'contact', title: 'Contact', description: 'Contact section labels and business hours', icon: 'Mail' }
+]
+
+export type HomepageAdminEntry = {
+  key: HomepageVisibilityKey
+  title: string
+  description: string
+  icon: string
+  labelKey: string
+}
+
+const adminEntry = (section: HomepageSectionMeta): HomepageAdminEntry => ({
+  key: section.key,
+  title: section.title,
+  description: section.description,
+  icon: section.icon,
+  labelKey: `admin.sections.${section.key}`
+})
+
+export const HOMEPAGE_ADMIN_ENTRIES: HomepageAdminEntry[] = [
+  ...HOMEPAGE_SECTION_META.slice(0, 3).map(adminEntry),
+  {
+    key: 'fleet',
+    title: 'Fleet',
+    description: 'Manage fleet vehicles, descriptions, and images',
+    icon: 'Truck',
+    labelKey: 'admin.fleet'
+  },
+  {
+    key: 'coverage',
+    title: 'Coverage',
+    description: 'Manage coverage regions, copy, and map content',
+    icon: 'MapPin',
+    labelKey: 'admin.coverage'
+  },
+  ...HOMEPAGE_SECTION_META.slice(3).map(adminEntry)
 ]
 
 export type FormField = {
